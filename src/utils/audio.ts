@@ -1,9 +1,12 @@
-// Audio and Speech Synthesis helper for English-lingou
-// Supports 100% offline text-to-speech for both English AND Persian!
+// Audio, Speech Synthesis & Calming Noise Generator for English-lingou
+// Supports 100% offline text-to-speech for English and Persian, plus ADHD Calming Brown Noise!
 
 class SoundEngine {
   private ctx: AudioContext | null = null;
   public enabled: boolean = true;
+  private noiseNode: AudioNode | null = null;
+  private noiseGain: GainNode | null = null;
+  public isNoisePlaying: boolean = false;
 
   private getContext(): AudioContext | null {
     if (typeof window === 'undefined') return null;
@@ -33,12 +36,12 @@ class SoundEngine {
       osc1.type = 'sine';
       osc2.type = 'triangle';
 
-      osc1.frequency.setValueAtTime(523.25, now); // C5
-      osc1.frequency.exponentialRampToValueAtTime(783.99, now + 0.15); // G5
-      osc1.frequency.exponentialRampToValueAtTime(1046.50, now + 0.3); // C6
+      osc1.frequency.setValueAtTime(523.25, now);
+      osc1.frequency.exponentialRampToValueAtTime(783.99, now + 0.15);
+      osc1.frequency.exponentialRampToValueAtTime(1046.50, now + 0.3);
 
-      osc2.frequency.setValueAtTime(659.25, now); // E5
-      osc2.frequency.exponentialRampToValueAtTime(1318.51, now + 0.3); // E6
+      osc2.frequency.setValueAtTime(659.25, now);
+      osc2.frequency.exponentialRampToValueAtTime(1318.51, now + 0.3);
 
       gain.gain.setValueAtTime(0.2, now);
       gain.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
@@ -51,9 +54,7 @@ class SoundEngine {
       osc2.start(now);
       osc1.stop(now + 0.6);
       osc2.stop(now + 0.6);
-    } catch {
-      // Audio playback failed silently
-    }
+    } catch {}
   }
 
   playCoin() {
@@ -67,8 +68,8 @@ class SoundEngine {
       const gain = ctx.createGain();
 
       osc.type = 'sine';
-      osc.frequency.setValueAtTime(987.77, now); // B5
-      osc.frequency.setValueAtTime(1318.51, now + 0.08); // E6
+      osc.frequency.setValueAtTime(987.77, now);
+      osc.frequency.setValueAtTime(1318.51, now + 0.08);
 
       gain.gain.setValueAtTime(0.15, now);
       gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
@@ -78,9 +79,7 @@ class SoundEngine {
 
       osc.start(now);
       osc.stop(now + 0.35);
-    } catch {
-      // Ignore
-    }
+    } catch {}
   }
 
   playLevelUp() {
@@ -90,7 +89,7 @@ class SoundEngine {
       if (!ctx) return;
       const now = ctx.currentTime;
 
-      const freqs = [440, 554.37, 659.25, 880]; // A4, C#5, E5, A5
+      const freqs = [440, 554.37, 659.25, 880];
       freqs.forEach((freq, idx) => {
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
@@ -107,9 +106,7 @@ class SoundEngine {
         osc.start(now + idx * 0.1);
         osc.stop(now + idx * 0.1 + 0.35);
       });
-    } catch {
-      // Ignore
-    }
+    } catch {}
   }
 
   playError() {
@@ -134,9 +131,7 @@ class SoundEngine {
 
       osc.start(now);
       osc.stop(now + 0.3);
-    } catch {
-      // Ignore
-    }
+    } catch {}
   }
 
   playClick() {
@@ -159,26 +154,76 @@ class SoundEngine {
 
       osc.start(now);
       osc.stop(now + 0.04);
-    } catch {
-      // Ignore
-    }
+    } catch {}
+  }
+
+  // ADHD Calming Brown Noise Generator (Scientific audio filter to anchor scattered thoughts)
+  startCalmBrownNoise() {
+    if (this.isNoisePlaying) return;
+    try {
+      const ctx = this.getContext();
+      if (!ctx) return;
+
+      const bufferSize = ctx.sampleRate * 2;
+      const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+      const output = noiseBuffer.getChannelData(0);
+      let lastOut = 0.0;
+
+      for (let i = 0; i < bufferSize; i++) {
+        const white = Math.random() * 2 - 1;
+        output[i] = (lastOut + (0.02 * white)) / 1.02;
+        lastOut = output[i];
+        output[i] *= 3.5; // Gain compensation
+      }
+
+      const whiteNoise = ctx.createBufferSource();
+      whiteNoise.buffer = noiseBuffer;
+      whiteNoise.loop = true;
+
+      // Soft low-pass filter (like gentle rain or ocean waves)
+      const filter = ctx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(380, ctx.currentTime);
+
+      const gain = ctx.createGain();
+      gain.gain.setValueAtTime(0.035, ctx.currentTime); // Very gentle and unobtrusive
+
+      whiteNoise.connect(filter);
+      filter.connect(gain);
+      gain.connect(ctx.destination);
+
+      whiteNoise.start();
+      this.noiseNode = whiteNoise;
+      this.noiseGain = gain;
+      this.isNoisePlaying = true;
+    } catch {}
+  }
+
+  stopCalmBrownNoise() {
+    if (!this.isNoisePlaying) return;
+    try {
+      if (this.noiseNode && 'stop' in this.noiseNode) {
+        (this.noiseNode as AudioBufferSourceNode).stop();
+        this.noiseNode.disconnect();
+      }
+      if (this.noiseGain) {
+        this.noiseGain.disconnect();
+      }
+      this.noiseNode = null;
+      this.noiseGain = null;
+      this.isNoisePlaying = false;
+    } catch {}
   }
 }
 
 export const sound = new SoundEngine();
 
-/**
- * Universal Offline Speech Synthesis for English
- */
 export const speakEnglish = (
   text: string, 
   rate: number = 0.9, 
   lang: string = 'en-US'
 ) => {
-  if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
-    return;
-  }
-
+  if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
   try {
     window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(text);
@@ -191,29 +236,18 @@ export const speakEnglish = (
         (v.lang.startsWith(lang.substring(0, 2)) && (v.name.includes('Natural') || v.name.includes('Google') || v.name.includes('Siri') || v.name.includes('Samantha') || v.name.includes('Daniel')))
       ) || voices.find(v => v.lang.startsWith('en'));
 
-      if (preferredVoice) {
-        utterance.voice = preferredVoice;
-      }
+      if (preferredVoice) utterance.voice = preferredVoice;
     }
 
     window.speechSynthesis.speak(utterance);
-  } catch (err) {
-    console.warn('SpeechSynthesis error:', err);
-  }
+  } catch {}
 };
 
-/**
- * Universal Offline Speech Synthesis for Persian (Farsi)
- * Supports teaching Persian to English speakers!
- */
 export const speakPersian = (
   text: string,
   rate: number = 0.85
 ) => {
-  if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
-    return;
-  }
-
+  if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
   try {
     window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(text);
@@ -222,26 +256,15 @@ export const speakPersian = (
 
     const voices = window.speechSynthesis.getVoices();
     if (voices && voices.length > 0) {
-      // Look for Persian (fa-IR, fa)
       const farsiVoice = voices.find(v => v.lang.startsWith('fa') || v.name.toLowerCase().includes('persian') || v.name.toLowerCase().includes('farsi'));
-      if (farsiVoice) {
-        utterance.voice = farsiVoice;
-      }
+      if (farsiVoice) utterance.voice = farsiVoice;
     }
 
     window.speechSynthesis.speak(utterance);
-  } catch (err) {
-    console.warn('Persian speech error:', err);
-  }
+  } catch {}
 };
 
-/**
- * Helper to speak according to language direction
- */
 export const speakTarget = (text: string, isPersian: boolean, rate: number = 0.9) => {
-  if (isPersian) {
-    speakPersian(text, rate);
-  } else {
-    speakEnglish(text, rate);
-  }
+  if (isPersian) speakPersian(text, rate);
+  else speakEnglish(text, rate);
 };

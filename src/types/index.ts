@@ -1,7 +1,9 @@
 export type CityDistrictId = 
   | 'map'
+  | 'persian_for_english' // Priority #1: Dedicated Persian Language & Taarof Cultural Lab for English Speakers
+  | 'offline_translator' // 100% Offline Real-Time Speech Communicator for Travelers
+  | 'mentor' // Master-Apprentice Gamification System & Student Peer Teaching Rooms (برای آموزش انگلیسی به فارسی‌زبانان)
   | 'bilingual_ai' // AI Foundation & Dual-Direction Offline Teacher (آموزش دوجانبه انگلیسی-فارسی)
-  | 'mentor' // Master-Apprentice Gamification System (سیستم استاد-شاگردی جیم‌فیکیشن)
   | 'vocabulary'
   | 'grammar'
   | 'dialogues'
@@ -13,6 +15,13 @@ export type CityDistrictId =
 export type CEFRLevel = 'A1-A2' | 'B1-B2' | 'C1-C2';
 
 export type LearningTrack = 'en_for_persian' | 'fa_for_english';
+
+export type LanguageProficiencyTier = 
+  | 'beginner'          // مبتدی
+  | 'intermediate'      // اینترمدیت
+  | 'upper_intermediate'// آپر اینترمدیت
+  | 'professional'      // حرفه‌ای
+  | 'grandmaster';      // فوق حرفه‌ای
 
 export interface VocabularyWord {
   id: string;
@@ -169,7 +178,32 @@ export interface UserProgress {
   completedMentorQuestIds: string[];
 
   // Bilingual AI Foundation & Offline Learning Track
-  learningTrack: LearningTrack; // 'en_for_persian' (آموزش انگلیسی به فارسی‌زبانان) | 'fa_for_english' (آموزش فارسی به انگلیسی‌زبانان)
+  learningTrack: LearningTrack; // 'en_for_persian' | 'fa_for_english'
   completedBilingualUnitIds: string[];
   offlineModeForced: boolean;
+
+  // Tiered Hierarchy & Student-Teacher Room System (سلسله‌مراتب استادیاری و چالش سه‌گانه)
+  proficiencyTier: LanguageProficiencyTier;
+  placementScore: number;
+  hasPassedPlacementTest: boolean;
+  failedChallengeCount: number; // 0, 1, 2 (If reaches 3 -> demoted to lower tier!)
+  totalStudentsTaught: number;
+  myHostedRoomId?: string;
+  myHostedRoomTitle?: string;
+  teachingSalaryAccumulated: number;
+
+  // Strict Sequential Mastery & Review Checkpoints (قانون پیش‌نیاز قطعی و آزمون مرور کلان)
+  masteredPersianLessonIds: string[]; // e.g. ['p_1']
+  passedCheckpointReviews: number[]; // e.g. [3, 5]
+
+  // Innovation #1: Reverse-Ta'arof Radar & Duel Mastery
+  completedTaarofDuelIds: string[];
+  taarofFinesseRating: number; // 0 to 100%
+
+  // Innovation #2: Master Teaching Chair & Golden Stars (کرسی استادی رسمی هوش مصنوعی)
+  teachingGoldenStars: number; // Stars awarded by junior students (e.g., 8 out of 10)
+  hasOfficialChairSeal: boolean; // 2x teaching salary unlocked!
+
+  // Innovation #3: Tandem Cultural Exchange (اتاق‌های تبادل فرهنگی دوطرفه)
+  completedTandemSessionIds: string[];
 }

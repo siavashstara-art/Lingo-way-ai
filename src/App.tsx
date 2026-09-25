@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Header } from './components/Header';
 import { CityMap } from './components/CityMap';
+import { PersianForEnglishLab } from './components/PersianForEnglishLab';
 import { MasterApprenticeGym } from './components/MasterApprenticeGym';
+import { BilingualAIFoundation } from './components/BilingualAIFoundation';
 import { VocabularyBazaar } from './components/VocabularyBazaar';
 import { GrammarHall } from './components/GrammarHall';
 import { CafeDialogue } from './components/CafeDialogue';
@@ -11,7 +13,17 @@ import { LingouVault } from './components/LingouVault';
 import { CityShop } from './components/CityShop';
 import { CustomWordModal } from './components/CustomWordModal';
 import { AccessibilityModal } from './components/AccessibilityModal';
-import { CityDistrictId, UserProgress, VocabularyWord, ApprenticeStage } from './types';
+import { ADHDMicroTimer } from './components/ADHDMicroTimer';
+import { VisualCaptionToast } from './components/VisualCaptionToast';
+import { OfflineSpeechTranslator } from './components/OfflineSpeechTranslator';
+import { 
+  CityDistrictId, 
+  UserProgress, 
+  VocabularyWord, 
+  ApprenticeStage, 
+  LearningTrack, 
+  LanguageProficiencyTier 
+} from './types';
 import { loadProgress, saveProgress } from './utils/storage';
 import { sound } from './utils/audio';
 import { AccessibilitySettings, DEFAULT_ACCESSIBILITY } from './utils/accessibility';
@@ -233,6 +245,149 @@ export const App: React.FC = () => {
     }));
   };
 
+  // Hierarchy Tier Update Handler (Placement Test)
+  const handleUpdateTier = (newTier: LanguageProficiencyTier, score: number) => {
+    updateProgress((prev) => ({
+      ...prev,
+      proficiencyTier: newTier,
+      placementScore: score,
+      hasPassedPlacementTest: true,
+      failedChallengeCount: 0,
+      xp: prev.xp + 100,
+      lingous: prev.lingous + 50
+    }));
+  };
+
+  // Three-strikes challenge rule handler (Defeat / Demotion logic)
+  const handleStudentChallengeResult = (passed: boolean) => {
+    updateProgress((prev) => {
+      if (passed) {
+        return {
+          ...prev,
+          lingous: prev.lingous + 25,
+          xp: prev.xp + 40,
+          failedChallengeCount: Math.max(0, (prev.failedChallengeCount || 0) - 1)
+        };
+      } else {
+        const nextFailed = (prev.failedChallengeCount || 0) + 1;
+        let nextTier = prev.proficiencyTier;
+
+        // If challenged 3 times unsuccessfully, demote one rank!
+        if (nextFailed >= 3) {
+          if (prev.proficiencyTier === 'grandmaster') nextTier = 'professional';
+          else if (prev.proficiencyTier === 'professional') nextTier = 'upper_intermediate';
+          else if (prev.proficiencyTier === 'upper_intermediate') nextTier = 'intermediate';
+          else if (prev.proficiencyTier === 'intermediate') nextTier = 'beginner';
+
+          return {
+            ...prev,
+            failedChallengeCount: 0, // Reset after demotion
+            proficiencyTier: nextTier
+          };
+        }
+
+        return {
+          ...prev,
+          failedChallengeCount: nextFailed
+        };
+      }
+    });
+  };
+
+  // Room host session reward
+  const handleHostTeachingSession = (roomTitle: string, salary: number) => {
+    updateProgress((prev) => ({
+      ...prev,
+      lingous: prev.lingous + salary,
+      xp: prev.xp + 60,
+      totalStudentsTaught: (prev.totalStudentsTaught || 0) + 5,
+      teachingSalaryAccumulated: (prev.teachingSalaryAccumulated || 0) + salary,
+      myHostedRoomTitle: roomTitle
+    }));
+  };
+
+  // Persian Sequential Mastery & Checkpoint Handlers
+  const handleMasterPersianLesson = (lessonId: string) => {
+    updateProgress((prev) => {
+      const already = prev.masteredPersianLessonIds || [];
+      if (already.includes(lessonId)) return prev;
+      return {
+        ...prev,
+        masteredPersianLessonIds: [...already, lessonId],
+        xp: prev.xp + 35,
+      };
+    });
+  };
+
+  const handlePassCheckpointReview = (checkpointNum: number) => {
+    updateProgress((prev) => {
+      const already = prev.passedCheckpointReviews || [];
+      if (already.includes(checkpointNum)) return prev;
+      return {
+        ...prev,
+        passedCheckpointReviews: [...already, checkpointNum],
+        xp: prev.xp + 50,
+      };
+    });
+  };
+
+  // Innovation #1: Taarof Duel Handler
+  const handleCompleteTaarofDuel = (duelId: string, reward: number) => {
+    updateProgress((prev) => {
+      const currentDuels = prev.completedTaarofDuelIds || [];
+      const isNew = !currentDuels.includes(duelId);
+      const newRating = Math.min(100, (prev.taarofFinesseRating || 75) + 10);
+      return {
+        ...prev,
+        completedTaarofDuelIds: isNew ? [...currentDuels, duelId] : currentDuels,
+        taarofFinesseRating: newRating,
+        lingous: prev.lingous + reward,
+        xp: prev.xp + 45
+      };
+    });
+  };
+
+  // Innovation #2: Teaching Star & Chair Seal Handler
+  const handleAwardTeachingStar = () => {
+    updateProgress((prev) => {
+      const updatedStars = (prev.teachingGoldenStars || 7) + 1;
+      const getsSeal = updatedStars >= 10;
+      return {
+        ...prev,
+        teachingGoldenStars: updatedStars,
+        hasOfficialChairSeal: getsSeal || prev.hasOfficialChairSeal,
+        lingous: prev.lingous + (getsSeal ? 100 : 20),
+        xp: prev.xp + 50
+      };
+    });
+  };
+
+  // Innovation #3: Tandem Cultural Exchange Handler
+  const handleCompleteTandemSession = (partnerId: string, reward: number) => {
+    updateProgress((prev) => {
+      const sessions = prev.completedTandemSessionIds || [];
+      return {
+        ...prev,
+        completedTandemSessionIds: sessions.includes(partnerId) ? sessions : [...sessions, partnerId],
+        lingous: prev.lingous + reward,
+        xp: prev.xp + 40
+      };
+    });
+  };
+
+  // Bilingual Unit Completion Handler
+  const handleCompleteBilingualUnit = (unitId: string, rewardLingous: number) => {
+    updateProgress((prev) => {
+      if (prev.completedBilingualUnitIds?.includes(unitId)) return prev;
+      return {
+        ...prev,
+        lingous: prev.lingous + rewardLingous,
+        xp: prev.xp + 40,
+        completedBilingualUnitIds: [...(prev.completedBilingualUnitIds || []), unitId]
+      };
+    });
+  };
+
   // Monetization Handlers
   const handlePurchaseVip = (planId: string) => {
     updateProgress((prev) => ({
@@ -271,11 +426,37 @@ export const App: React.FC = () => {
   const isRtl = accessibility.language === 'fa';
   const isFa = accessibility.language === 'fa';
 
+  const fontClass = 
+    accessibility.fontSize === 'huge' ? 'text-xl' :
+    accessibility.fontSize === 'extra-large' ? 'text-lg' :
+    accessibility.fontSize === 'large' ? 'text-base' : 'text-sm';
+
+  const contrastClass = accessibility.highContrast
+    ? 'bg-black text-amber-300'
+    : 'bg-gradient-to-b from-sky-50 via-amber-50/40 to-slate-50 text-slate-800';
+
   return (
     <div 
       dir={isRtl ? 'rtl' : 'ltr'} 
-      className="min-h-screen bg-gradient-to-b from-sky-50 via-amber-50/40 to-slate-50 text-slate-800 flex flex-col font-sans transition-colors duration-200"
+      className={`min-h-screen flex flex-col font-sans transition-colors duration-200 ${contrastClass} ${fontClass} ${accessibility.reducedMotion ? 'animate-none' : ''}`}
     >
+      {/* Visual Captions for Deaf and Hard-of-Hearing */}
+      {accessibility.visualCaptionsForDeaf && (
+        <VisualCaptionToast
+          lastAudioEvent={{
+            text: isFa ? 'سیستم صوتی آماده است: تلفظ‌ها و صداها به صورت متن زیرنویس می‌شوند.' : 'Closed captions enabled.',
+            type: 'speech',
+            timestamp: Date.now()
+          }}
+          showLipSync={accessibility.lipSyncGuide}
+        />
+      )}
+      {/* ADHD Micro 5-Minute Timer (Anti-Burnout chunking) */}
+      {accessibility.adhdSingleTaskTimer && (
+        <ADHDMicroTimer 
+          onCompleteChunk={() => handleEarnLingous(25, 'تکمیل لقمه تمرکز ۵ دقیقه‌ای')} 
+        />
+      )}
       {/* ADHD Reading Ruler Guide */}
       {accessibility.readingRuler && (
         <div 
@@ -319,12 +500,44 @@ export const App: React.FC = () => {
           />
         )}
 
+        {/* PRIORITY #1: Dedicated Persian Language Immersion for English Speakers with Sequential Gating */}
+        {currentDistrict === 'persian_for_english' && (
+          <PersianForEnglishLab
+            progress={progress}
+            onEarnLingous={handleEarnLingous}
+            onMasterLesson={handleMasterPersianLesson}
+            onPassCheckpoint={handlePassCheckpointReview}
+            onCompleteTaarofDuel={handleCompleteTaarofDuel}
+            onCompleteTandemSession={handleCompleteTandemSession}
+          />
+        )}
+
+        {/* 100% Offline Real-Time Speech Communicator for Travelers */}
+        {currentDistrict === 'offline_translator' && (
+          <OfflineSpeechTranslator />
+        )}
+
+        {/* Master-Apprentice Hierarchical Peer Teaching & Room Hosting for English Learning */}
         {currentDistrict === 'mentor' && (
           <MasterApprenticeGym
             progress={progress}
             accessibility={accessibility}
             onCompleteWorkout={handleCompleteWorkout}
             onLevelUpStage={handleLevelUpStage}
+            onUpdateTier={handleUpdateTier}
+            onStudentChallengeResult={handleStudentChallengeResult}
+            onHostTeachingSession={handleHostTeachingSession}
+            onAwardTeachingStar={handleAwardTeachingStar}
+          />
+        )}
+
+        {currentDistrict === 'bilingual_ai' && (
+          <BilingualAIFoundation
+            progress={progress}
+            accessibility={accessibility}
+            onUpdateTrack={(track) => updateProgress(p => ({ ...p, learningTrack: track }))}
+            onCompleteUnit={handleCompleteBilingualUnit}
+            onToggleOfflineForced={() => updateProgress(p => ({ ...p, offlineModeForced: !p.offlineModeForced }))}
           />
         )}
 
@@ -393,28 +606,42 @@ export const App: React.FC = () => {
               {isFa ? 'انگلیش لینگو' : 'English-lingou'}
             </span>
             <span>•</span>
-            <span>{isFa ? 'able way city | متد استاد-شاگردی جیم‌فیکیشن' : 'Master-Apprentice Verbal Gym'}</span>
+            <span>{isFa ? 'able way city | اولویت آموزش فارسی با تسلط زنجیره‌ای + استادیاری زبان انگلیسی' : 'Persian Sequential Mastery & English Mentorship'}</span>
           </div>
           <div className="flex items-center gap-3">
+            <button
+              onClick={() => setCurrentDistrict('persian_for_english')}
+              className="text-emerald-700 hover:underline font-bold"
+            >
+              {isFa ? 'آموزش زبان فارسی 🌹' : 'Learn Persian 🇮🇷'}
+            </button>
+            <span>•</span>
+            <button
+              onClick={() => setCurrentDistrict('offline_translator')}
+              className="text-teal-700 hover:underline font-bold"
+            >
+              {isFa ? 'مترجم صوتی مسافرتی 🎙️' : 'Voice Communicator 🎙️'}
+            </button>
+            <span>•</span>
             <button
               onClick={() => setCurrentDistrict('mentor')}
               className="text-amber-700 hover:underline font-bold"
             >
-              {isFa ? 'باشگاه گفتار استاد-شاگردی' : 'Verbal Gym'}
+              {isFa ? 'سامانه استادیاری و روم‌ها' : 'Teaching Hierarchy'}
+            </button>
+            <span>•</span>
+            <button
+              onClick={() => setCurrentDistrict('bilingual_ai')}
+              className="text-sky-700 hover:underline font-bold"
+            >
+              {isFa ? 'هوش مصنوعی آفلاین' : 'Offline AI'}
             </button>
             <span>•</span>
             <button
               onClick={() => setCurrentDistrict('shop')}
               className="text-slate-600 hover:underline font-bold"
             >
-              {isFa ? 'فروشگاه و اشتراک طلایی' : 'VIP Store'}
-            </button>
-            <span>•</span>
-            <button
-              onClick={() => setIsAccessibilityModalOpen(true)}
-              className="text-slate-600 hover:underline font-bold"
-            >
-              {isFa ? 'تنظیمات راحتی' : 'Comfort Settings'}
+              {isFa ? 'فروشگاه' : 'Store'}
             </button>
           </div>
         </div>

@@ -1,6 +1,6 @@
-import { UserProgress, ApprenticeStage } from '../types';
+import { UserProgress, ApprenticeStage, LanguageProficiencyTier } from '../types';
 
-const STORAGE_KEY = 'english_lingou_tavana_progress_v4';
+const STORAGE_KEY = 'english_lingou_tavana_progress_v8';
 
 export const INITIAL_PROGRESS: UserProgress = {
   lingous: 150, // Starting gold Lingous
@@ -13,7 +13,19 @@ export const INITIAL_PROGRESS: UserProgress = {
   completedLessonIds: ['g1'],
   completedDialogueIds: [],
   quizHighScore: 85,
-  unlockedDistricts: ['map', 'bilingual_ai', 'mentor', 'vocabulary', 'grammar', 'dialogues', 'pronunciation', 'quiz', 'vault', 'shop'],
+  unlockedDistricts: [
+    'map', 
+    'persian_for_english', 
+    'mentor', 
+    'bilingual_ai', 
+    'vocabulary', 
+    'grammar', 
+    'dialogues', 
+    'pronunciation', 
+    'quiz', 
+    'vault', 
+    'shop'
+  ],
   customWords: [],
   soundEnabled: true,
   speechVoiceRate: 0.9,
@@ -24,8 +36,8 @@ export const INITIAL_PROGRESS: UserProgress = {
   streakShields: 1,
 
   // Master-Apprentice & Gym-fication (استاد-شاگردی جیم‌فیکیشن)
-  apprenticeStage: 'novice',
-  apprenticePoints: 45,
+  apprenticeStage: 'learner',
+  apprenticePoints: 65,
   completedWorkoutIds: [],
   shadowingAudioListenedCount: 4,
   completedMentorQuestIds: ['mq1'],
@@ -33,7 +45,32 @@ export const INITIAL_PROGRESS: UserProgress = {
   // Bilingual AI Foundation & Offline Learning Track
   learningTrack: 'en_for_persian',
   completedBilingualUnitIds: ['bi_1'],
-  offlineModeForced: true, // Default to 100% reliable offline mode!
+  offlineModeForced: true, // 100% reliable offline mode!
+
+  // Hierarchical Teaching & Apprentice Room System
+  proficiencyTier: 'intermediate', // Default test rank: Intermediate assistant teacher
+  placementScore: 70,
+  hasPassedPlacementTest: true,
+  failedChallengeCount: 0,
+  totalStudentsTaught: 3,
+  myHostedRoomId: 'my_room_1',
+  myHostedRoomTitle: 'روم تدریس من: تمرین جملات کاربردی با شاگردان مبتدی',
+  teachingSalaryAccumulated: 90,
+
+  // Strict Sequential Mastery & Review Checkpoints
+  masteredPersianLessonIds: ['p_1'],
+  passedCheckpointReviews: [],
+
+  // Innovation #1: Reverse-Ta'arof Radar & Duel Mastery
+  completedTaarofDuelIds: [],
+  taarofFinesseRating: 75,
+
+  // Innovation #2: Master Teaching Chair & Golden Stars (کرسی استادی رسمی)
+  teachingGoldenStars: 7, // 7 stars towards the 10-star Official Chair Seal!
+  hasOfficialChairSeal: false,
+
+  // Innovation #3: Tandem Cultural Exchange
+  completedTandemSessionIds: [],
 };
 
 export const loadProgress = (): UserProgress => {
@@ -87,7 +124,7 @@ export const calculateLevel = (xp: number): { level: number; currentXp: number; 
 
 export const getCitizenRank = (level: number): { title: string; badge: string; color: string } => {
   if (level >= 10) return { title: 'استاد تمام مکالمه', badge: '👑', color: 'from-amber-400 to-yellow-600' };
-  if (level >= 7) return { title: 'یار ارشد استاد', badge: '🏛️', color: 'from-purple-400 to-indigo-600' };
+  if (level >= 7) return { title: 'دارنده کرسی استادی رسمی', badge: '🏛️', color: 'from-purple-400 to-indigo-600' };
   if (level >= 5) return { title: 'شاگرد باتجربه و پرانرژی', badge: '🏺', color: 'from-blue-400 to-cyan-600' };
   if (level >= 3) return { title: 'شاگرد کوشا و باانگیزه', badge: '🗺️', color: 'from-emerald-400 to-teal-600' };
   return { title: 'شاگرد تازه‌کار و مشتاق', badge: '🌱', color: 'from-slate-400 to-zinc-600' };
