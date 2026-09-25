@@ -1,0 +1,8 @@
+{
+  "name": "English-lingou",
+  "description": "An interactive English learning app set in the capital of Virtual Tavana City with grammar quests, vocabulary bazaar, dialogue simulations, and pronunciation practice.",
+  "requestFramePermissions": [],
+  "capabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

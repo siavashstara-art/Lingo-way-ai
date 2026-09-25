@@ -1,0 +1,6 @@
+<resources>
+    <style name="Theme.EnglishLingou" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:statusBarColor">#020617</item>
+        <item name="android:navigationBarColor">#020617</item>
+    </style>
+</resources>
