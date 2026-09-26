@@ -19,7 +19,9 @@ import {
   RotateCw,
   Layers,
   Sparkles,
-  Calculator
+  Calculator,
+  Camera,
+  ShieldCheck
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import {
@@ -29,6 +31,7 @@ import {
   CarpetTermItem
 } from '../data/carpetTradeData';
 import { CarpetSmartTools } from './CarpetSmartTools';
+import { OfflineRajScanner } from './OfflineRajScanner';
 import {
   sound,
   speakEnglish,
@@ -170,7 +173,7 @@ export const CarpetTradeAcademy: React.FC<CarpetTradeAcademyProps> = ({
   onEarnLingous,
   speechVoiceRate = 0.85
 }) => {
-  const [activeTab, setActiveTab] = useState<'showroom_interpreter' | 'smart_tools' | 'lexicon' | 'dimensions' | 'dialogues' | 'simulator'>('showroom_interpreter');
+  const [activeTab, setActiveTab] = useState<'showroom_interpreter' | 'raj_scanner' | 'smart_tools' | 'lexicon' | 'dimensions' | 'dialogues' | 'simulator'>('showroom_interpreter');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [copiedId, setCopiedId] = useState<string | null>(null);
@@ -326,6 +329,34 @@ export const CarpetTradeAcademy: React.FC<CarpetTradeAcademyProps> = ({
       else if (targetBuyerLang === 'ru') speakRussian(res.ru, speechVoiceRate, res.en);
       else speakEnglish(res.en, speechVoiceRate);
     }
+
+    // Zero-Touch Automated Server Refinement for free-form merchant statements
+    fetch('/api/ai/translate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        text,
+        sourceLang: 'fa',
+        targetLang: targetBuyerLang === 'all' ? 'en' : targetBuyerLang,
+        domain: 'carpet_and_travel'
+      })
+    })
+      .then(r => (r.ok ? r.json() : null))
+      .then(data => {
+        if (data?.translation && data.translation.trim()) {
+          setLatestMerchantPitch(prev => ({
+            ...prev,
+            en: targetBuyerLang === 'all' || targetBuyerLang === 'en' ? data.translation : prev.en,
+            ar: data.arabicText || (targetBuyerLang === 'ar' ? data.translation : prev.ar),
+            zh: targetBuyerLang === 'zh' ? data.translation : prev.zh,
+            ru: targetBuyerLang === 'ru' ? data.translation : prev.ru,
+            pron: data.pronunciation || prev.pron
+          }));
+        }
+      })
+      .catch(() => {
+        // Offline 0ms translation is already active
+      });
   };
 
   // Instant 0ms Buyer Send
@@ -362,6 +393,32 @@ export const CarpetTradeAcademy: React.FC<CarpetTradeAcademyProps> = ({
     if (autoSpeakShowroom) {
       speakPersian(res.fa, speechVoiceRate, res.pronFa);
     }
+
+    // Zero-Touch Automated Server Refinement for free-form buyer questions
+    fetch('/api/ai/translate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        text,
+        sourceLang: 'auto',
+        targetLang: 'fa',
+        domain: 'carpet_and_travel'
+      })
+    })
+      .then(r => (r.ok ? r.json() : null))
+      .then(data => {
+        if (data?.translation && data.translation.trim()) {
+          const faText = `مشتری می‌پرسد: «${data.translation.trim()}»`;
+          setLatestBuyerQuestion({
+            foreignText: text,
+            faTranslation: faText,
+            pronFa: data.pronunciation || transliteratePersianToFingilish(faText)
+          });
+        }
+      })
+      .catch(() => {
+        // Offline 0ms translation is already active
+      });
   };
 
   const handleToggleShowroomMic = (role: 'merchant_fa' | 'buyer_en' | 'buyer_ar') => {
@@ -494,6 +551,18 @@ export const CarpetTradeAcademy: React.FC<CarpetTradeAcademyProps> = ({
         </button>
 
         <button
+          onClick={() => { sound.playClick(); setActiveTab('raj_scanner'); }}
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-black whitespace-nowrap border-2 transition-all ${
+            activeTab === 'raj_scanner'
+              ? 'bg-amber-400 text-slate-950 border-amber-500 shadow-md'
+              : 'bg-amber-50 text-rose-950 border-amber-300 hover:bg-amber-100'
+          }`}
+        >
+          <Camera className="w-4 h-4" />
+          <span>📸 رجشمار نوری آفلاین با دوربین (ختم مشاجرات رج قالی)</span>
+        </button>
+
+        <button
           onClick={() => { sound.playClick(); setActiveTab('smart_tools'); }}
           className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-black whitespace-nowrap ${
             activeTab === 'smart_tools' ? 'bg-rose-800 text-white' : 'text-slate-700 hover:bg-slate-100'
@@ -533,6 +602,15 @@ export const CarpetTradeAcademy: React.FC<CarpetTradeAcademyProps> = ({
           <span>مکالمات آماده حجره</span>
         </button>
       </div>
+
+      {/* TAB: DEDICATED OFFLINE OPTICAL CAMERA RAJ-SHOMAR */}
+      {activeTab === 'raj_scanner' && (
+        <OfflineRajScanner
+          onApplyToCertificate={() => {
+            setActiveTab('smart_tools');
+          }}
+        />
+      )}
 
       {/* TAB 1: SMART TOOLS (CERTIFICATE GENERATOR + CURRENCY/DIMENSION CALCULATOR + STORYTELLER) */}
       {activeTab === 'smart_tools' && <CarpetSmartTools />}

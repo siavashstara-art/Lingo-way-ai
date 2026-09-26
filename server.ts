@@ -1,5 +1,4 @@
-import express, { Request, Response } from 'express';
-import cors from 'cors';
+import express, { Request, Response, NextFunction } from 'express';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -13,7 +12,17 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = Number(process.env.PORT) || 3000;
 
-app.use(cors());
+app.use((req: Request, res: Response, next: NextFunction) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  if (req.method === 'OPTIONS') {
+    res.sendStatus(200);
+    return;
+  }
+  next();
+});
+
 app.use(express.json());
 
 // Automatic Zero-Touch Server-Side Gemini Client
@@ -39,6 +48,7 @@ app.get('/api/health', (_req: Request, res: Response) => {
     status: 'ok',
     offlineReady: true,
     automatedApiReady: true,
+    zeroManualConfig: true,
     mode: hasAutoKey ? 'automated-cloud-ai-plus-offline' : 'zero-key-neural-plus-offline',
   });
 });

@@ -4,7 +4,6 @@ import {
   Award,
   Calculator,
   QrCode,
-  Sparkles,
   Copy,
   Check,
   Globe
@@ -14,9 +13,9 @@ import {
   speakEnglish,
   speakArabic,
   speakChinese,
-  speakRussian,
-  speakPersian
+  speakRussian
 } from '../utils/audio';
+import { OfflineRajScanner } from './OfflineRajScanner';
 
 export const CarpetSmartTools: React.FC = () => {
   // 1. Smart Dimension & Currency Calculator State
@@ -30,7 +29,7 @@ export const CarpetSmartTools: React.FC = () => {
   const [certOrigin, setCertOrigin] = useState<string>('Tabriz / Isfahan Master Weave (تبریز / اصفهان)');
   const [certTypeSize, setCertTypeSize] = useState<string>('Dozar Ghalicheh (200×135 cm / 4.5×6.7 ft)');
   const [certCondition, setCertCondition] = useState<string>('100% Kohneh Zaati (Naturally Aged Patina) & Vegetable Dyes');
-  const [certMaterialRaj, setCertMaterialRaj] = useState<string>('60 Raj • Pure Silk Foundation & Kork Lambswool');
+  const [certMaterialRaj, setCertMaterialRaj] = useState<string>('50 Raj • 329 KPSI (510,200 knots/m²) • Silk Foundation & Kork Wool');
   const [copiedCert, setCopiedCert] = useState<boolean>(false);
 
   // Calculations
@@ -77,7 +76,7 @@ In Honored Memory of Master Merchant Haj Hossein Agha Ali Miri (فرش بازا�
 • Origin & Master Weave: ${certOrigin}
 • Traditional Cut & Dimensions: ${certTypeSize}
 • Age & Dye Authenticity: ${certCondition}
-• Structure & Knot Density: ${certMaterialRaj}
+• Optical Verified Knot Density (Raj): ${certMaterialRaj}
 • Serial ID: FB-${Date.now().toString().slice(-6)}
 ----------------------------------------
 100% Hand-Knotted Iranian Heritage • Verified by Farsh Bazaar & English-lingou`;
@@ -88,6 +87,13 @@ In Honored Memory of Master Merchant Haj Hossein Agha Ali Miri (فرش بازا�
 
   return (
     <div className="space-y-6">
+      {/* 0. FLAGSHIP OFFLINE OPTICAL CAMERA RAJ-SHOMAR (تشخیص آفلاین رج فرش با دوربین موبایل) */}
+      <OfflineRajScanner
+        onApplyToCertificate={(summaryEn) => {
+          setCertMaterialRaj(summaryEn);
+        }}
+      />
+
       {/* 1. MULTILINGUAL (EN / AR / ZH / RU) DIMENSION & PRICE CALCULATOR */}
       <div className="bg-white border-2 border-amber-500/50 rounded-3xl p-5 sm:p-7 shadow-md space-y-5">
         <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-3">
@@ -267,7 +273,7 @@ In Honored Memory of Master Merchant Haj Hossein Agha Ali Miri (فرش بازا�
                 ۳. صدور آنی «شناسنامه بین‌المللی اصالت فرش دستباف (Certificate of Authenticity)»
               </h3>
               <p className="text-xs text-amber-100/80">
-                به یاد شادروان حاج حسین آقای علی‌میری • متصل به استاندارد برنامه «فرش بازار (Farsh Bazaar)»
+                به یاد شادروان حاج حسین آقای علی‌میری • متصل به رجشمار نوری و استاندارد برنامه «فرش بازار (Farsh Bazaar)»
               </p>
             </div>
           </div>
@@ -314,6 +320,18 @@ In Honored Memory of Master Merchant Haj Hossein Agha Ali Miri (فرش بازا�
               className="w-full px-3.5 py-2.5 rounded-xl bg-white/10 border border-amber-400/40 text-white font-bold"
             />
           </div>
+          <div className="sm:col-span-2">
+            <label className="text-amber-200 font-bold block mb-1">
+              رجشمار تاییدشده با دوربین و مشخصات بافت (Verified Knot Density & Material):
+            </label>
+            <input
+              type="text"
+              value={certMaterialRaj}
+              onChange={(e) => setCertMaterialRaj(e.target.value)}
+              dir="ltr"
+              className="w-full px-3.5 py-2.5 rounded-xl bg-emerald-950/60 border border-emerald-400/50 text-emerald-200 font-black"
+            />
+          </div>
         </div>
 
         {/* Preview of Golden Certificate Card */}
@@ -328,7 +346,7 @@ In Honored Memory of Master Merchant Haj Hossein Agha Ali Miri (فرش بازا�
           <p className="text-xs text-amber-100"><strong>Issued To:</strong> {certBuyerName}</p>
           <p className="text-xs text-amber-100"><strong>Origin & Cut:</strong> {certOrigin} — {certTypeSize}</p>
           <p className="text-xs text-amber-100"><strong>Patina & Dyes:</strong> {certCondition}</p>
-          <p className="text-xs text-amber-100"><strong>Weave Spec:</strong> {certMaterialRaj}</p>
+          <p className="text-xs text-emerald-300"><strong>Optical Raj & Weave Spec:</strong> {certMaterialRaj}</p>
         </div>
 
         <div className="flex flex-wrap gap-3">
