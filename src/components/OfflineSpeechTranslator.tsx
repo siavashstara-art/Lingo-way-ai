@@ -1,15 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { 
   Volume2, 
-  ArrowLeftRight, 
   Mic, 
+  MicOff,
   Sparkles, 
   Copy, 
   Check, 
   Compass,
-  ShieldAlert
+  ShieldAlert,
+  Send,
+  Trash2,
+  MessageSquare,
+  VolumeX
 } from 'lucide-react';
-import { sound, speakEnglish, speakPersian, speakArabic } from '../utils/audio';
+import {
+  sound,
+  speakEnglish,
+  speakPersian,
+  speakArabic,
+  transliteratePersianToFingilish
+} from '../utils/audio';
 
 export interface OfflineTranslationEntry {
   id: string;
@@ -37,10 +47,19 @@ export interface OfflineTranslationEntry {
   isMature17Plus?: boolean;
 }
 
+export interface ChatTurnMessage {
+  id: string;
+  sender: 'fa_speaker' | 'en_speaker';
+  originalText: string;
+  translatedText: string;
+  colloquialVariant?: string;
+  pronunciation: string;
+  noteFa?: string;
+  timestamp: string;
+}
+
 export const OFFLINE_TRANSLATION_DATABASE: OfflineTranslationEntry[] = [
-  // ==========================================
   // 1. TAXI & DIRECTIONS
-  // ==========================================
   {
     id: 'tr_1',
     category: 'taxi_direction',
@@ -50,8 +69,8 @@ export const OFFLINE_TRANSLATION_DATABASE: OfflineTranslationEntry[] = [
     fa: 'سلام، بی‌زحمت من رو به این آدرس یا نزدیک‌ترین ایستگاه مترو ببرید.',
     faColloquial: 'سلام داداش، بی‌زحمت ما رو می‌رسونی این آدرس یا دم مترو؟',
     en: 'Hello, could you please take me to this address or the nearest metro station?',
-    enSlangVariant: 'Hey mate, could you drop me off at this spot or by the nearest tube/subway?',
-    fingilish: 'Salam, bi-zahmat man ro be in adres ya nazdiktarin istgahe metro bebarid.',
+    enSlangVariant: 'Hey mate, could you drop me off at this spot or by the nearest subway?',
+    fingilish: 'Salaam, bi-zahmat man ro be in adres ya nazdiktarin istgahe metro bebarid.',
     pronunciationEn: 'hel-LO, kood yoo pleez tayk mee too this ad-DRES',
     explanationFa: 'جمله‌ای بسیار محترمانه (همراه با نسخه عامیانه) برای تاکسی و مترو.'
   },
@@ -63,7 +82,7 @@ export const OFFLINE_TRANSLATION_DATABASE: OfflineTranslationEntry[] = [
     categoryLabelEn: 'Taxi & Directions',
     fa: 'کرایه چقدر شد؟ کارتخوان دارید یا نقدی پرداخت کنم؟',
     faColloquial: 'چقدر تقدیم کنم؟ کارت می‌کشید یا نقد بدم خدمتتون؟',
-    en: 'How much is the fare? Do you take tap-to-pay/card or cash only?',
+    en: 'How much is the fare? Do you take card or cash only?',
     fingilish: 'Kerayeh cheghadr shod? Kart-khan darid ya naghdi pardakht konam?',
     pronunciationEn: 'how much iz theh fayr? doo yoo tayk kard or kash?',
     explanationFa: 'جمله کاربردی برای تسویه حساب در تاکسی.'
@@ -76,15 +95,13 @@ export const OFFLINE_TRANSLATION_DATABASE: OfflineTranslationEntry[] = [
     categoryLabelEn: 'Taxi & Directions',
     fa: 'لطفاً همین گوشه نگه‌دارید، پیاده می‌شم. دست شما درد نکنه!',
     faColloquial: 'بی‌زحمت همین بغل بزن کنار پیاده شم، دمت گرم!',
-    en: 'Please pull over right here at the corner. Thanks a million!',
+    en: 'Please pull over right here at the corner. Thank you so much!',
     fingilish: 'Lotfan hamin goosheh negah-darid, piyadeh misham. Daste shoma dard nakoneh!',
     pronunciationEn: 'pleez pool oh-ver ryte heer at theh kor-ner',
     explanationFa: 'پیاده شدن راحت در مقصد به همراه تشکر اصیل و عامیانه.'
   },
 
-  // ==========================================
   // 2. RESTAURANT & FOOD
-  // ==========================================
   {
     id: 'tr_4',
     category: 'restaurant_food',
@@ -92,8 +109,8 @@ export const OFFLINE_TRANSLATION_DATABASE: OfflineTranslationEntry[] = [
     categoryLabelFa: 'رستوران و کافه 🍽️',
     categoryLabelEn: 'Restaurant & Café',
     fa: 'سلام، لطفاً منو را بیاورید. غذای سنتی و پرطرفدار شما چیست؟',
-    en: 'Hello, could we see the menu please? What is your signature local dish?',
-    fingilish: 'Salam, lotfan menu ra biavarid. Ghazaye sonnatiye shoma chist?',
+    en: 'Hello, could we see the menu please? What is your signature traditional dish?',
+    fingilish: 'Salaam, lotfan menu ra biavarid. Ghazaye sonnatiye shoma chist?',
     pronunciationEn: 'kood wee see theh men-yoo? whut iz yoor sig-nuh-cher dish?',
     explanationFa: 'پرسش درباره منو و بهترین غذای سرآشپز.'
   },
@@ -104,15 +121,13 @@ export const OFFLINE_TRANSLATION_DATABASE: OfflineTranslationEntry[] = [
     categoryLabelFa: 'رستوران و کافه 🍽️',
     categoryLabelEn: 'Restaurant & Café',
     fa: 'بی‌زحمت این غذا فلفل تند یا مواد حساسیت‌زا نداشته باشد.',
-    en: 'Please make sure this dish is mild and free of any food allergens.',
+    en: 'Please make sure this dish is not spicy and has no food allergens.',
     fingilish: 'Bi-zahmat in ghaza felfele tond ya mavade hassasiyat-za nadashteh bashad.',
-    pronunciationEn: 'pleez mayk shoor this dish iz myld and al-er-jen free',
+    pronunciationEn: 'pleez mayk shoor this dish iz not spye-see',
     explanationFa: 'جلوگیری از حساسیت غذایی یا تندی زیاد.'
   },
 
-  // ==========================================
   // 3. HOTEL & EMERGENCY
-  // ==========================================
   {
     id: 'tr_7',
     category: 'hotel_stay',
@@ -120,9 +135,9 @@ export const OFFLINE_TRANSLATION_DATABASE: OfflineTranslationEntry[] = [
     categoryLabelFa: 'هتل و اقامتگاه 🏨',
     categoryLabelEn: 'Hotel & Stay',
     fa: 'سلام، من از قبل اتاق رزرو کرده‌ام، رمز وای‌فای و ساعت صبحانه چیست؟',
-    en: 'Hello, I have a booking under my name. What is the Wi-Fi password and breakfast time?',
-    fingilish: 'Salam, man otagh rezerv kardeh-am, ramze Wi-Fi va sa\'ate sobhaneh chist?',
-    pronunciationEn: 'eye hav ah book-ing. whut iz theh wye-fye and brek-fust tyme?',
+    en: 'Hello, I have a room reservation. What is the Wi-Fi password and breakfast time?',
+    fingilish: 'Salaam, man otagh rezerv kardeh-am, ramze Wi-Fi va sa\'ate sobhaneh chist?',
+    pronunciationEn: 'eye hav ah room reh-zer-vay-shun. whut iz theh wye-fye and brek-fust tyme?',
     explanationFa: 'پذیرش سریع در هتل بدون نیاز به مکالمه پیچیده.'
   },
   {
@@ -131,16 +146,14 @@ export const OFFLINE_TRANSLATION_DATABASE: OfflineTranslationEntry[] = [
     levelTag: 'A1-B1 (روزمره)',
     categoryLabelFa: 'اورژانس و کمک فوری 🚨',
     categoryLabelEn: 'Emergency & Help',
-    fa: 'لطفاً کمکم کنید! من مسیرم را گم کرده‌ام، گوشی‌ام شارژ ندارد و زبان بلد نیستم.',
-    en: 'Please help me! I have lost my way, my phone battery is dead, and I do not speak the language.',
+    fa: 'لطفاً کمکم کنید! من مسیرم را گم کرده‌ام و زبان بلد نیستم.',
+    en: 'Please help me! I have lost my way and I do not speak the language well.',
     fingilish: 'Lotfan komakam konid! Man masiram ra gom kardeh-am va zaban balad nistam.',
-    pronunciationEn: 'pleez help mee, eye am lost and mye fohn iz ded',
+    pronunciationEn: 'pleez help mee, eye am lost',
     explanationFa: 'جمله نجات‌بخش فوری در کوچه و خیابان.'
   },
 
-  // ==========================================
-  // 4. STREET SLANG & COLLOQUIAL IDIOMS (محاوره عامیانه کوچه و خیابان)
-  // ==========================================
+  // 4. STREET SLANG & COLLOQUIAL IDIOMS
   {
     id: 'tr_slang_1',
     category: 'street_slang_idioms',
@@ -163,7 +176,7 @@ export const OFFLINE_TRANSLATION_DATABASE: OfflineTranslationEntry[] = [
     categoryLabelEn: 'Street Slang & Colloquial',
     fa: 'حوصله سر رفته و کلافه‌ام؛ بیا بریم یه چرخی بزنیم هوایی عوض کنیم.',
     faColloquial: 'پوکیدم از بی‌حوصلگی؛ پایه هستی بریم یه دوری بزنیم؟',
-    en: 'I am bored out of my mind and going stir-crazy; fancy going for a spin to clear our heads?',
+    en: 'I am bored out of my mind; fancy going for a spin to clear our heads?',
     enSlangVariant: 'I’m dead bored; you down to bounce and grab some fresh air?',
     fingilish: 'Pookidam az bi-howselegi; pâyeh hasti berim ye dowri bezanim?',
     pronunciationEn: 'eye am bord owt ov mye mynd; yoo down too bowns?',
@@ -177,30 +190,14 @@ export const OFFLINE_TRANSLATION_DATABASE: OfflineTranslationEntry[] = [
     categoryLabelEn: 'Street Slang & Colloquial',
     fa: 'سر کارم گذاشتی؟ با من شوخی نکن، قضیه جدیه!',
     faColloquial: 'ما رو گرفتی؟ دستمون ننداز تو رو خدا، شوخی بردار نیست!',
-    en: 'Are you pulling my leg? Stop messing with me—this is no laughing matter!',
+    en: 'Are you pulling my leg? Stop messing with me—this is dead serious!',
     enSlangVariant: 'Are you winding me up? Quit playing, dead serious right now!',
-    fingilish: 'Mâ ro gerefti? Dastemoon nandâz, ghalziyeh jeddiyeh!',
+    fingilish: 'Mâ ro gerefti? Dastemoon nandâz, ghaziyeh jeddiyeh!',
     pronunciationEn: 'ar yoo pool-ing mye leg? stop mes-ing with mee!',
     explanationFa: 'معادل اصطلاحی «ما رو گرفتی؟ / سر کار گذاشتن / دست انداختن».'
   },
-  {
-    id: 'tr_slang_4',
-    category: 'street_slang_idioms',
-    levelTag: 'B2-C1 (پیشرفته و محاوره)',
-    categoryLabelFa: 'محاوره عامیانه و اصطلاحات خیابانی 🗣️',
-    categoryLabelEn: 'Street Slang & Colloquial',
-    fa: 'اصلاً به روی خودش نیاورد و شانه خالی کرد!',
-    faColloquial: 'زیرآبی رفت و زد زیر همه‌چی، انگار نه انگار!',
-    en: 'He played completely dumb and wormed his way out of responsibility!',
-    enSlangVariant: 'He straight-up ghosted his promise and acted like nothing happened!',
-    fingilish: 'Aslan be rooye khodesh nayâvard va zad zire hameh-chi!',
-    pronunciationEn: 'hee playd kum-pleet-lee dum and wermd hiz way owt!',
-    explanationFa: 'اصطلاح «به روی خود نیاوردن / شانه خالی کردن / زدن زیر حرف».'
-  },
 
-  // ==========================================
-  // 5. GRANDMASTER C2 PROVERBS & LITERARY IDIOMS (فوق پیشرفته و ضرب‌المثل‌ها)
-  // ==========================================
+  // 5. GRANDMASTER C2 PROVERBS
   {
     id: 'tr_prov_1',
     category: 'proverbs_c2',
@@ -219,40 +216,14 @@ export const OFFLINE_TRANSLATION_DATABASE: OfflineTranslationEntry[] = [
     levelTag: 'C2 Grandmaster (فوق پیشرفته و ادبی)',
     categoryLabelFa: 'ضرب‌المثل‌ها و سطح فوق‌پیشرفته (C2) 📜',
     categoryLabelEn: 'Proverbs & C2 Mastery',
-    fa: 'با یک گل بهار نمی‌شود، اما نشانه رسیدن بهار است.',
-    en: 'One swallow does not a summer make, yet it heralds the coming of spring.',
-    fingilish: 'Bâ yek gol bahâr nemishavad.',
-    pronunciationEn: 'wun swol-oh duz not ah sum-er mayk',
-    explanationFa: 'کاربرد در سخنرانی‌ها، مقالات آکادمیک و مناظرات سطح فوق‌پیشرفته.'
-  },
-  {
-    id: 'tr_prov_3',
-    category: 'proverbs_c2',
-    levelTag: 'C2 Grandmaster (فوق پیشرفته و ادبی)',
-    categoryLabelFa: 'ضرب‌المثل‌ها و سطح فوق‌پیشرفته (C2) 📜',
-    categoryLabelEn: 'Proverbs & C2 Mastery',
     fa: 'آشپز که دو تا شد، آش یا شور می‌شود یا بی‌نمک.',
     en: 'Too many cooks spoil the broth.',
     fingilish: 'Âshpaz ke do tâ shod, âsh yâ shoor mishavad yâ bi-namak.',
     pronunciationEn: 'too men-ee kooks spoyl theh broth',
     explanationFa: 'معادل دقیق ضرب‌المثل «آشپز که دو تا شد...» در مدیریت و مکالمه.'
   },
-  {
-    id: 'tr_prov_4',
-    category: 'proverbs_c2',
-    levelTag: 'C2 Grandmaster (فوق پیشرفته و ادبی)',
-    categoryLabelFa: 'ضرب‌المثل‌ها و سطح فوق‌پیشرفته (C2) 📜',
-    categoryLabelEn: 'Proverbs & C2 Mastery',
-    fa: 'هر که بامش بیش، برفش بیشتر (هر قدر جایگاه بالاتر، مسئولیت سنگین‌تر).',
-    en: 'Uneasy lies the head that wears a crown. (With great stature comes greater burden.)',
-    fingilish: 'Har ke bâmesh bish, barfash bishtar.',
-    pronunciationEn: 'un-ee-zee lyez theh hed that wayrz ah krown',
-    explanationFa: 'معادل شکسپیری و فوق‌پیشرفته ضرب‌المثل «هر که بامش بیش، برفش بیشتر».'
-  },
 
-  // ==========================================
-  // 6. PERSIAN CARPET BAZAAR & EXPORT (اصطلاحات تخصصی فرش و بازار)
-  // ==========================================
+  // 6. PERSIAN CARPET BAZAAR & EXPORT
   {
     id: 'tr_carpet_1',
     category: 'carpet_bazaar',
@@ -280,22 +251,20 @@ export const OFFLINE_TRANSLATION_DATABASE: OfflineTranslationEntry[] = [
     explanationFa: 'پوشش کامل واژگان تخصصی سایز و نوع فرش به سه زبان فارسی، انگلیسی و عربی.'
   },
 
-  // ==========================================
-  // 7. 17+ STREET & MATURE IDIOMS (پوشش الفاظ و اصطلاحات تند خیابانی رده سنی ۱۷+ سال)
-  // ==========================================
+  // 7. 17+ STREET & MATURE IDIOMS
   {
     id: 'tr_17_1',
     category: 'mature_17plus',
     levelTag: '17+ Street (رده سنی ۱۷+ سال)',
     categoryLabelFa: 'اصطلاحات تند و خیابانی (رده سنی ۱۷+ سال) 🔞',
     categoryLabelEn: '17+ Street & Edgy Slang',
-    fa: 'چرت و پرت نگو / چرند نگو! داری کلاه سر ما می‌ذاری؟',
+    fa: 'چرت و پرت نگو / خالی نبند! داری کلاه سر ما می‌ذاری؟',
     faColloquial: 'شعر نگو / خالی نبند! می‌خوای سر ما رو شیره بمالی؟',
     en: 'Cut the crap / Stop the bullshit! Are you trying to rip me off?',
     enSlangVariant: 'Quit bullshitting me! You trying to scam me or what?',
     fingilish: 'Chert o part nagoo / Khâli naband! Dâri kolâh sare mâ mizâri?',
     pronunciationEn: 'kut theh krap! ar yoo try-ing too rip mee off?',
-    explanationFa: 'رده سنی ۱۷+: برای فهمیدن یا دفاع از خود در برابر کلاهبرداری یا بحث‌های تند خیابانی (Cut the crap / Bullshit / Rip off).',
+    explanationFa: 'رده سنی ۱۷+: برای فهمیدن یا دفاع از خود در برابر کلاهبرداری یا بحث‌های تند خیابانی.',
     isMature17Plus: true
   },
   {
@@ -310,122 +279,568 @@ export const OFFLINE_TRANSLATION_DATABASE: OfflineTranslationEntry[] = [
     enSlangVariant: 'You messed it all up big time! Piss off and mind your own business!',
     fingilish: 'Gand zadi be hameh-chiz! Saret be kâre khodet bâsheh!',
     pronunciationEn: 'yoo skrood ev-ree-thing up! mynd yoor ohn dam biz-nes and bak off!',
-    explanationFa: 'رده سنی ۱۷+: شناخت الفاظ تند اعتراضی در فیلم‌ها یا مشاجرات خیابانی (Screwed up / Piss off / Damn business).',
-    isMature17Plus: true
-  },
-  {
-    id: 'tr_17_3',
-    category: 'mature_17plus',
-    levelTag: '17+ Street (رده سنی ۱۷+ سال)',
-    categoryLabelFa: 'اصطلاحات تند و خیابانی (رده سنی ۱۷+ سال) 🔞',
-    categoryLabelEn: '17+ Street & Edgy Slang',
-    fa: 'اعصابم خرد است و خونم به جوش آمده؛ الان اصلاً حوصله چانه زدن و بحث ندارم!',
-    faColloquial: 'سگ‌اخلاقم و قاطی کردم؛ الان رو مخ من نرو!',
-    en: 'I am pissed off and my blood is boiling right now; stop getting on my nerves!',
-    enSlangVariant: 'I’mproper ticked off; don’t push my buttons right now!',
-    fingilish: 'A\'sâbam khord ast va ghâti kardam; alân roo mokhe man naro!',
-    pronunciationEn: 'eye am pist off right now; stop get-ing on mye nervz!',
-    explanationFa: 'رده سنی ۱۷+: اصطلاح خیابانی «قاطی کردن / رو مخ رفتن» و معادل «Pissed off / Getting on my nerves».',
+    explanationFa: 'رده سنی ۱۷+: شناخت الفاظ تند اعتراضی در فیلم‌ها یا مشاجرات خیابانی.',
     isMature17Plus: true
   }
 ];
 
+// Compositional Offline Dictionary (Word & Phrase Stems for 100% Offline Free-Form Sentence Construction)
+const OFFLINE_FA_TO_EN_PHRASES: Array<[string, string]> = [
+  ['حالت چطوره', 'How are you doing?'],
+  ['حالتون چطوره', 'How are you doing?'],
+  ['خسته نباشید', 'Thank you for your hard work / Good job!'],
+  ['خوشبختم', 'Nice to meet you!'],
+  ['اسم من', 'My name is'],
+  ['اسم شما چیه', 'What is your name?'],
+  ['چند سالته', 'How old are you?'],
+  ['اهل کجایی', 'Where are you from?'],
+  ['اهل ایران هستم', 'I am from Iran'],
+  ['من ایرانی هستم', 'I am Iranian'],
+  ['گرسنه هستم', 'I am hungry'],
+  ['تشنه هستم', 'I am thirsty'],
+  ['خسته هستم', 'I am tired'],
+  ['می‌خواهم', 'I want to'],
+  ['میخوام', 'I want to'],
+  ['نمی‌خواهم', 'I do not want'],
+  ['نمیخوام', 'I do not want'],
+  ['دوست دارم', 'I like / I love'],
+  ['کجاست', 'where is it?'],
+  ['چقدر است', 'how much is it?'],
+  ['چنده', 'how much is it?'],
+  ['قیمت این', 'the price of this'],
+  ['تخفیف بده', 'please give me a discount'],
+  ['تخفیف داره', 'does it have a discount?'],
+  ['خیلی گرونه', 'it is too expensive!'],
+  ['خیلی خوبه', 'it is very good!'],
+  ['عالیه', 'that is awesome!'],
+  ['دمت گرم', 'thank you so much, you rock!'],
+  ['دستت درد نکنه', 'thank you very much for your kindness!'],
+  ['قابل نداره', 'it is a gift for you, please do not mention the price!'],
+  ['کهنه ذاتی', 'authentic naturally aged patina (Kohneh Zaati)'],
+  ['ذرع و نیم', 'Zar-o-Nim rug size (150 by 105 cm / 3.5 by 5 feet)'],
+  ['دو ذرع', 'Dozar rug size (200 by 135 cm / 4.5 by 6.7 feet)'],
+  ['ذرع و چارک', 'Zar-o-Charak rug size (125 by 80 cm / 2.7 by 4.1 feet)'],
+  ['قالیچه', 'fine handwoven Persian area rug (Ghalicheh)'],
+  ['قالی', 'hand-knotted Persian carpet (Ghali)'],
+  ['گلیم', 'flat-woven Persian Kilim'],
+  ['پشتی', 'traditional Persian bolster cushion rug (Poshti)'],
+  ['نوبافت', 'newly woven off-the-loom carpet'],
+  ['کارکرده', 'pre-owned vintage condition carpet'],
+  ['چرت و پرت نگو', 'cut the crap / stop talking nonsense!'],
+  ['خالی نبند', 'stop pulling my leg / stop exaggerating!'],
+  ['قاطی کردم', 'I am really pissed off right now!'],
+  ['رو مخ من نرو', 'stop getting on my nerves!'],
+  ['سرویس بهداشتی', 'restroom / bathroom'],
+  ['دستشویی', 'restroom / toilet'],
+  ['فرودگاه', 'the airport'],
+  ['ایستگاه مترو', 'the metro station'],
+  ['بیمارستان', 'the hospital'],
+  ['داروخانه', 'the pharmacy'],
+  ['پلیس', 'the police'],
+  ['امروز', 'today'],
+  ['فردا', 'tomorrow'],
+  ['دیروز', 'yesterday'],
+  ['الان', 'right now'],
+  ['بله', 'yes'],
+  ['نه', 'no'],
+  ['شاید', 'maybe'],
+  ['حتماً', 'certainly / for sure'],
+  ['باشه', 'okay, sounds good'],
+  ['خداحافظ', 'Goodbye, take care!'],
+  ['فعلاً خداحافظ', 'See you later, bye!']
+];
+
+const OFFLINE_EN_TO_FA_PHRASES: Array<[string, string]> = [
+  ['how are you', 'حالتون چطوره؟ خوبی رفیق؟'],
+  ['what is your name', 'اسم شما چیه؟'],
+  ['my name is', 'اسم من هست'],
+  ['nice to meet you', 'از آشنایی با شما خیلی خوشبختم!'],
+  ['where are you from', 'شما اهل کجا هستید؟'],
+  ['i am from', 'من اهلِ ... هستم'],
+  ['how much is this', 'قیمت این چقدر است؟ (چنده؟)'],
+  ['how much does it cost', 'هزینه این چقدر می‌شود؟'],
+  ['too expensive', 'خیلی گرانه! می‌شود تخفیف بدهید؟'],
+  ['can you give me a discount', 'ممکنه به من تخفیف بدید؟'],
+  ['where is the bathroom', 'ببخشید، سرویس بهداشتی کجاست؟'],
+  ['where is the restroom', 'ببخشید، سرویس بهداشتی کجاست؟'],
+  ['where is the hotel', 'هتل کجاست؟'],
+  ['where is the airport', 'فرودگاه کجاست؟'],
+  ['i need a taxi', 'من یک تاکسی نیاز دارم.'],
+  ['i am hungry', 'من گرسنه هستم.'],
+  ['i am thirsty', 'من تشنه هستم، آب می‌خواهم.'],
+  ['i want to buy', 'من می‌خواهم بخرم'],
+  ['persian carpet', 'فرش دستباف ایرانی'],
+  ['persian rug', 'قالیچه دستباف ایرانی'],
+  ['naturally aged', 'کهنه ذاتی (پاخورده طبیعی و اصیل)'],
+  ['vegetable dye', 'رنگ گیاهی و طبیعی'],
+  ['bullshit', 'چرت و پرت / خالی‌بندی (محاوره تند ۱۷+)'],
+  ['cut the crap', 'چرت و پرت نگو! (محاوره ۱۷+)'],
+  ['pissed off', 'اعصابم خیلی خرده و قاطی کردم! (محاوره ۱۷+)'],
+  ['rip off', 'کلاهبرداری و گران‌فروشی!'],
+  ['thank you', 'خیلی ممنون، دست شما درد نکنه!'],
+  ['thanks a lot', 'دمت گرم، خیلی ممنون!'],
+  ['excuse me', 'ببخشید، عذر می‌خواهم'],
+  ['i do not understand', 'متوجه نمی‌شوم، لطفاً واضح‌تر بگویید'],
+  ['do you speak english', 'آیا شما انگلیسی صحبت می‌کنید؟'],
+  ['please help me', 'لطفاً به من کمک کنید!'],
+  ['goodbye', 'خداحافظ، به سلامت!']
+];
+
+const OFFLINE_WORD_DICT_FA_EN: Record<string, string> = {
+  'سلام': 'Hello',
+  'درود': 'Greetings',
+  'من': 'I',
+  'تو': 'you',
+  'شما': 'you',
+  'ما': 'we',
+  'آنها': 'they',
+  'این': 'this',
+  'آن': 'that',
+  'خوب': 'good',
+  'بد': 'bad',
+  'بزرگ': 'large',
+  'کوچک': 'small',
+  'زیبا': 'beautiful',
+  'قشنگ': 'lovely',
+  'فرش': 'carpet',
+  'قالی': 'hand-knotted carpet (Ghali)',
+  'قالیچه': 'area rug (Ghalicheh)',
+  'گلیم': 'flat-woven Kilim',
+  'پشتی': 'bolster cushion rug (Poshti)',
+  'ابریشم': 'pure silk',
+  'پشم': 'natural wool',
+  'قیمت': 'price',
+  'پول': 'money',
+  'دلار': 'dollars',
+  'تومان': 'Tomans',
+  'غذا': 'food',
+  'آب': 'water',
+  'چای': 'tea',
+  'قهوه': 'coffee',
+  'نان': 'bread',
+  'کباب': 'kebab',
+  'خیابان': 'street',
+  'بازار': 'bazaar',
+  'مغازه': 'shop',
+  'اتاق': 'room',
+  'بلیط': 'ticket',
+  'تاکسی': 'taxi',
+  'مترو': 'metro',
+  'اتوبوس': 'bus',
+  'هتل': 'hotel',
+  'کمک': 'help',
+  'دکتر': 'doctor',
+  'دارو': 'medicine',
+  'دوست': 'friend',
+  'رفیق': 'buddy',
+  'داداش': 'bro',
+  'هستم': 'am',
+  'هستی': 'are',
+  'است': 'is',
+  'نیست': 'is not',
+  'دارم': 'have',
+  'ندارم': 'do not have',
+  'می‌روم': 'am going',
+  'میرم': 'am going',
+  'می‌آیم': 'am coming',
+  'می‌خرم': 'will buy',
+  'می‌فروشم': 'sell'
+};
+
+const OFFLINE_WORD_DICT_EN_FA: Record<string, string> = {
+  'hello': 'سلام',
+  'hi': 'سلام',
+  'hey': 'سلام رفیق',
+  'good': 'خوب',
+  'morning': 'صبح بخیر',
+  'night': 'شب بخیر',
+  'please': 'لطفاً',
+  'thanks': 'ممنون',
+  'yes': 'بله',
+  'no': 'نه',
+  'water': 'آب',
+  'food': 'غذا',
+  'tea': 'چای',
+  'coffee': 'قهوه',
+  'bread': 'نان',
+  'taxi': 'تاکسی',
+  'bus': 'اتوبوس',
+  'metro': 'مترو',
+  'hotel': 'هتل',
+  'room': 'اتاق',
+  'airport': 'فرودگاه',
+  'bazaar': 'بازار',
+  'carpet': 'فرش دستباف',
+  'rug': 'قالیچه',
+  'kilim': 'گلیم',
+  'silk': 'ابریشم',
+  'wool': 'پشم',
+  'old': 'قدیمی و کهنه',
+  'new': 'جدید و نوبافت',
+  'price': 'قیمت',
+  'cheap': 'ارزان و مناسب',
+  'expensive': 'گران',
+  'discount': 'تخفیف',
+  'money': 'پول',
+  'card': 'کارت بانکی',
+  'cash': 'پول نقد',
+  'help': 'کمک',
+  'doctor': 'پزشک',
+  'hospital': 'بیمارستان',
+  'police': 'پلیس',
+  'friend': 'دوست و رفیق',
+  'where': 'کجاست',
+  'when': 'چه زمانی',
+  'why': 'چرا',
+  'how': 'چطور',
+  'much': 'چقدر',
+  'today': 'امروز',
+  'tomorrow': 'فردا'
+};
+
 export const OfflineSpeechTranslator: React.FC = () => {
-  const [direction, setDirection] = useState<'fa_to_en' | 'en_to_fa'>('fa_to_en');
-  const [customText, setCustomText] = useState<string>('');
+  // Dual-side chat inputs
+  const [faInput, setFaInput] = useState<string>('');
+  const [enInput, setEnInput] = useState<string>('');
+  const [isTranslating, setIsTranslating] = useState<boolean>(false);
+  const [autoSpeakChat, setAutoSpeakChat] = useState<boolean>(true);
+
+  // Voice Recognition States for BOTH sides
+  const [listeningSide, setListeningSide] = useState<'fa' | 'en' | null>(null);
+  const [micStatusMessage, setMicStatusMessage] = useState<string | null>(null);
+  const recognitionRef = useRef<any>(null);
+
+  // Chat Messages History
+  const [chatHistory, setChatHistory] = useState<ChatTurnMessage[]>([
+    {
+      id: 'welcome_1',
+      sender: 'fa_speaker',
+      originalText: 'سلام، به حجره و شهر ما خوش آمدید! هر جمله‌ای را به فارسی یا انگلیسی بنویسید یا با میکروفون بگویید تا فوراً ترجمه و با صدای بلند خوانده شود.',
+      translatedText: 'Hello, welcome to our showroom and city! Type or speak any sentence in Persian or English to translate and play it aloud.',
+      colloquialVariant: 'Hey there, welcome! Just type or tap the mic in Persian or English and I’ll speak for you.',
+      pronunciation: 'hel-LO, wel-kum too owr show-room and sit-ee!',
+      timestamp: 'هم‌اکنون'
+    }
+  ]);
+
   const [activeCategory, setActiveCategory] = useState<string>('all');
   const [enable17PlusSlang, setEnable17PlusSlang] = useState<boolean>(true);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const chatEndRef = useRef<HTMLDivElement>(null);
 
-  // Intelligent Offline Semantic, Slang, Idiom, Carpet & C2 Dictionary Engine
-  const handleTranslateCustom = (text: string): { translation: string; pronunciation: string; noteFa?: string } => {
-    const trimmed = text.trim().toLowerCase();
-    if (!trimmed) return { translation: '', pronunciation: '' };
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [chatHistory]);
 
-    // 1. Check full offline database (including colloquial & slang variants)
+  // Pure Offline Compositional Fallback Translator
+  const translateOfflineCompositional = (
+    text: string,
+    dir: 'fa_to_en' | 'en_to_fa'
+  ): { translation: string; colloquialVariant?: string; pronunciation: string; noteFa?: string } => {
+    const trimmed = text.trim();
+    const lower = trimmed.toLowerCase();
+
+    // 1. Check exact or substring match in OFFLINE_TRANSLATION_DATABASE
     const dbMatch = OFFLINE_TRANSLATION_DATABASE.find(item =>
-      item.fa.toLowerCase().includes(trimmed) ||
-      (item.faColloquial && item.faColloquial.toLowerCase().includes(trimmed)) ||
-      item.fingilish.toLowerCase().includes(trimmed) ||
-      item.en.toLowerCase().includes(trimmed) ||
-      (item.enSlangVariant && item.enSlangVariant.toLowerCase().includes(trimmed))
+      dir === 'fa_to_en'
+        ? item.fa.toLowerCase().includes(lower) ||
+          (item.faColloquial && item.faColloquial.toLowerCase().includes(lower)) ||
+          item.fingilish.toLowerCase().includes(lower)
+        : item.en.toLowerCase().includes(lower) ||
+          (item.enSlangVariant && item.enSlangVariant.toLowerCase().includes(lower))
     );
 
     if (dbMatch) {
       return {
-        translation: direction === 'fa_to_en' ? dbMatch.en : dbMatch.fa,
-        pronunciation: direction === 'fa_to_en' ? dbMatch.pronunciationEn : dbMatch.fingilish,
+        translation: dir === 'fa_to_en' ? dbMatch.en : dbMatch.fa,
+        colloquialVariant: dir === 'fa_to_en' ? dbMatch.enSlangVariant : dbMatch.faColloquial,
+        pronunciation: dir === 'fa_to_en' ? dbMatch.pronunciationEn : dbMatch.fingilish,
         noteFa: dbMatch.explanationFa
       };
     }
 
-    // 2. Comprehensive Offline Keyword & Slang/Carpet/Idiom Lexicon
-    const richLexicon: Record<string, { en: string; fa: string; phon: string; note?: string }> = {
-      // Carpet specialized terms
-      'قالیچه': { en: 'Fine Persian area rug (Ghalicheh / Dozar size)', fa: 'قالیچه دستباف اصیل ایرانی', phon: 'fyne per-zhen air-ee-uh rug', note: 'اصطلاح تخصصی فرش' },
-      'قالی': { en: 'Hand-knotted large Persian pile carpet (Ghali)', fa: 'قالی دستباف بزرگ‌پارچه', phon: 'hand-not-ed per-zhen pyle kar-pet' },
-      'گلیم': { en: 'Flat-woven tribal Persian Kilim (pileless tapestry)', fa: 'گلیم دستباف سنتی (بدون پرز)', phon: 'flat-woh-ven kee-leem' },
-      'پشتی': { en: 'Traditional handwoven Persian bolster cushion rug (Poshti - 2x3 ft)', fa: 'پشتی دستباف سنتی (۶۰×۹۰ سانت)', phon: 'posh-tee kuh-shun rug' },
-      'ذرع و نیم': { en: 'Zar-o-Nim rug size (approx. 150×105 cm / 3.5×5 feet)', fa: 'سایز ذرع و نیم (حدود ۱۵۰ در ۱۰۵ سانتی‌متر)', phon: 'zar-oh-neem (3.5 by 5 feet)' },
-      'زرع و نیم': { en: 'Zar-o-Nim rug size (approx. 150×105 cm / 3.5×5 feet)', fa: 'سایز ذرع و نیم (حدود ۱۵۰ در ۱۰۵ سانتی‌متر)', phon: 'zar-oh-neem (3.5 by 5 feet)' },
-      'دو ذرع': { en: 'Dozar classic rug size (approx. 200×135 cm / 4.5×6.7 feet)', fa: 'سایز دو ذرع قالیچه (حدود ۲۰۰ در ۱۳۵ سانتی‌متر)', phon: 'doh-zar (4.5 by 6.7 feet)' },
-      'دوزرع': { en: 'Dozar classic rug size (approx. 200×135 cm / 4.5×6.7 feet)', fa: 'سایز دو ذرع قالیچه (حدود ۲۰۰ در ۱۳۵ سانتی‌متر)', phon: 'doh-zar (4.5 by 6.7 feet)' },
-      'چارک': { en: 'Zar-o-Charak rug size (approx. 125×80 cm / 2.7×4.1 feet)', fa: 'سایز ذرع و چارک (حدود ۱۲۵ در ۸۰ سانتی‌متر)', phon: 'zar-oh-cha-rak (2.7 by 4.1 feet)' },
-      'کهنه ذاتی': { en: '100% Authentic naturally aged patina (Kohneh Zaati — organically foot-worn over decades, zero chemical wash)', fa: 'کهنه ذاتی (پاخورده طبیعی در طول دهه‌ها بدون مواد شیمیایی)', phon: 'aw-then-tik nach-ur-uh-lee aydjd puh-tee-nuh' },
-      'نوبافت': { en: 'Newly woven unwalked carpet straight off the loom (Now-baft)', fa: 'فرش نوبافت و آکبند', phon: 'noo-lee woh-ven kar-pet' },
-      'کارکرده': { en: 'Pre-owned vintage carpet in excellent full-pile condition', fa: 'فرش کارکرده سالم و گوشت‌دار', phon: 'pree-ohnd vin-tij kar-pet' },
-      // Slang, Colloquial & 17+ Idioms
-      'دمت گرم': { en: 'You rock, mate! Thanks a ton, I really appreciate it!', fa: 'دمت گرم رفیق، خیلی لطف کردی!', phon: 'yoo rok mayt, thanks ah tun' },
-      'چطوری': { en: 'How’s it going, buddy? Everything good with you?', fa: 'چطوری رفیق؟ اوضاع روبه‌راهه؟', phon: 'howz it goh-ing bud-ee' },
-      'خالی نبند': { en: 'Stop exaggerating / Stop pulling my leg!', fa: 'خالی نبند / اغراق نکن!', phon: 'stop pool-ing mye leg' },
-      'چرت و پرت': { en: 'Cut the crap / Stop talking nonsense (17+ Street)', fa: 'چرت و پرت نگو / حرف بی‌ربط نزن', phon: 'kut theh krap / stop non-sens' },
-      'قاطی کردم': { en: 'I am pissed off and losing my temper right now (17+ Street)', fa: 'خیلی عصبانی شدم و قاطی کردم', phon: 'eye am pist off ryte now' },
-      'رو مخ': { en: 'Stop getting on my nerves / Stop bugging me!', fa: 'رو مخ من نرو / کلافه‌ام نکن!', phon: 'stop get-ing on mye nervz' },
-      'bullshit': { en: 'Stop the bullshit / Cut the crap', fa: 'چرت و پرت نگو / خالی نبند! (محاوره تند ۱۷+)', phon: 'Chert o part nagoo!' },
-      'pissed off': { en: 'I am really pissed off', fa: 'اعصابم به شدت خرده و قاطی کردم! (محاوره ۱۷+)', phon: 'Asabam kheyli khordeh!' },
-      'rip off': { en: 'This is a rip-off!', fa: 'این رسماً سرگردنه و کلاهبرداریه! گران حساب نکنید.', phon: 'In kolah-bardariyeh!' },
-      // Everyday Survival
-      'سلام': { en: 'Hello, good day!', fa: 'سلام، روزتون به‌خیر!', phon: 'hel-LO, good day' },
-      'ممنون': { en: 'Thank you very much, I truly appreciate it!', fa: 'خیلی ممنون، دست شما درد نکنه!', phon: 'thank yoo ver-ee much' },
-      'ببخشید': { en: 'Excuse me, pardon me.', fa: 'ببخشید، معذرت می‌خوام.', phon: 'ek-SKYOOZ mee' },
-      'کجاست': { en: 'Where is it located? How can I get there?', fa: 'کجاست؟ چطور می‌توانم بروم؟', phon: 'wayr iz it loh-kay-ted' },
-      'آب': { en: 'Could I have a bottle of water, please?', fa: 'بی‌زحمت یک بطری آب لطفاً.', phon: 'kood eye hav ah bot-ul ov wah-ter pleez' },
-      'کمک': { en: 'Please help me, I need assistance!', fa: 'لطفاً به من کمک کنید!', phon: 'pleez help mee' },
-      'تاکسی': { en: 'I need a taxi to this address, please.', fa: 'من یک تاکسی به این آدرس می‌خواهم.', phon: 'eye need ah tak-see' },
-      'مترو': { en: 'Where is the nearest metro/subway station?', fa: 'نزدیک‌ترین ایستگاه مترو کجاست؟', phon: 'wayr iz theh meh-troh stay-shun' },
-      'هتل': { en: 'Please take me to this hotel.', fa: 'لطفاً من را به این هتل ببرید.', phon: 'pleez tayk mee too this hoh-tel' },
-      'حساب': { en: 'Could we have the bill/check, please?', fa: 'صورت‌حساب لطفاً.', phon: 'kood wee hav theh bil pleez' }
-    };
+    // 2. Phrase & Clause replacement + Word-by-Word assembly
+    if (dir === 'fa_to_en') {
+      let working = trimmed;
+      const matchedChunks: string[] = [];
 
-    for (const [key, val] of Object.entries(richLexicon)) {
-      if (trimmed.includes(key)) {
+      for (const [faPhrase, enPhrase] of OFFLINE_FA_TO_EN_PHRASES) {
+        if (working.includes(faPhrase)) {
+          matchedChunks.push(enPhrase);
+          working = working.replace(faPhrase, ' ');
+        }
+      }
+
+      const remainingWords = working
+        .replace(/[؟?،,.!]/g, ' ')
+        .split(/\s+/)
+        .filter(Boolean);
+
+      for (const w of remainingWords) {
+        if (OFFLINE_WORD_DICT_FA_EN[w]) {
+          matchedChunks.push(OFFLINE_WORD_DICT_FA_EN[w]);
+        }
+      }
+
+      if (matchedChunks.length > 0) {
+        const joined = matchedChunks.join(' ');
+        const formatted = joined.charAt(0).toUpperCase() + joined.slice(1);
         return {
-          translation: direction === 'fa_to_en' ? val.en : val.fa,
-          pronunciation: val.phon,
-          noteFa: val.note
+          translation: formatted,
+          pronunciation: formatted.toLowerCase(),
+          noteFa: 'ترجمه با موتور ترکیبی آفلاین'
         };
       }
-    }
 
-    if (direction === 'fa_to_en') {
       return {
-        translation: `Excuse me, regarding "${text}", could you please help or explain clearly?`,
-        pronunciation: 'ek-skyooz mee, kood yoo pleez help or ek-splayn kleer-lee?'
+        translation: transliteratePersianToFingilish(trimmed),
+        pronunciation: transliteratePersianToFingilish(trimmed),
+        noteFa: 'نمایش آوایی آفلاین'
       };
     } else {
+      let working = lower;
+      const matchedChunks: string[] = [];
+
+      for (const [enPhrase, faPhrase] of OFFLINE_EN_TO_FA_PHRASES) {
+        if (working.includes(enPhrase)) {
+          matchedChunks.push(faPhrase);
+          working = working.replace(enPhrase, ' ');
+        }
+      }
+
+      const remainingWords = working
+        .replace(/[?,.!]/g, ' ')
+        .split(/\s+/)
+        .filter(Boolean);
+
+      for (const w of remainingWords) {
+        if (OFFLINE_WORD_DICT_EN_FA[w]) {
+          matchedChunks.push(OFFLINE_WORD_DICT_EN_FA[w]);
+        }
+      }
+
+      if (matchedChunks.length > 0) {
+        const joinedFa = matchedChunks.join(' ');
+        return {
+          translation: joinedFa,
+          pronunciation: transliteratePersianToFingilish(joinedFa),
+          noteFa: 'ترجمه با موتور ترکیبی آفلاین'
+        };
+      }
+
       return {
-        translation: `ببخشید، در مورد «${text}»، ممکن است به زبان ساده راهنمایی بفرمایید؟`,
-        pronunciation: 'Bebakhshid, momken ast be zabane sadeh rahnamayi befarmayid?'
+        translation: trimmed,
+        pronunciation: trimmed,
+        noteFa: 'متن انگلیسی'
       };
     }
   };
 
-  const currentTranslation = handleTranslateCustom(customText);
+  // Hybrid Online + Offline Translation Engine (Translates ANY sentence accurately!)
+  const performSmartTranslation = async (
+    text: string,
+    dir: 'fa_to_en' | 'en_to_fa'
+  ): Promise<{ translation: string; colloquialVariant?: string; pronunciation: string; noteFa?: string }> => {
+    const trimmed = text.trim();
+    if (!trimmed) return { translation: '', pronunciation: '' };
 
-  const handleSpeak = (text: string, lang: 'en' | 'fa' | 'ar') => {
+    // First check if we have a rich curated entry in our specialized database (for carpet terms, C2 proverbs, 17+ slang)
+    const exactCurated = OFFLINE_TRANSLATION_DATABASE.find(item =>
+      dir === 'fa_to_en'
+        ? item.fa.trim() === trimmed || item.faColloquial?.trim() === trimmed
+        : item.en.toLowerCase().trim() === trimmed.toLowerCase()
+    );
+    if (exactCurated) {
+      return {
+        translation: dir === 'fa_to_en' ? exactCurated.en : exactCurated.fa,
+        colloquialVariant: dir === 'fa_to_en' ? exactCurated.enSlangVariant : exactCurated.faColloquial,
+        pronunciation: dir === 'fa_to_en' ? exactCurated.pronunciationEn : exactCurated.fingilish,
+        noteFa: exactCurated.explanationFa
+      };
+    }
+
+    // Try fast neural translation API (Google GTX free endpoint) + Backend AI proxy
+    try {
+      const sl = dir === 'fa_to_en' ? 'fa' : 'en';
+      const tl = dir === 'fa_to_en' ? 'en' : 'fa';
+      const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sl}&tl=${tl}&dt=t&dt=rm&q=${encodeURIComponent(trimmed)}`;
+      const res = await fetch(url);
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data) && Array.isArray(data[0])) {
+          const translatedSegments = data[0]
+            .map((seg: any) => (Array.isArray(seg) && typeof seg[0] === 'string' ? seg[0] : ''))
+            .join('');
+          if (translatedSegments.trim()) {
+            const cleanTranslation = translatedSegments.trim();
+            const pron = dir === 'fa_to_en'
+              ? cleanTranslation
+              : transliteratePersianToFingilish(cleanTranslation);
+            return {
+              translation: cleanTranslation,
+              pronunciation: pron,
+              noteFa: 'ترجمه دقیق جمله‌ای'
+            };
+          }
+        }
+      }
+    } catch {
+      // Ignore network error and try backend or offline engine
+    }
+
+    // Try server-side Gemini proxy if configured
+    try {
+      const apiRes = await fetch('/api/ai/translate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          text: trimmed,
+          direction: dir,
+          includeMature17Plus: enable17PlusSlang
+        })
+      });
+      if (apiRes.ok) {
+        const json = await apiRes.json();
+        if (json.success && json.data?.translation) {
+          return {
+            translation: json.data.translation,
+            colloquialVariant: json.data.colloquialVariant,
+            pronunciation: json.data.pronunciation || transliteratePersianToFingilish(json.data.translation),
+            noteFa: json.data.noteFa
+          };
+        }
+      }
+    } catch {
+      // Fallback to 100% offline engine
+    }
+
+    return translateOfflineCompositional(trimmed, dir);
+  };
+
+  // Send a message from EITHER the Persian speaker OR the English speaker
+  const handleSendChatMessage = async (textToSend: string, sender: 'fa_speaker' | 'en_speaker') => {
+    const trimmed = textToSend.trim();
+    if (!trimmed) return;
+
+    sound.playClick();
+    setIsTranslating(true);
+
+    if (sender === 'fa_speaker') setFaInput('');
+    else setEnInput('');
+
+    const dir = sender === 'fa_speaker' ? 'fa_to_en' : 'en_to_fa';
+    const result = await performSmartTranslation(trimmed, dir);
+
+    const newMsg: ChatTurnMessage = {
+      id: `msg_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
+      sender,
+      originalText: trimmed,
+      translatedText: result.translation,
+      colloquialVariant: result.colloquialVariant,
+      pronunciation: result.pronunciation,
+      noteFa: result.noteFa,
+      timestamp: new Date().toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' })
+    };
+
+    setChatHistory(prev => [...prev, newMsg]);
+    setIsTranslating(false);
+
+    // Automatically speak the translated text out loud for the other person!
+    if (autoSpeakChat && result.translation) {
+      if (sender === 'fa_speaker') {
+        speakEnglish(result.translation, 0.88);
+      } else {
+        speakPersian(result.translation, 0.85, result.pronunciation);
+      }
+    }
+  };
+
+  // Start or stop live voice recognition (Speech-to-Text) for Persian or English speaker
+  const handleToggleVoiceMic = (side: 'fa' | 'en') => {
+    sound.playClick();
+
+    if (listeningSide === side) {
+      if (recognitionRef.current) {
+        try {
+          recognitionRef.current.stop();
+        } catch {}
+      }
+      setListeningSide(null);
+      setMicStatusMessage(null);
+      return;
+    }
+
+    const SpeechRecognitionAPI =
+      (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+
+    if (!SpeechRecognitionAPI) {
+      setMicStatusMessage(
+        'مرورگر فعلی شما از میکروفون مستقیم وب پشتیبانی نمی‌کند؛ لطفاً از کیبورد صوتی گوشی (آیکون میکروفون روی کیبورد موبایل) یا تایپ متنی استفاده کنید.'
+      );
+      return;
+    }
+
+    try {
+      if (recognitionRef.current) {
+        try {
+          recognitionRef.current.stop();
+        } catch {}
+      }
+
+      const recognition = new SpeechRecognitionAPI();
+      recognition.lang = side === 'fa' ? 'fa-IR' : 'en-US';
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+
+      recognition.onstart = () => {
+        setListeningSide(side);
+        setMicStatusMessage(
+          side === 'fa'
+            ? '🎙️ میکروفون فارسی روشن است... لطفاً به فارسی صحبت کنید تا به انگلیسی ترجمه و پخش شود!'
+            : '🎙️ English Mic Active... Speak in English now to translate & speak in Persian!'
+        );
+      };
+
+      recognition.onresult = (event: any) => {
+        const transcript = event.results?.[0]?.[0]?.transcript;
+        if (transcript) {
+          if (side === 'fa') {
+            setFaInput(transcript);
+            handleSendChatMessage(transcript, 'fa_speaker');
+          } else {
+            setEnInput(transcript);
+            handleSendChatMessage(transcript, 'en_speaker');
+          }
+        }
+      };
+
+      recognition.onerror = (event: any) => {
+        setListeningSide(null);
+        if (event.error === 'not-allowed') {
+          setMicStatusMessage(
+            '⚠️ دسترسی به میکروفون در مرورگر بسته است. اجازه میکروفون (Allow Microphone) را بدهید و یا از دکمه میکروفونِ روی کیبورد موبایلتان در کادر متن استفاده کنید.'
+          );
+        } else {
+          setMicStatusMessage('صدایی دریافت نشد. دوباره روی دکمه میکروفون بزنید یا متن را بنویسید.');
+        }
+      };
+
+      recognition.onend = () => {
+        setListeningSide(null);
+      };
+
+      recognitionRef.current = recognition;
+      recognition.start();
+    } catch {
+      setListeningSide(null);
+      setMicStatusMessage('خطا در باز کردن میکروفون؛ لطفاً در کادر زیر تایپ کنید.');
+    }
+  };
+
+  const handleSpeak = (text: string, lang: 'en' | 'fa' | 'ar', phoneticHint?: string) => {
     if (lang === 'en') speakEnglish(text, 0.85);
-    else if (lang === 'ar') speakArabic(text, 0.85);
-    else speakPersian(text, 0.85);
+    else if (lang === 'ar') speakArabic(text, 0.85, phoneticHint);
+    else speakPersian(text, 0.85, phoneticHint);
   };
 
   const handleCopy = (text: string, id: string) => {
@@ -448,32 +863,34 @@ export const OfflineSpeechTranslator: React.FC = () => {
         <div className="max-w-4xl space-y-3 relative z-10">
           <div className="flex flex-wrap items-center gap-2 text-xs font-bold text-teal-200">
             <Sparkles className="w-3.5 h-3.5 text-teal-300" />
-            <span>۱۰۰٪ آفلاین • پوشش کامل از مکالمه روزمره تا سطح فوق‌پیشرفته (C2)، ضرب‌المثل‌ها، فرش و اصطلاحات ۱۷+ سال</span>
+            <span>چت صوتی و متنی دوطرفه (فارسی ⇄ انگلیسی) • پوشش محاوره، ضرب‌المثل C2، فرش و ۱۷+ سال</span>
           </div>
 
           <h1 className="text-2xl sm:text-4xl font-black leading-tight">
-            مترجم صوتی و سخنگوی هوشمند آفلاین (حرفه‌ای، عامیانه و تجاری) 🎙️
+            مترجم چت دوطرفه (متنی و صوتی همزمان برای هر دو نفر) 🎙️💬
           </h1>
 
           <p className="text-teal-100 text-xs sm:text-sm leading-relaxed">
-            این مترجم هم <strong>زبان عامیانه و خیابانی (Slang)</strong>، هم <strong>ضرب‌المثل‌ها و سطوح فوق‌پیشرفته (C2)</strong>، هم <strong>اصطلاحات تخصصی فرش</strong> و هم <strong>الفاظ تند رده سنی ۱۷+ سال</strong> را می‌فهمد و با صدای بلند به جای شما با طرف مقابل صحبت می‌کند!
+            هم <strong>شما (به فارسی)</strong> و هم <strong>طرف مقابل (به انگلیسی)</strong> می‌توانید با <strong>میکروفون صوتی</strong> یا <strong>تایپ متنی</strong> در چت زیر صحبت کنید؛ مترجم بلافاصله پیام هر نفر را ترجمه کرده و <strong>با صدای بلند برای نفر مقابل می‌خواند!</strong>
           </p>
 
-          {/* Direction & 17+ Toggle Controls */}
           <div className="pt-2 flex flex-wrap items-center gap-3">
             <button
               onClick={() => {
                 sound.playClick();
-                setDirection(direction === 'fa_to_en' ? 'en_to_fa' : 'fa_to_en');
-                setCustomText('');
+                setAutoSpeakChat(!autoSpeakChat);
               }}
-              className="flex items-center gap-2 px-5 py-3 rounded-2xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs sm:text-sm shadow-lg transition-transform active:scale-95"
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-2xl font-black text-xs sm:text-sm transition-all ${
+                autoSpeakChat
+                  ? 'bg-amber-400 text-slate-950 shadow-md'
+                  : 'bg-white/15 text-white border border-white/20'
+              }`}
             >
-              <ArrowLeftRight className="w-4 h-4" />
+              {autoSpeakChat ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
               <span>
-                {direction === 'fa_to_en' 
-                  ? '🇮🇷 فارسی به 🇬🇧 انگلیسی (مسافر و تاجر ایرانی)' 
-                  : '🇬🇧 انگلیسی به 🇮🇷 فارسی (توریست و مشتری خارجی در ایران)'}
+                {autoSpeakChat
+                  ? '🔊 سخنگوی خودکار چت: روشن (پخش خودکار صدای ترجمه)'
+                  : '🔇 سخنگوی خودکار چت: خاموش'}
               </span>
             </button>
 
@@ -482,7 +899,7 @@ export const OfflineSpeechTranslator: React.FC = () => {
                 sound.playClick();
                 setEnable17PlusSlang(!enable17PlusSlang);
               }}
-              className={`flex items-center gap-2 px-4 py-3 rounded-2xl font-bold text-xs sm:text-sm border transition-all ${
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-2xl font-bold text-xs sm:text-sm border transition-all ${
                 enable17PlusSlang
                   ? 'bg-rose-600/90 border-rose-400 text-white'
                   : 'bg-white/10 border-white/20 text-teal-100 hover:bg-white/20'
@@ -499,119 +916,292 @@ export const OfflineSpeechTranslator: React.FC = () => {
         </div>
       </div>
 
-      {/* INSTANT INTERACTIVE COMMUNICATOR BOX */}
-      <div className="bg-white border-2 border-teal-500/40 rounded-3xl p-6 sm:p-8 shadow-lg space-y-6">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
+      {/* ===================================================================== */}
+      {/* TWO-WAY VOICE & TEXT CHAT CONVERSATION ARENA                          */}
+      {/* ===================================================================== */}
+      <div className="bg-white border-2 border-teal-500/40 rounded-3xl shadow-lg overflow-hidden">
+        {/* Chat Top Bar */}
+        <div className="bg-slate-900 text-white px-5 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="p-2.5 rounded-xl bg-teal-50 text-teal-700">
-              <Mic className="w-5 h-5" />
-            </div>
+            <MessageSquare className="w-5 h-5 text-teal-400" />
             <div>
-              <h2 className="font-bold text-base sm:text-lg text-slate-900">
-                مترجم و سخنگوی آنی (عامیانه، ضرب‌المثل، فرش و روزمره)
+              <h2 className="font-black text-sm sm:text-base">
+                اتاق چت و ترجمه زنده دوطرفه (فارسی‌زبان ⇄ انگلیسی‌زبان)
               </h2>
-              <p className="text-xs text-slate-500">
-                هر واژه عامیانه، اصطلاح خیابانی، سایز فرش (ذرع و نیم، کهنه ذاتی) یا جمله مسافرتی را بنویسید یا انتخاب کنید:
+              <p className="text-[11px] text-slate-300">
+                هر پیامی که ارسال شود، فوراً ترجمه شده و با صدای بلند خوانده می‌شود
               </p>
             </div>
           </div>
 
-          <span className="text-xs font-bold text-teal-800">
-            موتور صوتی آفلاین فعال ✔️
-          </span>
+          <button
+            onClick={() => {
+              sound.playClick();
+              setChatHistory([]);
+            }}
+            className="flex items-center gap-1 text-xs font-bold text-slate-300 hover:text-rose-400 bg-white/10 px-3 py-1.5 rounded-xl transition-colors"
+            title="پاک کردن تاریخچه چت"
+          >
+            <Trash2 className="w-3.5 h-3.5" />
+            <span>پاک کردن چت</span>
+          </button>
         </div>
 
-        {/* Input Area */}
-        <div className="space-y-3">
-          <div className="relative">
-            <input
-              type="text"
-              value={customText}
-              onChange={(e) => setCustomText(e.target.value)}
-              placeholder={
-                direction === 'fa_to_en' 
-                  ? 'بنویسید: مثلاً «دمت گرم»، «کهنه ذاتی»، «دو ذرع»، «مارگزیده»، «چرت و پرت»، «تاکسی»...' 
-                  : 'Type slang, proverb, carpet term, or travel phrase: e.g. "bullshit", "rip off", "taxi", "water"...'
-              }
-              className="w-full px-4 py-3.5 rounded-2xl border-2 border-slate-200 focus:border-teal-500 focus:ring-4 focus:ring-teal-100 text-sm font-bold text-slate-900 placeholder:text-slate-400 outline-none transition-all"
-            />
-            {customText && (
-              <button
-                onClick={() => setCustomText('')}
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-slate-500 hover:text-slate-800 font-bold bg-slate-100 px-2.5 py-1 rounded-lg"
-              >
-                پاک کردن
-              </button>
-            )}
-          </div>
-
-          {/* Quick Suggestion Chips including Slang, Carpet & Proverbs */}
-          <div className="flex flex-wrap items-center gap-1.5 text-xs">
-            <span className="text-slate-500 font-bold">امتحان سریع:</span>
-            {(direction === 'fa_to_en' 
-              ? ['دمت گرم', 'کهنه ذاتی', 'دو ذرع', 'ذرع و نیم', 'مارگزیده', 'سر کارم گذاشتی', 'چرت و پرت', 'قاطی کردم', 'تاکسی'] 
-              : ['bullshit', 'pissed off', 'rip off', 'hello', 'taxi', 'water', 'help']
-            ).map((keyword) => (
-              <button
-                key={keyword}
-                onClick={() => {
-                  sound.playClick();
-                  setCustomText(keyword);
-                }}
-                className="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-teal-100 text-slate-700 hover:text-teal-900 font-bold transition-colors"
-              >
-                {keyword}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Real-Time Speech Output Box */}
-        {customText.trim() && (
-          <div className="p-6 rounded-3xl bg-gradient-to-br from-teal-50 via-emerald-50 to-amber-50 border-2 border-teal-300 space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-teal-800">
-                {direction === 'fa_to_en' ? 'ترجمه صوتی به انگلیسی (رسمی و محاوره):' : 'ترجمه صوتی به فارسی:'}
-              </span>
-
-              <button
-                onClick={() => handleCopy(currentTranslation.translation, 'custom')}
-                className="p-2 rounded-xl bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 transition-colors"
-                title="کپی کردن متن"
-              >
-                {copiedId === 'custom' ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
-              </button>
-            </div>
-
-            <div className="space-y-1.5">
-              <h3 className="text-xl sm:text-2xl font-black text-slate-900 leading-snug" dir="auto">
-                "{currentTranslation.translation}"
-              </h3>
-              <p className="font-mono text-xs font-bold text-teal-800" dir="ltr">
-                Pronunciation: {currentTranslation.pronunciation}
-              </p>
-              {currentTranslation.noteFa && (
-                <p className="text-xs text-slate-600 pt-1">
-                  💡 {currentTranslation.noteFa}
-                </p>
-              )}
-            </div>
-
-            <div className="pt-2">
-              <button
-                onClick={() => handleSpeak(currentTranslation.translation, direction === 'fa_to_en' ? 'en' : 'fa')}
-                className="w-full flex items-center justify-center gap-3 px-6 py-4 rounded-2xl bg-teal-700 hover:bg-teal-600 text-white font-black text-sm sm:text-base shadow-lg transition-all active:scale-95"
-              >
-                <Volume2 className="w-6 h-6" />
-                <span>
-                  {direction === 'fa_to_en' 
-                    ? '🔊 با صدای رسا به انگلیسی بگو (Speak on My Behalf)' 
-                    : '🔊 با صدای رسا به فارسی بگو (Speak in Persian)'}
-                </span>
-              </button>
-            </div>
+        {/* Microphone Status Alert */}
+        {micStatusMessage && (
+          <div className="bg-amber-50 border-b border-amber-200 px-5 py-3 text-xs font-bold text-amber-950 flex items-center justify-between gap-2">
+            <span>{micStatusMessage}</span>
+            <button
+              onClick={() => setMicStatusMessage(null)}
+              className="text-amber-800 underline shrink-0"
+            >
+              بستن
+            </button>
           </div>
         )}
+
+        {/* Chat Messages Timeline */}
+        <div className="p-4 sm:p-6 space-y-4 max-h-[430px] overflow-y-auto bg-slate-50/70">
+          {chatHistory.length === 0 ? (
+            <div className="text-center py-10 text-slate-400 text-xs sm:text-sm font-bold">
+              چت خالی است. با یکی از کادرهای پایین (فارسی یا انگلیسی) پیام متنی یا صوتی بفرستید!
+            </div>
+          ) : (
+            chatHistory.map((msg) => {
+              const isFaSender = msg.sender === 'fa_speaker';
+              return (
+                <div
+                  key={msg.id}
+                  className={`flex flex-col ${isFaSender ? 'items-start' : 'items-end'}`}
+                >
+                  <div
+                    className={`w-full sm:max-w-xl rounded-3xl p-4 sm:p-5 space-y-3 shadow-xs border ${
+                      isFaSender
+                        ? 'bg-emerald-50/90 border-emerald-300 text-slate-900'
+                        : 'bg-sky-50/90 border-sky-300 text-slate-900'
+                    }`}
+                  >
+                    {/* Header of Bubble */}
+                    <div className="flex items-center justify-between text-xs text-slate-500 border-b border-slate-200/70 pb-2">
+                      <span className="font-black text-slate-800">
+                        {isFaSender ? '🇮🇷 گوینده فارسی‌زبان (ترجمه به انگلیسی)' : '🇬🇧 گوینده انگلیسی‌زبان (ترجمه به فارسی)'}
+                      </span>
+                      <div className="flex items-center gap-2">
+                        <span>{msg.timestamp}</span>
+                        <button
+                          onClick={() => handleCopy(msg.translatedText, msg.id)}
+                          className="p-1 text-slate-400 hover:text-slate-800"
+                          title="کپی ترجمه"
+                        >
+                          {copiedId === msg.id ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Original Spoken/Typed Text */}
+                    <div className="flex items-center justify-between gap-2">
+                      <p className="text-xs sm:text-sm text-slate-600 font-semibold" dir="auto">
+                        متن اصلی: «{msg.originalText}»
+                      </p>
+                      <button
+                        onClick={() =>
+                          handleSpeak(
+                            msg.originalText,
+                            isFaSender ? 'fa' : 'en',
+                            msg.pronunciation
+                          )
+                        }
+                        className="text-[11px] font-bold text-slate-500 hover:text-slate-900 flex items-center gap-1 shrink-0"
+                      >
+                        <Volume2 className="w-3.5 h-3.5" />
+                        <span>صدای اصلی</span>
+                      </button>
+                    </div>
+
+                    {/* Translated Output (Highlighted) */}
+                    <div className="p-3.5 rounded-2xl bg-white border border-slate-200 space-y-2">
+                      <p className="text-base sm:text-lg font-black text-slate-950 leading-snug" dir="auto">
+                        {msg.translatedText}
+                      </p>
+
+                      {msg.colloquialVariant && (
+                        <p className="text-xs font-bold text-indigo-900" dir="auto">
+                          🗣️ معادل عامیانه / Slang: «{msg.colloquialVariant}»
+                        </p>
+                      )}
+
+                      <p className="text-xs font-mono text-teal-800" dir="ltr">
+                        تلفظ آوایی: {msg.pronunciation}
+                      </p>
+
+                      {/* Giant Replay Voice Button inside Chat Bubble */}
+                      <button
+                        onClick={() =>
+                          handleSpeak(
+                            msg.translatedText,
+                            isFaSender ? 'en' : 'fa',
+                            msg.pronunciation
+                          )
+                        }
+                        className={`w-full py-2.5 px-4 rounded-xl font-black text-xs sm:text-sm text-white flex items-center justify-center gap-2 shadow-xs transition-transform active:scale-95 ${
+                          isFaSender
+                            ? 'bg-emerald-700 hover:bg-emerald-600'
+                            : 'bg-sky-700 hover:bg-sky-600'
+                        }`}
+                      >
+                        <Volume2 className="w-4 h-4" />
+                        <span>
+                          {isFaSender
+                            ? '🔊 پخش صدای انگلیسی (Speak English to Partner)'
+                            : '🔊 پخش صدای فارسی (Speak Persian to Partner)'}
+                        </span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              );
+            })
+          )}
+          <div ref={chatEndRef} />
+        </div>
+
+        {/* ===================================================================== */}
+        {/* DUAL INPUT CONSOLE: LEFT/TOP = PERSIAN SPEAKER, RIGHT/BOTTOM = ENGLISH */}
+        {/* ===================================================================== */}
+        <div className="p-4 sm:p-6 bg-white border-t-2 border-slate-200 grid grid-cols-1 lg:grid-cols-2 gap-4">
+          {/* PANEL 1: PERSIAN SPEAKER (فارسی‌زبان -> ترجمه و پخش انگلیسی) */}
+          <div className="p-4 rounded-2xl bg-emerald-50/70 border-2 border-emerald-400/60 space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-xs sm:text-sm font-black text-emerald-950">
+                🇮🇷 نوبت شما (فارسی بنویسید یا بگویید ⬅️ انگلیسی پخش شود)
+              </span>
+              <button
+                type="button"
+                onClick={() => handleToggleVoiceMic('fa')}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-black text-xs transition-all ${
+                  listeningSide === 'fa'
+                    ? 'bg-rose-600 text-white animate-pulse shadow-md'
+                    : 'bg-emerald-700 hover:bg-emerald-600 text-white'
+                }`}
+              >
+                {listeningSide === 'fa' ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+                <span>{listeningSide === 'fa' ? 'توقف میکروفون' : '🎙️ میکروفون فارسی'}</span>
+              </button>
+            </div>
+
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleSendChatMessage(faInput, 'fa_speaker');
+              }}
+              className="flex items-center gap-2"
+            >
+              <input
+                type="text"
+                value={faInput}
+                onChange={(e) => setFaInput(e.target.value)}
+                placeholder="به فارسی بنویسید (مثلاً: قیمت این فرش دو ذرع چنده؟ / کجاست؟)..."
+                className="flex-1 px-3.5 py-3 rounded-xl border border-emerald-300 bg-white text-xs sm:text-sm font-bold text-slate-900 outline-none focus:border-emerald-600"
+              />
+              <button
+                type="submit"
+                disabled={isTranslating || !faInput.trim()}
+                className="px-4 py-3 rounded-xl bg-emerald-700 hover:bg-emerald-600 disabled:opacity-50 text-white font-black text-xs sm:text-sm flex items-center gap-1.5 shrink-0 transition-transform active:scale-95"
+              >
+                <Send className="w-4 h-4" />
+                <span>ترجمه و بگو</span>
+              </button>
+            </form>
+
+            {/* Quick One-Tap Persian Chat Chips */}
+            <div className="flex flex-wrap items-center gap-1.5 text-[11px]">
+              <span className="text-emerald-900 font-bold">ارسال سریع فارسی:</span>
+              {[
+                'سلام، حالتون چطوره؟',
+                'این قالیچه دو ذرع کهنه ذاتی است',
+                'کرایه تاکسی چقدر شد؟',
+                'دمت گرم رفیق!',
+                'چرت و پرت نگو!'
+              ].map((chip) => (
+                <button
+                  key={chip}
+                  type="button"
+                  onClick={() => handleSendChatMessage(chip, 'fa_speaker')}
+                  className="px-2 py-1 rounded-lg bg-white hover:bg-emerald-100 text-emerald-950 border border-emerald-200 font-bold transition-colors"
+                >
+                  {chip}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* PANEL 2: ENGLISH SPEAKER (انگلیسی‌زبان -> ترجمه و پخش فارسی) */}
+          <div className="p-4 rounded-2xl bg-sky-50/70 border-2 border-sky-400/60 space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-xs sm:text-sm font-black text-sky-950">
+                🇬🇧 نوبت طرف خارجی (انگلیسی بنویسد یا بگوید ⬅️ فارسی پخش شود)
+              </span>
+              <button
+                type="button"
+                onClick={() => handleToggleVoiceMic('en')}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-black text-xs transition-all ${
+                  listeningSide === 'en'
+                    ? 'bg-rose-600 text-white animate-pulse shadow-md'
+                    : 'bg-sky-700 hover:bg-sky-600 text-white'
+                }`}
+              >
+                {listeningSide === 'en' ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+                <span>{listeningSide === 'en' ? 'Stop Mic' : '🎙️ English Mic'}</span>
+              </button>
+            </div>
+
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleSendChatMessage(enInput, 'en_speaker');
+              }}
+              className="flex items-center gap-2"
+            >
+              <input
+                type="text"
+                value={enInput}
+                onChange={(e) => setEnInput(e.target.value)}
+                dir="ltr"
+                placeholder="Type in English (e.g. How much is this Persian rug? / Where is the hotel?)..."
+                className="flex-1 px-3.5 py-3 rounded-xl border border-sky-300 bg-white text-xs sm:text-sm font-bold text-slate-900 outline-none focus:border-sky-600"
+              />
+              <button
+                type="submit"
+                disabled={isTranslating || !enInput.trim()}
+                className="px-4 py-3 rounded-xl bg-sky-700 hover:bg-sky-600 disabled:opacity-50 text-white font-black text-xs sm:text-sm flex items-center gap-1.5 shrink-0 transition-transform active:scale-95"
+              >
+                <Send className="w-4 h-4" />
+                <span>Translate & Speak</span>
+              </button>
+            </form>
+
+            {/* Quick One-Tap English Chat Chips */}
+            <div className="flex flex-wrap items-center gap-1.5 text-[11px]" dir="ltr">
+              <span className="text-sky-900 font-bold">Quick English:</span>
+              {[
+                'How much is this Persian carpet?',
+                'Can you give me a discount?',
+                'Where is the nearest hotel?',
+                'Thanks a lot, mate!',
+                'Stop pulling my leg!'
+              ].map((chip) => (
+                <button
+                  key={chip}
+                  type="button"
+                  onClick={() => handleSendChatMessage(chip, 'en_speaker')}
+                  className="px-2 py-1 rounded-lg bg-white hover:bg-sky-100 text-sky-950 border border-sky-200 font-bold transition-colors"
+                >
+                  {chip}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* SITUATIONAL, SLANG, PROVERB & CARPET PHRASE DATABASE */}
@@ -620,10 +1210,10 @@ export const OfflineSpeechTranslator: React.FC = () => {
           <div>
             <h2 className="text-lg sm:text-xl font-black text-slate-900 flex items-center gap-2">
               <Compass className="w-5 h-5 text-teal-600" />
-              <span>بانک جامع جملات سخنگو (از سفر و تجارت فرش تا محاوره خیابانی، ضرب‌المثل C2 و ۱۷+ سال)</span>
+              <span>بانک جملات آماده با ارسال مستقیم به چت و پخش صوتی دوطرفه</span>
             </h2>
             <p className="text-xs text-slate-500 mt-1">
-              روی هر دسته کلیک کنید تا جملات رسمی، عامیانه (Slang)، ضرب‌المثل‌های سطح فوق‌پیشرفته و اصطلاحات تند ۱۷+ سال را ببینید و پخش کنید:
+              با زدن روی هر دکمه، جمله هم در چت بالا قرار می‌گیرد و هم با صدای بلند به انگلیسی، فارسی یا عربی خوانده می‌شود:
             </p>
           </div>
 
@@ -660,118 +1250,103 @@ export const OfflineSpeechTranslator: React.FC = () => {
 
         {/* Phrases Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {filteredPhrases.map((phrase) => {
-            const isEnglishTarget = direction === 'fa_to_en';
-            const speakTargetText = isEnglishTarget ? phrase.en : phrase.fa;
-
-            return (
-              <div
-                key={phrase.id}
-                className={`p-5 rounded-2xl border transition-all space-y-3 flex flex-col justify-between ${
-                  phrase.isMature17Plus
-                    ? 'border-rose-300 bg-rose-50/30'
-                    : 'border-slate-200 bg-slate-50/50 hover:bg-white'
-                }`}
-              >
-                <div className="space-y-2.5">
-                  {/* Unboxed metadata header */}
-                  <div className="flex items-center justify-between text-xs text-slate-500">
-                    <div className="flex items-center gap-1.5 font-bold text-teal-900">
-                      <span>{phrase.categoryLabelFa}</span>
-                      <span aria-hidden="true">·</span>
-                      <span className={phrase.isMature17Plus ? 'text-rose-700 font-black' : 'text-slate-500'}>
-                        {phrase.levelTag}
-                      </span>
-                    </div>
-                    <button
-                      onClick={() => handleCopy(speakTargetText, phrase.id)}
-                      className="p-1 rounded-lg text-slate-400 hover:text-slate-700"
-                      title="کپی"
-                    >
-                      {copiedId === phrase.id ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
-                    </button>
-                  </div>
-
-                  {/* Persian Formal & Colloquial */}
-                  <div className="space-y-1">
-                    <span className="text-[11px] text-slate-500 font-bold block">🇮🇷 فارسی (معیار و عامیانه):</span>
-                    <p className="font-bold text-sm text-slate-900 leading-snug">
-                      {phrase.fa}
-                    </p>
-                    {phrase.faColloquial && (
-                      <p className="text-xs font-bold text-amber-900">
-                        🗣️ عامیانه کوچه بازار: «{phrase.faColloquial}»
-                      </p>
-                    )}
-                  </div>
-
-                  {/* English Formal & Slang */}
-                  <div className="pt-2 border-t border-slate-200/70 space-y-1">
-                    <span className="text-[11px] text-slate-500 font-bold block">🇬🇧 English (Standard & Street Slang):</span>
-                    <p className="font-black text-sm text-teal-950 leading-snug" dir="ltr">
-                      "{phrase.en}"
-                    </p>
-                    {phrase.enSlangVariant && (
-                      <p className="text-xs font-bold text-indigo-900" dir="ltr">
-                        🔥 Street Slang: "{phrase.enSlangVariant}"
-                      </p>
-                    )}
-                  </div>
-
-                  {/* Optional Arabic for Carpet Trade */}
-                  {phrase.ar && (
-                    <div className="pt-1 border-t border-slate-200/70">
-                      <span className="text-[11px] text-amber-800 font-bold block">🇸🇦🇦🇪 عربی تجاری:</span>
-                      <p className="font-bold text-xs text-slate-900">
-                        «{phrase.ar}»
-                      </p>
-                    </div>
-                  )}
-
-                  {/* Phonetic & Pedagogical Note */}
-                  <p className="font-mono text-xs text-slate-500" dir="ltr">
-                    {isEnglishTarget ? `Pronunciation: ${phrase.pronunciationEn}` : `Fingilish: ${phrase.fingilish}`}
-                  </p>
-                  <p className="text-[11px] text-slate-600">
-                    💡 {phrase.explanationFa}
-                  </p>
-                </div>
-
-                {/* Speaker Action Buttons */}
-                <div className="pt-2 flex flex-wrap items-center gap-2">
-                  <button
-                    onClick={() => handleSpeak(speakTargetText, isEnglishTarget ? 'en' : 'fa')}
-                    className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl bg-teal-700 hover:bg-teal-600 text-white font-bold text-xs shadow-xs transition-transform active:scale-95"
-                  >
-                    <Volume2 className="w-4 h-4" />
-                    <span>
-                      {isEnglishTarget ? '🔊 بگو (انگلیسی)' : '🔊 بگو (فارسی)'}
+          {filteredPhrases.map((phrase) => (
+            <div
+              key={phrase.id}
+              className={`p-5 rounded-2xl border transition-all space-y-3 flex flex-col justify-between ${
+                phrase.isMature17Plus
+                  ? 'border-rose-300 bg-rose-50/30'
+                  : 'border-slate-200 bg-slate-50/50 hover:bg-white'
+              }`}
+            >
+              <div className="space-y-2.5">
+                <div className="flex items-center justify-between text-xs text-slate-500">
+                  <div className="flex items-center gap-1.5 font-bold text-teal-900">
+                    <span>{phrase.categoryLabelFa}</span>
+                    <span aria-hidden="true">·</span>
+                    <span className={phrase.isMature17Plus ? 'text-rose-700 font-black' : 'text-slate-500'}>
+                      {phrase.levelTag}
                     </span>
+                  </div>
+                  <button
+                    onClick={() => handleCopy(phrase.en, phrase.id)}
+                    className="p-1 rounded-lg text-slate-400 hover:text-slate-700"
+                    title="کپی"
+                  >
+                    {copiedId === phrase.id ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
                   </button>
+                </div>
 
-                  {phrase.enSlangVariant && isEnglishTarget && (
-                    <button
-                      onClick={() => handleSpeak(phrase.enSlangVariant!, 'en')}
-                      className="px-3 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs flex items-center gap-1.5"
-                    >
-                      <Volume2 className="w-3.5 h-3.5" />
-                      <span>لحن خیابانی (Slang)</span>
-                    </button>
-                  )}
-
-                  {phrase.ar && (
-                    <button
-                      onClick={() => handleSpeak(phrase.ar!, 'ar')}
-                      className="px-3 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs flex items-center gap-1.5"
-                    >
-                      <Volume2 className="w-3.5 h-3.5" />
-                      <span>عربی</span>
-                    </button>
+                {/* Persian Formal & Colloquial */}
+                <div className="space-y-1">
+                  <span className="text-[11px] text-slate-500 font-bold block">🇮🇷 فارسی:</span>
+                  <p className="font-bold text-sm text-slate-900 leading-snug">
+                    {phrase.fa}
+                  </p>
+                  {phrase.faColloquial && (
+                    <p className="text-xs font-bold text-amber-900">
+                      🗣️ عامیانه: «{phrase.faColloquial}»
+                    </p>
                   )}
                 </div>
+
+                {/* English Formal & Slang */}
+                <div className="pt-2 border-t border-slate-200/70 space-y-1">
+                  <span className="text-[11px] text-slate-500 font-bold block">🇬🇧 English:</span>
+                  <p className="font-black text-sm text-teal-950 leading-snug" dir="ltr">
+                    "{phrase.en}"
+                  </p>
+                  {phrase.enSlangVariant && (
+                    <p className="text-xs font-bold text-indigo-900" dir="ltr">
+                      🔥 Street Slang: "{phrase.enSlangVariant}"
+                    </p>
+                  )}
+                </div>
+
+                {phrase.ar && (
+                  <div className="pt-1 border-t border-slate-200/70">
+                    <span className="text-[11px] text-amber-800 font-bold block">🇸🇦🇦🇪 عربی تجاری:</span>
+                    <p className="font-bold text-xs text-slate-900">
+                      «{phrase.ar}»
+                    </p>
+                  </div>
+                )}
+
+                <p className="font-mono text-xs text-slate-500" dir="ltr">
+                  Fingilish: {phrase.fingilish}
+                </p>
               </div>
-            );
-          })}
+
+              {/* Dual Speaker Action Buttons */}
+              <div className="pt-2 flex flex-wrap items-center gap-2">
+                <button
+                  onClick={() => handleSpeak(phrase.en, 'en')}
+                  className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl bg-teal-700 hover:bg-teal-600 text-white font-bold text-xs shadow-xs transition-transform active:scale-95"
+                >
+                  <Volume2 className="w-4 h-4" />
+                  <span>🔊 بگو انگلیسی</span>
+                </button>
+
+                <button
+                  onClick={() => handleSpeak(phrase.fa, 'fa', phrase.fingilish)}
+                  className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white font-bold text-xs shadow-xs transition-transform active:scale-95"
+                >
+                  <Volume2 className="w-4 h-4" />
+                  <span>🔊 بگو فارسی</span>
+                </button>
+
+                {phrase.ar && (
+                  <button
+                    onClick={() => handleSpeak(phrase.ar!, 'ar')}
+                    className="px-3 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs flex items-center gap-1.5"
+                  >
+                    <Volume2 className="w-3.5 h-3.5" />
+                    <span>عربی</span>
+                  </button>
+                )}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>

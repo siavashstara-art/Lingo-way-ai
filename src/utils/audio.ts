@@ -218,6 +218,108 @@ class SoundEngine {
 
 export const sound = new SoundEngine();
 
+// Automatic Persian script to phonetic Latin (Fingilish) converter
+// Ensures mobile devices without a native fa-IR TTS voice pack still speak Persian audibly!
+export const transliteratePersianToFingilish = (faText: string): string => {
+  const wordMap: Record<string, string> = {
+    'سلام': 'Salaam',
+    'درود': 'Dorood',
+    'خوش': 'khosh',
+    'آمدید': 'aamadeed',
+    'چطورید': 'chetoreed',
+    'چطوری': 'chetoree',
+    'حالتون': 'haaletoon',
+    'خوبم': 'khoobam',
+    'ممنون': 'mamnoon',
+    'مرسی': 'mersee',
+    'ببخشید': 'bebakhsheed',
+    'لطفاً': 'lotfan',
+    'لطفا': 'lotfan',
+    'بی‌زحمت': 'bee-zahmat',
+    'کجاست': 'kojaast',
+    'چقدر': 'cheghadr',
+    'قیمت': 'gheymat',
+    'تاکسی': 'taaksee',
+    'مترو': 'metro',
+    'هتل': 'hotel',
+    'فرودگاه': 'foroodgaah',
+    'رستوران': 'restoraan',
+    'آب': 'aab',
+    'چای': 'chaay',
+    'نان': 'naan',
+    'غذا': 'ghazaa',
+    'کمک': 'komak',
+    'کنید': 'koneed',
+    'من': 'man',
+    'شما': 'shomaa',
+    'ما': 'maa',
+    'این': 'een',
+    'آن': 'aan',
+    'بله': 'baleh',
+    'نه': 'nah',
+    'خیر': 'kheyr',
+    'دست': 'dast',
+    'درد': 'dard',
+    'نکنه': 'nakoneh',
+    'قابل': 'ghaabel',
+    'نداره': 'nadaareh',
+    'تعارف': 'taarof',
+    'قالی': 'ghaalee',
+    'قالیچه': 'ghaaleecheh',
+    'گلیم': 'geleem',
+    'پشتی': 'poshtee',
+    'ذرع': 'zar',
+    'نیم': 'neem',
+    'چارک': 'chaarak',
+    'کهنه': 'kohneh',
+    'ذاتی': 'zaatee',
+    'نوبافت': 'now-baaft',
+    'کارکرده': 'kaar-kardeh',
+    'ابریشم': 'abreesham',
+    'دمت': 'damet',
+    'گرم': 'garm',
+    'رفیق': 'rafeegh',
+    'داداش': 'daadaash',
+    'حساب': 'hesaab',
+    'کارت': 'kaart',
+    'نقدی': 'naghdee',
+    'داروخانه': 'daarookhaaneh',
+    'دکتر': 'doktor',
+    'گم': 'gom',
+    'کردم': 'kardam',
+    'خیلی': 'kheylee',
+    'خوب': 'khoob',
+    'است': 'ast',
+    'هست': 'hast',
+    'نیست': 'neest',
+    'می‌خواهم': 'meekhaaham',
+    'میخوام': 'meekhaam',
+    'بروم': 'beravam',
+    'برم': 'beram'
+  };
+
+  let result = faText;
+  for (const [faWord, enPhon] of Object.entries(wordMap)) {
+    result = result.split(faWord).join(` ${enPhon} `);
+  }
+
+  const charMap: Record<string, string> = {
+    'آ': 'aa', 'ا': 'a', 'ب': 'b', 'پ': 'p', 'ت': 't', 'ث': 's',
+    'ج': 'j', 'چ': 'ch', 'ح': 'h', 'خ': 'kh', 'د': 'd', 'ذ': 'z',
+    'ر': 'r', 'ز': 'z', 'ژ': 'zh', 'س': 's', 'ش': 'sh', 'ص': 's',
+    'ض': 'z', 'ط': 't', 'ظ': 'z', 'ع': 'a', 'غ': 'gh', 'ف': 'f',
+    'ق': 'gh', 'ک': 'k', 'ك': 'k', 'گ': 'g', 'ل': 'l', 'م': 'm',
+    'ن': 'n', 'و': 'o', 'ه': 'eh', 'ی': 'ee', 'ي': 'ee', 'ئ': 'y',
+    '؟': '?', '،': ',', '«': '"', '»': '"', '‌': ' '
+  };
+
+  let out = '';
+  for (const ch of result) {
+    out += charMap[ch] !== undefined ? charMap[ch] : ch;
+  }
+  return out.replace(/\s+/g, ' ').trim();
+};
+
 export const speakEnglish = (
   text: string, 
   rate: number = 0.9, 
@@ -225,63 +327,103 @@ export const speakEnglish = (
 ) => {
   if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
   try {
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = lang;
-    utterance.rate = rate;
-
-    const voices = window.speechSynthesis.getVoices();
-    if (voices && voices.length > 0) {
-      const preferredVoice = voices.find(v => 
-        (v.lang.startsWith(lang.substring(0, 2)) && (v.name.includes('Natural') || v.name.includes('Google') || v.name.includes('Siri') || v.name.includes('Samantha') || v.name.includes('Daniel')))
-      ) || voices.find(v => v.lang.startsWith('en'));
-
-      if (preferredVoice) utterance.voice = preferredVoice;
+    if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
+      window.speechSynthesis.cancel();
     }
+    setTimeout(() => {
+      try {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = lang;
+        utterance.rate = rate;
 
-    window.speechSynthesis.speak(utterance);
+        const voices = window.speechSynthesis.getVoices();
+        if (voices && voices.length > 0) {
+          const preferredVoice = voices.find(v => 
+            (v.lang.startsWith(lang.substring(0, 2)) && (v.name.includes('Natural') || v.name.includes('Google') || v.name.includes('Siri') || v.name.includes('Samantha') || v.name.includes('Daniel')))
+          ) || voices.find(v => v.lang.startsWith('en'));
+
+          if (preferredVoice) utterance.voice = preferredVoice;
+        }
+
+        window.speechSynthesis.speak(utterance);
+      } catch {}
+    }, 60);
   } catch {}
 };
 
 export const speakPersian = (
   text: string,
-  rate: number = 0.85
+  rate: number = 0.85,
+  fingilishHint?: string
 ) => {
   if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
   try {
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'fa-IR';
-    utterance.rate = rate;
-
-    const voices = window.speechSynthesis.getVoices();
-    if (voices && voices.length > 0) {
-      const farsiVoice = voices.find(v => v.lang.startsWith('fa') || v.name.toLowerCase().includes('persian') || v.name.toLowerCase().includes('farsi'));
-      if (farsiVoice) utterance.voice = farsiVoice;
+    if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
+      window.speechSynthesis.cancel();
     }
+    setTimeout(() => {
+      try {
+        const voices = window.speechSynthesis.getVoices() || [];
+        const farsiVoice = voices.find(v =>
+          v.lang.toLowerCase().startsWith('fa') ||
+          v.name.toLowerCase().includes('persian') ||
+          v.name.toLowerCase().includes('farsi')
+        );
+        const arabicVoice = voices.find(v => v.lang.toLowerCase().startsWith('ar'));
 
-    window.speechSynthesis.speak(utterance);
+        const utterance = new SpeechSynthesisUtterance();
+        utterance.rate = rate;
+
+        if (farsiVoice) {
+          utterance.text = text;
+          utterance.lang = 'fa-IR';
+          utterance.voice = farsiVoice;
+        } else if (arabicVoice && /[\u0600-\u06FF]/.test(text)) {
+          // Arabic TTS engine on mobile reads Persian script letters naturally
+          utterance.text = text;
+          utterance.lang = arabicVoice.lang;
+          utterance.voice = arabicVoice;
+        } else {
+          // Fallback for mobile devices without Persian/Arabic TTS pack: read phonetic Fingilish!
+          const phoneticText = fingilishHint || transliteratePersianToFingilish(text);
+          utterance.text = phoneticText;
+          utterance.lang = 'en-US';
+        }
+
+        window.speechSynthesis.speak(utterance);
+      } catch {}
+    }, 60);
   } catch {}
 };
 
 export const speakArabic = (
   text: string,
-  rate: number = 0.85
+  rate: number = 0.85,
+  phoneticHint?: string
 ) => {
   if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
   try {
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'ar-SA';
-    utterance.rate = rate;
-
-    const voices = window.speechSynthesis.getVoices();
-    if (voices && voices.length > 0) {
-      const arabicVoice = voices.find(v => v.lang.startsWith('ar') || v.name.toLowerCase().includes('arabic'));
-      if (arabicVoice) utterance.voice = arabicVoice;
+    if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
+      window.speechSynthesis.cancel();
     }
+    setTimeout(() => {
+      try {
+        const voices = window.speechSynthesis.getVoices() || [];
+        const arabicVoice = voices.find(v => v.lang.toLowerCase().startsWith('ar') || v.name.toLowerCase().includes('arabic'));
+        const utterance = new SpeechSynthesisUtterance();
+        utterance.rate = rate;
 
-    window.speechSynthesis.speak(utterance);
+        if (arabicVoice) {
+          utterance.text = text;
+          utterance.lang = arabicVoice.lang;
+          utterance.voice = arabicVoice;
+        } else {
+          utterance.text = phoneticHint || transliteratePersianToFingilish(text);
+          utterance.lang = 'en-US';
+        }
+        window.speechSynthesis.speak(utterance);
+      } catch {}
+    }, 60);
   } catch {}
 };
 

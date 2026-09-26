@@ -123,6 +123,46 @@ Format response as JSON:
   }
 });
 
+// Bidirectional Persian <-> English Chat & Voice Translator Endpoint
+app.post('/api/ai/translate', async (req: Request, res: Response) => {
+  try {
+    const { text, direction, includeMature17Plus } = req.body;
+    if (!text || typeof text !== 'string') {
+      return res.status(400).json({ error: 'Text is required.' });
+    }
+
+    if (!aiClient) {
+      return res.status(503).json({ error: 'Offline fallback active' });
+    }
+
+    const prompt = `You are a master bilingual Persian-English interpreter covering everything from everyday travel, specialized Persian carpet trade (Ghali, Ghalicheh, Dozar, Zar-o-Nim, Kohneh Zaati), and C2 proverbs to colloquial street slang${includeMature17Plus ? ' (including edgy 17+ street idioms)' : ''}.
+Direction: ${direction === 'fa_to_en' ? 'Persian to English' : 'English to Persian'}.
+Input text: "${text}"
+
+Return a JSON object with:
+{
+  "translation": "Accurate natural translation in the target language",
+  "colloquialVariant": "Colloquial / street slang equivalent in the target language",
+  "pronunciation": "Clear phonetic pronunciation guide (English phonetics if target is English, or Fingilish Latin script if target is Persian)",
+  "noteFa": "Brief 1-sentence cultural or linguistic note in Persian"
+}`;
+
+    const response = await aiClient.models.generateContent({
+      model: 'gemini-3.8-flash',
+      contents: prompt,
+      config: {
+        responseMimeType: 'application/json',
+      },
+    });
+
+    const parsed = JSON.parse(response.text || '{}');
+    return res.json({ success: true, data: parsed });
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    return res.status(500).json({ error: 'Translation fallback required', details: message });
+  }
+});
+
 // Health check endpoint
 app.get('/api/health', (_req: Request, res: Response) => {
   res.json({
