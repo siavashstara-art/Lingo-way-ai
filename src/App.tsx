@@ -629,7 +629,7 @@ export const App: React.FC = () => {
               onClick={() => setCurrentDistrict('carpet_trade')}
               className="text-rose-800 hover:underline font-bold"
             >
-              {isFa ? 'تجارت فرش (یادمان حاج حسن آقا علی‌میری) 🧶' : 'Persian Carpet Trade 🧶'}
+              {isFa ? 'تجارت و مترجم فرش (یادمان حاج حسین علی‌میری) 🧶' : 'Persian Carpet Trade 🧶'}
             </button>
             <span>•</span>
             <button

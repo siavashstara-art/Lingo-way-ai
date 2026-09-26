@@ -1,5 +1,5 @@
 // Specialized Persian Carpet Trade & Bazaar Terminology & Trilingual Dialogues (Persian - English - Arabic)
-// Dedicated in honored memory of the late Haj Hassan Agha Ali Miri (شادروان حاج حسن آقای علی‌میری)
+// Dedicated in honored memory of the late Haj Hossein Agha Ali Miri (شادروان حاج حسین آقای علی‌میری)
 // Companion educational module to the "Farsh Bazaar (فرش بازار)" app by the same developer.
 
 export interface CarpetTermItem {
@@ -307,7 +307,7 @@ export const CARPET_MERCHANT_DIALOGUES: CarpetMerchantDialogue[] = [
     merchantReplyEnPhonetic: 'yoo ON-er us! wel-kum too owr SHOW-room. pleez hav ah seet wyle wee serv saf-ron tee',
     merchantReplyAr: 'أهلاً وسهلاً بكم، شرّفتم معرضنا! المكان مكانكم، تفضّلوا بالجلوس لنقدّم لكم الشاي بالزعفران ونفرش لكم أجمل القطع.',
     merchantReplyArPhonetic: 'Ahlan wa sahlan bikum, sharraftum ma‘ridanā! Tafaddalū bil-julūs linuqaddima lakum ash-shāy bil-za‘farān.',
-    tradeTipFa: 'نکته مرحوم حاج حسن آقا علی‌میری: در تجارت فرش، مشتری ابتدا «حرمت، آرامش و صداقت حجره» را می‌خرد و سپس فرش را؛ هرگز در دقایق اول صحبت از قیمت نکنید.'
+    tradeTipFa: 'نکته مرحوم حاج حسین آقا علی‌میری: در تجارت فرش، مشتری ابتدا «حرمت، آرامش و صداقت حجره» را می‌خرد و سپس فرش را؛ هرگز در دقایق اول صحبت از قیمت نکنید.'
   },
   {
     id: 'cmd_2',

@@ -97,7 +97,7 @@ export const CityMap: React.FC<CityMapProps> = ({
                 className="flex items-center gap-2 px-5 py-3 rounded-xl bg-rose-800 hover:bg-rose-700 text-white font-black text-xs sm:text-sm shadow-md transition-transform active:scale-95"
               >
                 <span>🧶</span>
-                <span>{isFa ? 'تجارت فرش (یادمان حاج حسن آقا علی‌میری)' : 'Persian Carpet Trade Academy'}</span>
+                <span>{isFa ? 'تجارت و مترجم فرش (یادمان حاج حسین علی‌میری)' : 'Persian Carpet Trade & Interpreter'}</span>
               </button>
 
               <button
