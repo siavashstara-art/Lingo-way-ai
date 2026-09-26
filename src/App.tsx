@@ -16,6 +16,7 @@ import { AccessibilityModal } from './components/AccessibilityModal';
 import { ADHDMicroTimer } from './components/ADHDMicroTimer';
 import { VisualCaptionToast } from './components/VisualCaptionToast';
 import { OfflineSpeechTranslator } from './components/OfflineSpeechTranslator';
+import { CarpetTradeAcademy } from './components/CarpetTradeAcademy';
 import { 
   CityDistrictId, 
   UserProgress, 
@@ -512,6 +513,14 @@ export const App: React.FC = () => {
           />
         )}
 
+        {/* Specialized Persian Carpet Trade & Bazaar Academy (in memory of Haj Hassan Agha Ali Miri) */}
+        {currentDistrict === 'carpet_trade' && (
+          <CarpetTradeAcademy
+            onEarnLingous={handleEarnLingous}
+            speechVoiceRate={progress.speechVoiceRate || 0.85}
+          />
+        )}
+
         {/* 100% Offline Real-Time Speech Communicator for Travelers */}
         {currentDistrict === 'offline_translator' && (
           <OfflineSpeechTranslator />
@@ -613,7 +622,14 @@ export const App: React.FC = () => {
               onClick={() => setCurrentDistrict('persian_for_english')}
               className="text-emerald-700 hover:underline font-bold"
             >
-              {isFa ? 'آموزش زبان فارسی 🌹' : 'Learn Persian 🇮🇷'}
+              {isFa ? 'آموزش زبان فارسی (رایگان) 🌹' : 'Learn Persian (Free) 🇮🇷'}
+            </button>
+            <span>•</span>
+            <button
+              onClick={() => setCurrentDistrict('carpet_trade')}
+              className="text-rose-800 hover:underline font-bold"
+            >
+              {isFa ? 'تجارت فرش (یادمان حاج حسن آقا علی‌میری) 🧶' : 'Persian Carpet Trade 🧶'}
             </button>
             <span>•</span>
             <button

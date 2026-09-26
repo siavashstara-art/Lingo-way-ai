@@ -40,7 +40,8 @@ export const Header: React.FC<HeaderProps> = ({
 
   const navItems: { id: CityDistrictId; label: string; icon: string; highlight?: boolean }[] = [
     { id: 'map', label: isFa ? 'نقشه شهر' : 'City Map', icon: '🗺️' },
-    { id: 'persian_for_english', label: isFa ? 'آموزش فارسی' : 'Learn Persian 🇮🇷', icon: '🌹', highlight: true },
+    { id: 'persian_for_english', label: isFa ? 'آموزش فارسی (رایگان)' : 'Learn Persian (Free) 🇮🇷', icon: '🌹', highlight: true },
+    { id: 'carpet_trade', label: isFa ? 'تجارت فرش ایران' : 'Persian Carpet Trade', icon: '🧶', highlight: true },
     { id: 'offline_translator', label: isFa ? 'مترجم صوتی مسافرتی' : 'Voice Communicator', icon: '🎙️', highlight: true },
     { id: 'mentor', label: isFa ? 'استادیاری و روم‌ها' : 'Mentor Hierarchy', icon: '🏛️' },
     { id: 'bilingual_ai', label: isFa ? 'هوش مصنوعی آفلاین' : 'Offline AI', icon: '🤖' },

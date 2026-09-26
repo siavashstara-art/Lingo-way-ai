@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
     inputs:
       build_type:
-        description: 'Choose build output type'
+        description: 'Choose build output type (apk, aab, or both)'
         required: true
         default: 'both'
         type: choice
@@ -22,7 +22,7 @@ permissions:
 
 jobs:
   build:
-    name: Build Web Assets & Android Gradle Packages
+    name: Build Web Bundle & Android APK / AAB
     runs-on: ubuntu-latest
 
     steps:
@@ -33,66 +33,90 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: 'npm'
 
       - name: Install Node Dependencies
-        run: npm ci || npm install
+        run: npm install --no-audit --no-fund
 
-      - name: Build Web Application
+      - name: Build Production Web Bundle (dist)
         run: npm run build
         env:
           NODE_ENV: production
+
+      - name: Verify Web Assets Directory for Android
+        run: |
+          mkdir -p android/app/src/main/assets
+          ls -la dist/
 
       - name: Setup Java JDK 17
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
-          cache: 'gradle'
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Grant Execute Permission to Gradle Wrapper
-        run: chmod +x android/gradlew || true
+      - name: Setup Gradle 8.7 (No gradlew binary required)
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.7'
 
-      # Build APK
-      - name: Assemble Release APK
+      - name: Generate Signing Keystore (if not provided via Secrets)
+        run: |
+          if [ ! -f android/app/debug.keystore ]; then
+            keytool -genkeypair -v \
+              -keystore android/app/debug.keystore \
+              -storepass android \
+              -alias androiddebugkey \
+              -keypass android \
+              -keyalg RSA \
+              -keysize 2048 \
+              -validity 10000 \
+              -dname "CN=EnglishLingou, OU=Mobile, O=AbleWayCity, L=Tehran, S=Tehran, C=IR"
+          fi
+
+      # Build APK (Signed Release & Debug APK)
+      - name: Assemble Android APK
         if: ${{ github.event.inputs.build_type == 'apk' || github.event.inputs.build_type == 'both' || github.event_name == 'push' }}
-        run: |
-          cd android
-          ./gradlew assembleRelease --stacktrace
+        working-directory: android
+        run: gradle assembleRelease assembleDebug --no-daemon --stacktrace
 
-      # Build AAB (Google Play Store format)
-      - name: Bundle Release AAB
+      # Build AAB (Google Play Store / Cafe Bazaar Bundle)
+      - name: Bundle Android AAB
         if: ${{ github.event.inputs.build_type == 'aab' || github.event.inputs.build_type == 'both' || github.event_name == 'push' }}
-        run: |
-          cd android
-          ./gradlew bundleRelease --stacktrace
+        working-directory: android
+        run: gradle bundleRelease --no-daemon --stacktrace
 
       # Upload Artifacts (APK)
-      - name: Upload APK Artifact
+      - name: Upload APK Artifacts
+        if: ${{ github.event.inputs.build_type == 'apk' || github.event.inputs.build_type == 'both' || github.event_name == 'push' }}
         uses: actions/upload-artifact@v4
         with:
-          name: app-release-apk
-          path: android/app/build/outputs/apk/release/*.apk
-          retention-days: 14
+          name: english-lingou-android-apk
+          path: |
+            android/app/build/outputs/apk/release/*.apk
+            android/app/build/outputs/apk/debug/*.apk
+          if-no-files-found: warn
+          retention-days: 30
 
       # Upload Artifacts (AAB)
       - name: Upload AAB Bundle Artifact
+        if: ${{ github.event.inputs.build_type == 'aab' || github.event.inputs.build_type == 'both' || github.event_name == 'push' }}
         uses: actions/upload-artifact@v4
         with:
-          name: app-release-aab
+          name: english-lingou-android-aab
           path: android/app/build/outputs/bundle/release/*.aab
-          retention-days: 14
+          if-no-files-found: warn
+          retention-days: 30
 
-      # Automatic Release creation if tag pushed
-      - name: Create GitHub Release
+      # Automatic GitHub Release if tag v*.*.* is pushed
+      - name: Publish GitHub Release
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
         with:
           files: |
             android/app/build/outputs/apk/release/*.apk
+            android/app/build/outputs/apk/debug/*.apk
             android/app/build/outputs/bundle/release/*.aab
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

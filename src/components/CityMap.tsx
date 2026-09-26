@@ -85,8 +85,19 @@ export const CityMap: React.FC<CityMapProps> = ({
                 className="flex items-center gap-2 px-5 py-3 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white font-black text-xs sm:text-sm shadow-md transition-transform active:scale-95"
               >
                 <span>🌹</span>
-                <span>{isFa ? 'آموزش زبان فارسی (اولویت ۱)' : 'Learn Persian Immersion 🇮🇷'}</span>
+                <span>{isFa ? 'آموزش زبان فارسی (رایگان جهانی)' : 'Learn Persian (100% Free) 🇮🇷'}</span>
                 <ArrowRight className="w-4 h-4" />
+              </button>
+
+              <button
+                onClick={() => {
+                  sound.playClick();
+                  onSelectDistrict('carpet_trade');
+                }}
+                className="flex items-center gap-2 px-5 py-3 rounded-xl bg-rose-800 hover:bg-rose-700 text-white font-black text-xs sm:text-sm shadow-md transition-transform active:scale-95"
+              >
+                <span>🧶</span>
+                <span>{isFa ? 'تجارت فرش (یادمان حاج حسن آقا علی‌میری)' : 'Persian Carpet Trade Academy'}</span>
               </button>
 
               <button

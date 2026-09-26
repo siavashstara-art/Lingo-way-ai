@@ -199,6 +199,11 @@ export const PersianForEnglishLab: React.FC<PersianForEnglishLabProps> = ({
             <p className="text-xs sm:text-sm font-normal text-emerald-100 leading-relaxed">
               برای انگلیسی‌زبانانی که هدفشان صرفاً مکالمه، سفر یا گفت‌وگوی روزمره است و نیازی به یادگیری الفبا و خط فارسی ندارند، تمام عبارات به صورت لاتین (Fingilish) با شیوه تلفظ دقیق فونتیک عرضه شده و با یک کلیک می‌توانید حالت نمایش را تنظیم کنید.
             </p>
+
+            {/* Free Global Access Notice (Sanctions / No Payment Required) */}
+            <div className="p-3.5 rounded-2xl bg-black/25 border border-amber-300/40 text-xs text-amber-100 leading-relaxed">
+              🎁 <strong>دسترسی ۱۰۰٪ رایگان جهانی (Free Open Access):</strong> با توجه به تحریم‌های بانکی ایران و عدم تعیین سازوکار پرداخت بین‌المللی، فعلاً تمامی سطوح آموزش زبان فارسی به انگلیسی‌زبانان و سایر زبان‌های جهان کاملاً <strong>رایگان و آزاد</strong> در اختیار همه علاقه‌مندان قرار داده شده است.
+            </div>
           </div>
 
           {/* Script Display Mode Switcher */}

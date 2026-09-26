@@ -264,6 +264,27 @@ export const speakPersian = (
   } catch {}
 };
 
+export const speakArabic = (
+  text: string,
+  rate: number = 0.85
+) => {
+  if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
+  try {
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'ar-SA';
+    utterance.rate = rate;
+
+    const voices = window.speechSynthesis.getVoices();
+    if (voices && voices.length > 0) {
+      const arabicVoice = voices.find(v => v.lang.startsWith('ar') || v.name.toLowerCase().includes('arabic'));
+      if (arabicVoice) utterance.voice = arabicVoice;
+    }
+
+    window.speechSynthesis.speak(utterance);
+  } catch {}
+};
+
 export const speakTarget = (text: string, isPersian: boolean, rate: number = 0.9) => {
   if (isPersian) speakPersian(text, rate);
   else speakEnglish(text, rate);

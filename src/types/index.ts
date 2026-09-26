@@ -1,6 +1,7 @@
 export type CityDistrictId = 
   | 'map'
   | 'persian_for_english' // Priority #1: Dedicated Persian Language & Taarof Cultural Lab for English Speakers
+  | 'carpet_trade' // Specialized Persian Carpet Trade & Bazaar Academy (in memory of Haj Hassan Agha Ali Miri)
   | 'offline_translator' // 100% Offline Real-Time Speech Communicator for Travelers
   | 'mentor' // Master-Apprentice Gamification System & Student Peer Teaching Rooms (برای آموزش انگلیسی به فارسی‌زبانان)
   | 'bilingual_ai' // AI Foundation & Dual-Direction Offline Teacher (آموزش دوجانبه انگلیسی-فارسی)
