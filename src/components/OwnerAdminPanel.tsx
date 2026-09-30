@@ -241,6 +241,39 @@ FULL ASO DESCRIPTION (Optimized for US, Canada, UK, Germany & Australia):
                   </span>
                 </div>
               </div>
+
+              {/* Regional User Breakdown (USA, Canada, Europe, Tajikistan, Uzbekistan, Iran) */}
+              <div className="p-4 rounded-2xl bg-white/5 border border-amber-400/30 space-y-2.5">
+                <h4 className="text-xs sm:text-sm font-black text-amber-300">
+                  🌍 تفکیک جغرافیایی کاربران و ضریب CPM تبلیغاتی (آمریکا، کانادا، اروپا، تاجیکستان، ازبکستان و ایران):
+                </h4>
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 text-center text-xs">
+                  <div className="p-2.5 rounded-xl bg-slate-950 border border-white/10">
+                    <span className="block font-black text-amber-300">🇺🇸 آمریکا (USA)</span>
+                    <span className="text-[11px] text-emerald-300">۳۸٪ ترافیک • $55 CPM</span>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-slate-950 border border-white/10">
+                    <span className="block font-black text-amber-300">🇨🇦 کانادا (Canada)</span>
+                    <span className="text-[11px] text-emerald-300">۱۶٪ ترافیک • $42 CPM</span>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-slate-950 border border-white/10">
+                    <span className="block font-black text-amber-300">🇪🇺🇬🇧 اروپا و انگلیس</span>
+                    <span className="text-[11px] text-emerald-300">۲۱٪ ترافیک • $38 CPM</span>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-slate-950 border border-cyan-400/40">
+                    <span className="block font-black text-cyan-300">🇹🇯 تاجیکستان (دوشنبه)</span>
+                    <span className="text-[11px] text-cyan-100">۱۰٪ ترافیک • خط سیریلیک</span>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-slate-950 border border-cyan-400/40">
+                    <span className="block font-black text-cyan-300">🇺🇿 ازبکستان (سمرقند/بخارا)</span>
+                    <span className="text-[11px] text-cyan-100">۷٪ ترافیک • خط سیریلیک</span>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-slate-950 border border-white/10">
+                    <span className="block font-black text-emerald-300">🇮🇷🇦🇫 ایران و افغانستان</span>
+                    <span className="text-[11px] text-slate-300">۸٪ ترافیک • فارسی/دری</span>
+                  </div>
+                </div>
+              </div>
             </div>
           )}
 

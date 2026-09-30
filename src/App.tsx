@@ -23,6 +23,7 @@ import {
 import { CarpetTradeAcademy } from './components/CarpetTradeAcademy';
 import { EnglishLearningHub, EnglishCategoryTab } from './components/EnglishLearningHub';
 import { PersianForDiasporaHub } from './components/PersianForDiasporaHub';
+import { TajikCyrillicHub } from './components/TajikCyrillicHub';
 import { VictoryPathHub } from './components/VictoryPathHub';
 import { CreditClinic850 } from './components/CreditClinic850';
 import { AbleWayCityHub } from './components/AbleWayCityHub';
@@ -37,6 +38,7 @@ import {
 
 export type TopLevelArea =
   | 'persian_for_english'
+  | 'tajik_cyrillic_hub'
   | 'english_learning'
   | 'victory_path'
   | 'credit_clinic_850'
@@ -47,8 +49,9 @@ export type TopLevelArea =
 
 export function App() {
   // Primary #1 Flagship Identity:
-  // Direction A (#1 Default): Learn Persian / Farsi / Dari / Tajik for English, German, French & Spanish Speakers
-  // Direction B (#2): Learn American/British/Canadian English for Persian Speakers
+  // Pole 1 (#1 Default): Learn Persian / Farsi / Dari for English Speakers & Diaspora (Triple-Script + 32-Letter Canvas)
+  // Pole 2: Exclusive Tajik Cyrillic Hub (Тоҷикӣ / Uzbekistan & Tajikistan Samanid Tribute + Tajik➔Persian & Tajik➔English)
+  // Pole 3: Learn English, US Spanish & Canadian French for Persian Speakers
   // + VictoryPath Hub + 450->850 Credit Clinic + AbleWay City Capital + 5-Channel Global Chat + 8 Mind Sports + Persian Carpet Heritage
   const [topArea, setTopArea] = useState<TopLevelArea>('persian_for_english');
   const [englishCategory, setEnglishCategory] = useState<EnglishCategoryTab>('embassy_visa');
@@ -58,9 +61,9 @@ export function App() {
   // AbleWay Accessibility & ADHD Focus Bar States
   const [deafVisualCaptionsEnabled, setDeafVisualCaptionsEnabled] = useState<boolean>(true);
   const [latestCaption, setLatestCaption] = useState<VisualCaptionEventDetail | null>({
-    text: 'LingoEnglish & Farsi Bridge (AbleWay City Capital) • ۱۰۰٪ رایگان • پاسداشت زبان شیرین فارسی و سوپراپ جهانی آموزش و شهروندی',
+    text: 'LingoEnglish (by AbleWay City) • ۱۰۰٪ رایگان • ۳ قطب زبانی (فارسی به انگلیسی‌زبانان، ویژه تاجیکان با خط سیریلیک و لوح زرین سامانیان، و انگلیسی/اسپانیایی/فرانسوی)',
     lang: 'fa',
-    phonetic: '100% Free Global Super-App: Learn Persian for English Speakers & Learn English for Persian Speakers',
+    phonetic: '100% Free Global Super-App: English➔Persian, Tajik Cyrillic Hub (Тоҷикӣ), and Persian➔English/Spanish/French',
     timestamp: 'فعال'
   });
   const [blindHighContrast, setBlindHighContrast] = useState<boolean>(false);
@@ -69,9 +72,9 @@ export function App() {
   const [bionicReadingMode, setBionicReadingMode] = useState<boolean>(false);
   const [focusTunnelMode, setFocusTunnelMode] = useState<boolean>(false);
 
-  // ADHD 60-Second & 5-Minute Micro-Sprint Timer + Brown Noise
-  const [adhdSprintDuration, setAdhdSprintDuration] = useState<60 | 300>(60);
-  const [adhdSecondsLeft, setAdhdSecondsLeft] = useState<number>(60);
+  // ADHD 2-Minute (120s), 60-Second & 5-Minute Micro-Sprint Timer + Brown Noise
+  const [adhdSprintDuration, setAdhdSprintDuration] = useState<60 | 120 | 300>(120);
+  const [adhdSecondsLeft, setAdhdSecondsLeft] = useState<number>(120);
   const [adhdTimerRunning, setAdhdTimerRunning] = useState<boolean>(false);
   const [brownNoiseOn, setBrownNoiseOn] = useState<boolean>(false);
 
@@ -114,15 +117,17 @@ export function App() {
     sound.playClick();
     const descriptions: Record<TopLevelArea, string> = {
       persian_for_english:
-        'شما در مسیر اول و برگ برنده برنامه، یعنی آموزش زبان شیرین فارسی، دری و تاجیکی به انگلیسی‌زبانان و فرزندان ایرانیان خارج از کشور با نمایش سه خطی همزمان، تخته هوشمند نوشتن الفبا، اشعار مولانا و حافظ و مترجم عامیانه هستید.',
+        'شما در قطب اول، یعنی آموزش زبان شیرین فارسی به انگلیسی‌زبانان و فرزندان ایرانیان و افغانستانی‌ها با نمایش سه خطی همزمان و تخته هوشمند ۳۲ حرف الفبای فارسی هستید.',
+      tajik_cyrillic_hub:
+        'شما در قطب دوم، یعنی بخش ویژه و انحصاری تاجیکان و ازبکستان با خط سیریلیک و لوح زرین پیام مهر بنیان‌گذار در پاسداشت امپراتوری سامانیان، سمرقند، بخارا و دوشنبه هستید.',
       english_learning:
-        'شما در مسیر دوم، یعنی آموزش زبان انگلیسی آمریکایی، بریتانیایی و کانادایی به فارسی‌زبانان شامل محاوره، سفارت، پزشکی و موسیقی هستید.',
+        'شما در قطب سوم، یعنی آموزش زبان انگلیسی، اسپانیایی ویژه بازار آمریکا و فرانسوی ویژه مهاجرت کانادا به فارسی‌زبانان هستید.',
       victory_path:
-        'شما در بخش طلایی ویکتوری‌پث هاب هستید؛ شامل شبیه‌ساز مصاحبه شغلی و چانه‌زنی حقوق دلاری، مصاحبه بورسیه فول‌فاند، افسر ویزای ۵ کشور و بانک سوالات رسمی آزمون پاسپورت.',
+        'شما در بخش طلایی پیروز ویکتوری‌پث هاب هستید؛ شامل شبیه‌ساز مصاحبه شغلی و چانه‌زنی حقوق دلاری، مصاحبه بورسیه فول‌فاند، افسر ویزای ۵ کشور و بانک سوالات رسمی آزمون پاسپورت.',
       credit_clinic_850:
         'شما در کلینیک دوزبانه ارتقای کردیت اسکور از ۴۵۰ به ۸۵۰ هستید؛ شامل اسکنر کردیت، نامه‌نگاری حقوقی حذف بدهی، فرمول ای‌زدئی‌او و ماشین‌حساب سود وام مسکن و خودرو.',
       ableway_city:
-        'شما در پایتخت دموکراسی ثروت ایبل‌وی سیتی هستید؛ دارای ۷ مقام دموکراتیک، سند زمین و حق تجاری، تأسیس خاندان جهانی و موتور قانونی هبه ۳۰ درصدی.',
+        'شما در پایتخت دموکراسی ثروت ایبل‌وی سیتی هستید؛ دارای لیگ جهانی معرفان، ۷ مقام دموکراتیک، سند زمین و حق تجاری، تأسیس خاندان جهانی و موتور قانونی هبه ۳۰ درصدی.',
       live_chat_5ch:
         'شما در تالار گفتگوی زنده جهانی ۵ کاناله هستید و می‌توانید به صورت بلادرنگ با زبان‌آموزان و شهروندان گفتگو کنید.',
       mind_sports_8:
@@ -238,21 +243,21 @@ export function App() {
                 <span>🎯 تونل تمرکز (Focus Tunnel)</span>
               </button>
 
-              {/* 3. 60-Second Lesson / 5-Min ADHD Timer + Brown Noise */}
+              {/* 3. 2-Minute / 60-Second / 5-Min ADHD Timer + Brown Noise */}
               <div className="flex items-center gap-1 bg-indigo-950 border border-indigo-400/40 px-2 py-1 rounded-xl">
                 <Brain className="w-3.5 h-3.5 text-indigo-300" />
                 <button
                   type="button"
                   onClick={() => {
                     sound.playClick();
-                    const nextDur = adhdSprintDuration === 60 ? 300 : 60;
+                    const nextDur = adhdSprintDuration === 120 ? 60 : adhdSprintDuration === 60 ? 300 : 120;
                     setAdhdSprintDuration(nextDur);
                     setAdhdSecondsLeft(nextDur);
                   }}
                   className="text-[11px] font-mono font-black text-amber-300 hover:underline"
-                  title="تغییر بین درس ۶۰ ثانیه‌ای سریع و اسپرینت ۵ دقیقه‌ای ADHD"
+                  title="تغییر بین تایمر میکرولرنینگ ۲ دقیقه‌ای، ۶۰ ثانیه‌ای و ۵ دقیقه‌ای ADHD"
                 >
-                  ⏱️ {adhdSprintDuration === 60 ? '60s Sprint' : '5m Sprint'}: {formatTimer(adhdSecondsLeft)}
+                  ⏱️ {adhdSprintDuration === 120 ? '2m ADHD' : adhdSprintDuration === 60 ? '60s Sprint' : '5m Sprint'}: {formatTimer(adhdSecondsLeft)}
                 </button>
                 <button
                   type="button"
@@ -372,232 +377,216 @@ export function App() {
           )}
 
           {/* =============================================================== */}
-          {/* SUPER-APP 8-PILLAR GLOBAL NAVIGATION BAR                        */}
-          {/* (Hidden in Focus Tunnel Mode so ADHD learners can focus 100%)   */}
+          {/* 3-POLE TARGET AUDIENCE SWITCHER (۳ قطب اصلی مخاطبان هدف)        */}
           {/* =============================================================== */}
           {!focusTunnelMode && (
-            <nav
-              aria-label="بخش‌های اصلی سوپراپ جهانی"
-              className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2 pt-1"
-            >
-              {/* 1. Direction A (#1 Priority): Learn Persian / Farsi / Dari / Tajik */}
-              <button
-                type="button"
-                onClick={() => {
-                  sound.playClick();
-                  setTopArea('persian_for_english');
-                }}
-                className={`p-2.5 rounded-2xl border-2 text-right transition-all flex flex-col justify-between ${
-                  topArea === 'persian_for_english'
-                    ? 'bg-gradient-to-br from-emerald-800 to-teal-900 text-white border-amber-300 shadow-lg ring-2 ring-amber-400/40'
-                    : 'bg-white/10 text-slate-200 border-amber-400/30 hover:bg-white/20'
-                }`}
-              >
-                <div className="flex items-center justify-between gap-1">
-                  <Crown className="w-4 h-4 text-amber-300 shrink-0" />
-                  <span className="text-[10px] font-black px-1.5 py-0.5 rounded bg-amber-400 text-slate-950">
-                    #1 فیلگشیپ
+            <div className="space-y-2 pt-1">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+                {/* Pole 1: English ➔ Persian (Diaspora & Western Learners) */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    sound.playClick();
+                    setTopArea('persian_for_english');
+                  }}
+                  className={`p-3 rounded-2xl border-2 text-right transition-all flex items-center justify-between gap-2 ${
+                    topArea === 'persian_for_english'
+                      ? 'bg-gradient-to-r from-emerald-800 to-teal-900 text-white border-amber-300 shadow-lg ring-2 ring-amber-400/50'
+                      : 'bg-white/10 text-slate-200 border-amber-400/40 hover:bg-white/20'
+                  }`}
+                >
+                  <div>
+                    <span className="text-xs sm:text-sm font-black block text-amber-300">
+                      🇺🇸🇬🇧➔🇮🇷 قطب ۱: آموزش فارسی به انگلیسی‌زبانان و فرزندان خارج
+                    </span>
+                    <span className="text-[11px] text-emerald-100 block">
+                      English ➔ Persian • نمایش ۳ خطی + تخته هوشمند ۳۲ حرف الفبا
+                    </span>
+                  </div>
+                  <span className="px-2 py-1 rounded-lg bg-amber-400 text-slate-950 font-black text-[10px] shrink-0">
+                    Pole #1
                   </span>
-                </div>
-                <div className="mt-1">
-                  <span className="text-xs font-black block text-amber-300">
-                    🇮🇷 آموزش فارسی (۳ خطی)
-                  </span>
-                  <span className="text-[10px] text-emerald-100 block">
-                    Learn Farsi • الفبا و شعر
-                  </span>
-                </div>
-              </button>
+                </button>
 
-              {/* 2. Direction B (#2 Priority): Learn English for Persian Speakers */}
-              <button
-                type="button"
-                onClick={() => {
-                  sound.playClick();
-                  setTopArea('english_learning');
-                }}
-                className={`p-2.5 rounded-2xl border-2 text-right transition-all flex flex-col justify-between ${
-                  topArea === 'english_learning'
-                    ? 'bg-teal-700 text-white border-amber-300 shadow-lg'
-                    : 'bg-white/10 text-slate-200 border-white/15 hover:bg-white/20'
-                }`}
-              >
-                <div className="flex items-center justify-between gap-1">
-                  <GraduationCap className="w-4 h-4 text-teal-300 shrink-0" />
-                  <span className="text-[10px] font-bold text-teal-200">Direction B</span>
-                </div>
-                <div className="mt-1">
-                  <span className="text-xs font-black block">
-                    🇬🇧 آموزش جامع انگلیسی
+                {/* Pole 2: Exclusive Tajik Cyrillic Hub + Founder's Samanid Tribute */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    sound.playClick();
+                    setTopArea('tajik_cyrillic_hub');
+                  }}
+                  className={`p-3 rounded-2xl border-2 text-right transition-all flex items-center justify-between gap-2 ${
+                    topArea === 'tajik_cyrillic_hub'
+                      ? 'bg-gradient-to-r from-cyan-800 via-teal-800 to-emerald-900 text-white border-amber-300 shadow-lg ring-2 ring-amber-400/50'
+                      : 'bg-cyan-950/60 text-cyan-100 border-cyan-400/50 hover:bg-cyan-900/60'
+                  }`}
+                >
+                  <div>
+                    <span className="text-xs sm:text-sm font-black block text-amber-300">
+                      🇹🇯🇺🇿👑 قطب ۲: بخش ویژه تاجیکان و ازبکستان (Тоҷикӣ / خط سیریلیک)
+                    </span>
+                    <span className="text-[11px] text-cyan-100 block">
+                      لوح زرین سامانیان (سمرقند، بخارا و دوشنبه) + فارسی و انگلیسی با خط روسی
+                    </span>
+                  </div>
+                  <span className="px-2 py-1 rounded-lg bg-cyan-400 text-slate-950 font-black text-[10px] shrink-0">
+                    Тоҷикӣ
                   </span>
-                  <span className="text-[10px] text-teal-100 block">
-                    US/UK/CA • محاوره و آیلتس
-                  </span>
-                </div>
-              </button>
+                </button>
 
-              {/* 3. VictoryPath Hub (Job, Salary, Full-Fund, 5-Embassy Visa, Citizenship) */}
-              <button
-                type="button"
-                onClick={() => {
-                  sound.playClick();
-                  setTopArea('victory_path');
-                }}
-                className={`p-2.5 rounded-2xl border-2 text-right transition-all flex flex-col justify-between ${
-                  topArea === 'victory_path'
-                    ? 'bg-indigo-700 text-white border-amber-300 shadow-lg'
-                    : 'bg-white/10 text-slate-200 border-white/15 hover:bg-white/20'
-                }`}
+                {/* Pole 3: Persian ➔ English, US Spanish & Canadian French */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    sound.playClick();
+                    setTopArea('english_learning');
+                  }}
+                  className={`p-3 rounded-2xl border-2 text-right transition-all flex items-center justify-between gap-2 ${
+                    topArea === 'english_learning'
+                      ? 'bg-gradient-to-r from-indigo-800 to-blue-900 text-white border-amber-300 shadow-lg ring-2 ring-amber-400/50'
+                      : 'bg-white/10 text-slate-200 border-white/20 hover:bg-white/20'
+                  }`}
+                >
+                  <div>
+                    <span className="text-xs sm:text-sm font-black block text-amber-300">
+                      🇮🇷➔🇬🇧🇪🇸🇫🇷 قطب ۳: آموزش انگلیسی، اسپانیایی آمریکا و فرانسوی کانادا
+                    </span>
+                    <span className="text-[11px] text-indigo-100 block">
+                      Persian ➔ English, Spanish &amp; French • مکالمه، بانک، پزشکی و مهاجرت
+                    </span>
+                  </div>
+                  <span className="px-2 py-1 rounded-lg bg-indigo-400 text-slate-950 font-black text-[10px] shrink-0">
+                    Pole #3
+                  </span>
+                </button>
+              </div>
+
+              {/* Super-App Specialized Hubs Bar (Without duplicating any module) */}
+              <nav
+                aria-label="بخش‌های تخصصی سوپراپ"
+                className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2"
               >
-                <div className="flex items-center justify-between gap-1">
+                {/* VictoryPath Hub */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    sound.playClick();
+                    setTopArea('victory_path');
+                  }}
+                  className={`p-2 rounded-xl border text-right transition-all flex items-center justify-between ${
+                    topArea === 'victory_path'
+                      ? 'bg-indigo-700 text-white border-amber-300 shadow-md'
+                      : 'bg-white/10 text-slate-200 border-white/15 hover:bg-white/20'
+                  }`}
+                >
+                  <div>
+                    <span className="text-xs font-black block">🏆 بخش پیروز (VictoryPath)</span>
+                    <span className="text-[10px] text-indigo-100 block">شغل، فول‌فاند، ویزا و پاسپورت</span>
+                  </div>
                   <Briefcase className="w-4 h-4 text-amber-300 shrink-0" />
-                  <span className="text-[10px] font-black text-amber-300">VIP Hub</span>
-                </div>
-                <div className="mt-1">
-                  <span className="text-xs font-black block">
-                    🏆 VictoryPath Hub
-                  </span>
-                  <span className="text-[10px] text-indigo-100 block">
-                    شغل، فول‌فاند، ویزا و پاسپورت
-                  </span>
-                </div>
-              </button>
+                </button>
 
-              {/* 4. 450 -> 850 Credit Clinic (High-CPM Finance Engine) */}
-              <button
-                type="button"
-                onClick={() => {
-                  sound.playClick();
-                  setTopArea('credit_clinic_850');
-                }}
-                className={`p-2.5 rounded-2xl border-2 text-right transition-all flex flex-col justify-between ${
-                  topArea === 'credit_clinic_850'
-                    ? 'bg-emerald-700 text-white border-amber-300 shadow-lg'
-                    : 'bg-white/10 text-slate-200 border-white/15 hover:bg-white/20'
-                }`}
-              >
-                <div className="flex items-center justify-between gap-1">
+                {/* 450 -> 850 Credit Clinic */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    sound.playClick();
+                    setTopArea('credit_clinic_850');
+                  }}
+                  className={`p-2 rounded-xl border text-right transition-all flex items-center justify-between ${
+                    topArea === 'credit_clinic_850'
+                      ? 'bg-emerald-700 text-white border-amber-300 shadow-md'
+                      : 'bg-white/10 text-slate-200 border-white/15 hover:bg-white/20'
+                  }`}
+                >
+                  <div>
+                    <span className="text-xs font-black block">💳 کلینیک کردیت ۸۵۰</span>
+                    <span className="text-[10px] text-emerald-100 block">450➔850 • حذف بدهی و وام</span>
+                  </div>
                   <CreditCard className="w-4 h-4 text-emerald-300 shrink-0" />
-                  <span className="text-[10px] font-black text-amber-300">450➔850</span>
-                </div>
-                <div className="mt-1">
-                  <span className="text-xs font-black block">
-                    💳 کلینیک کردیت ۸۵۰
-                  </span>
-                  <span className="text-[10px] text-emerald-100 block">
-                    حذف بدهی و سود وام غرب
-                  </span>
-                </div>
-              </button>
+                </button>
 
-              {/* 5. AbleWay City Capital (7 Democratic Ranks, Land Deeds & 30% Heba) */}
-              <button
-                type="button"
-                onClick={() => {
-                  sound.playClick();
-                  setTopArea('ableway_city');
-                }}
-                className={`p-2.5 rounded-2xl border-2 text-right transition-all flex flex-col justify-between ${
-                  topArea === 'ableway_city'
-                    ? 'bg-amber-500 text-slate-950 border-white shadow-lg'
-                    : 'bg-white/10 text-slate-200 border-white/15 hover:bg-white/20'
-                }`}
-              >
-                <div className="flex items-center justify-between gap-1">
+                {/* AbleWay City Capital */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    sound.playClick();
+                    setTopArea('ableway_city');
+                  }}
+                  className={`p-2 rounded-xl border text-right transition-all flex items-center justify-between ${
+                    topArea === 'ableway_city'
+                      ? 'bg-amber-500 text-slate-950 border-white shadow-md'
+                      : 'bg-white/10 text-slate-200 border-white/15 hover:bg-white/20'
+                  }`}
+                >
+                  <div>
+                    <span className="text-xs font-black block">🏛️ شهر AbleWay و هبه ۳۰٪</span>
+                    <span className="text-[10px] opacity-90 block">لیگ معرفان، زمین و خاندان</span>
+                  </div>
                   <Landmark className="w-4 h-4 shrink-0" />
-                  <span className="text-[10px] font-black">۷ مقام + هبه ۳۰٪</span>
-                </div>
-                <div className="mt-1">
-                  <span className="text-xs font-black block">
-                    🏛️ پایتخت AbleWay City
-                  </span>
-                  <span className="text-[10px] opacity-90 block">
-                    سند زمین، خاندان و دموکراسی
-                  </span>
-                </div>
-              </button>
+                </button>
 
-              {/* 6. 5-Channel Global Live Chat */}
-              <button
-                type="button"
-                onClick={() => {
-                  sound.playClick();
-                  setTopArea('live_chat_5ch');
-                }}
-                className={`p-2.5 rounded-2xl border-2 text-right transition-all flex flex-col justify-between ${
-                  topArea === 'live_chat_5ch'
-                    ? 'bg-sky-700 text-white border-amber-300 shadow-lg'
-                    : 'bg-white/10 text-slate-200 border-white/15 hover:bg-white/20'
-                }`}
-              >
-                <div className="flex items-center justify-between gap-1">
-                  <MessageSquare className="w-4 h-4 text-sky-300 shrink-0" />
-                  <span className="text-[10px] font-black text-emerald-300">● LIVE</span>
-                </div>
-                <div className="mt-1">
-                  <span className="text-xs font-black block">
-                    💬 چت زنده ۵ کاناله
-                  </span>
-                  <span className="text-[10px] text-sky-100 block">
-                    گفتگوی جهانی دوزبانه
-                  </span>
-                </div>
-              </button>
-
-              {/* 7. 8 Family Mind Sports Club & Global Leagues */}
-              <button
-                type="button"
-                onClick={() => {
-                  sound.playClick();
-                  setTopArea('mind_sports_8');
-                }}
-                className={`p-2.5 rounded-2xl border-2 text-right transition-all flex flex-col justify-between ${
-                  topArea === 'mind_sports_8'
-                    ? 'bg-purple-800 text-white border-amber-300 shadow-lg'
-                    : 'bg-white/10 text-slate-200 border-white/15 hover:bg-white/20'
-                }`}
-              >
-                <div className="flex items-center justify-between gap-1">
+                {/* 8 Family Mind Sports Club */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    sound.playClick();
+                    setTopArea('mind_sports_8');
+                  }}
+                  className={`p-2 rounded-xl border text-right transition-all flex items-center justify-between ${
+                    topArea === 'mind_sports_8'
+                      ? 'bg-purple-800 text-white border-amber-300 shadow-md'
+                      : 'bg-white/10 text-slate-200 border-white/15 hover:bg-white/20'
+                  }`}
+                >
+                  <div>
+                    <span className="text-xs font-black block">♟️ باشگاه ۸ بازی فکری</span>
+                    <span className="text-[10px] text-purple-100 block">۸ لیگ مستقل • ضدقمار</span>
+                  </div>
                   <Trophy className="w-4 h-4 text-amber-300 shrink-0" />
-                  <span className="text-[10px] font-black text-amber-300">۸ بازی فکری</span>
-                </div>
-                <div className="mt-1">
-                  <span className="text-xs font-black block">
-                    ♟️ باشگاه ورزش‌های فکری
-                  </span>
-                  <span className="text-[10px] text-purple-100 block">
-                    شطرنج، تخته‌نرد، دبرنا و حکم
-                  </span>
-                </div>
-              </button>
+                </button>
 
-              {/* 8. Persian Carpet Heritage & Tools (Haj Hossein Agha Ali-Miri) */}
-              <button
-                type="button"
-                onClick={() => {
-                  sound.playClick();
-                  setTopArea('persian_carpet');
-                }}
-                className={`p-2.5 rounded-2xl border-2 text-right transition-all flex flex-col justify-between ${
-                  topArea === 'persian_carpet'
-                    ? 'bg-rose-800 text-white border-amber-300 shadow-lg'
-                    : 'bg-white/10 text-slate-200 border-white/15 hover:bg-white/20'
-                }`}
-              >
-                <div className="flex items-center justify-between gap-1">
+                {/* 5-Channel Global Live Chat */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    sound.playClick();
+                    setTopArea('live_chat_5ch');
+                  }}
+                  className={`p-2 rounded-xl border text-right transition-all flex items-center justify-between ${
+                    topArea === 'live_chat_5ch'
+                      ? 'bg-sky-700 text-white border-amber-300 shadow-md'
+                      : 'bg-white/10 text-slate-200 border-white/15 hover:bg-white/20'
+                  }`}
+                >
+                  <div>
+                    <span className="text-xs font-black block">💬 تالار چت زنده جهانی</span>
+                    <span className="text-[10px] text-sky-100 block">۵ کانال • فیلتر اخلاقی</span>
+                  </div>
+                  <MessageSquare className="w-4 h-4 text-sky-300 shrink-0" />
+                </button>
+
+                {/* Persian Carpet Heritage */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    sound.playClick();
+                    setTopArea('persian_carpet');
+                  }}
+                  className={`p-2 rounded-xl border text-right transition-all flex items-center justify-between ${
+                    topArea === 'persian_carpet'
+                      ? 'bg-rose-800 text-white border-amber-300 shadow-md'
+                      : 'bg-white/10 text-slate-200 border-white/15 hover:bg-white/20'
+                  }`}
+                >
+                  <div>
+                    <span className="text-xs font-black block">🧶 فرش دستباف ایران</span>
+                    <span className="text-[10px] text-rose-100 block">یادمان حاج حسین علی‌میری</span>
+                  </div>
                   <Store className="w-4 h-4 text-amber-300 shrink-0" />
-                  <span className="text-[10px] font-black text-amber-200">پلاک ۴۸</span>
-                </div>
-                <div className="mt-1">
-                  <span className="text-xs font-black block">
-                    🧶 فرش دستباف ایران
-                  </span>
-                  <span className="text-[10px] text-rose-100 block">
-                    یادمان حاج حسین علی‌میری
-                  </span>
-                </div>
-              </button>
-            </nav>
+                </button>
+              </nav>
+            </div>
           )}
         </div>
       </header>
@@ -619,6 +608,9 @@ export function App() {
       >
         {topArea === 'persian_for_english' && (
           <PersianForDiasporaHub onEarnLingous={handleEarnLingous} />
+        )}
+        {topArea === 'tajik_cyrillic_hub' && (
+          <TajikCyrillicHub onEarnLingous={handleEarnLingous} />
         )}
         {topArea === 'english_learning' && (
           <EnglishLearningHub

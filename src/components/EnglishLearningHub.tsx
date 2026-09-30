@@ -10,7 +10,7 @@ import {
   BookOpen,
   Sparkles
 } from 'lucide-react';
-import { sound, speakEnglish, speakPersian, transliteratePersianToFingilish } from '../utils/audio';
+import { sound, speakEnglish, speakPersian, speakMultilingual, transliteratePersianToFingilish } from '../utils/audio';
 import { EmbassyVisaEnglish } from './EmbassyVisaEnglish';
 
 export type EnglishCategoryTab =
@@ -18,7 +18,8 @@ export type EnglishCategoryTab =
   | 'real_life'
   | 'embassy_visa'
   | 'medical'
-  | 'music';
+  | 'music'
+  | 'spanish_french';
 
 interface EnglishLearningHubProps {
   activeCategory: EnglishCategoryTab;
@@ -343,7 +344,7 @@ export const EnglishLearningHub: React.FC<EnglishLearningHubProps> = ({
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-2">
           {[
             {
               id: 'core' as const,
@@ -374,6 +375,12 @@ export const EnglishLearningHub: React.FC<EnglishLearningHubProps> = ({
               icon: '🎵',
               titleEn: 'Learn English with Music',
               titleFa: '۵. یادگیری انگلیسی با موسیقی'
+            },
+            {
+              id: 'spanish_french' as const,
+              icon: '🇪🇸🇫🇷',
+              titleEn: 'US Spanish & Canada French',
+              titleFa: '۶. اسپانیایی آمریکا و فرانسوی کانادا'
             }
           ].map((tab) => {
             const isActive = activeCategory === tab.id;
@@ -714,6 +721,127 @@ export const EnglishLearningHub: React.FC<EnglishLearningHubProps> = ({
                     className="w-full py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs"
                   >
                     🐢 پخش شمرده برای تمرین هم‌خوانی (Shadowing)
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* =================================================================== */}
+      {/* 6. 🇪🇸🇫🇷 US SPANISH & CANADIAN FRENCH (TEF CANADA) FOR PERSIANS      */}
+      {/* =================================================================== */}
+      {activeCategory === 'spanish_french' && (
+        <div className="space-y-5">
+          <div className="rounded-3xl bg-gradient-to-r from-indigo-950 via-blue-900 to-rose-950 text-white p-6 sm:p-8 shadow-lg space-y-2">
+            <span className="text-xs font-black text-amber-300">
+              🇪🇸🇺🇸 &amp; 🇫🇷🇨🇦 MODULE 6 • US SPANISH &amp; CANADIAN FRENCH (TEF CANADA)
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-black">
+              آموزش کاربردی اسپانیایی (ویژه بازار کار آمریکا) و فرانسوی (ویژه مهاجرت اکسپرس‌انتری کانادا)
+            </h2>
+            <p className="text-xs sm:text-sm text-indigo-100">
+              در ایالت‌های کالیفرنیا، تگزاس و فلوریدا، دانستن اسپانیایی درآمد و موقعیت شغلی شما را دو برابر می‌کند؛ و در کانادا، دانستن فرانسوی (آزمون TEF/TCF) تا ۵۰ امتیاز طلایی CRS برای اقامت دائم به شما می‌دهد!
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {[
+              {
+                id: 'sf_1',
+                lang: 'es' as const,
+                badge: '🇪🇸🇺🇸 اسپانیایی بازار کار و زندگی در آمریکا (US Spanish)',
+                scenarioFa: '۱. معرفی حرفه‌ای، کار و کسب‌وکار در کالیفرنیا، تگزاس و میامی',
+                targetPhrase: '¡Hola! Mucho gusto. Soy especialista en negocios y estoy aquí para ayudarle con su proyecto.',
+                phoneticFa: 'اولا! موچو گوستو. سُی اسپسیالیستا اِن نگوسیوس ای استوی آکی پارا آیودارله کُن سو پرویِکتو.',
+                englishBridge: 'Hello! Nice to meet you. I am a business specialist and I am here to help you with your project.',
+                persianMeaning: 'سلام! از دیدارتان خوشبختم. من متخصص کسب‌وکار هستم و اینجا هستم تا در پروژه‌تان به شما کمک کنم.'
+              },
+              {
+                id: 'sf_2',
+                lang: 'es' as const,
+                badge: '🇪🇸🇺🇸 اسپانیایی بانک، خرید و خدمات در آمریکا',
+                scenarioFa: '۲. مذاکره قیمت، خرید و خدمات بانکی به اسپانیایی آمریکایی',
+                targetPhrase: '¿Cuánto cuesta este servicio y podemos abrir una cuenta comercial hoy mismo?',
+                phoneticFa: 'کوآنتو کوئستا استه سرویسیو ای پودِموس آبریر اونا کوئنتا کومرسیال اُی میسمو؟',
+                englishBridge: 'How much does this service cost, and can we open a business account right today?',
+                persianMeaning: 'هزینه این خدمات چقدر است و آیا می‌توانیم همین امروز یک حساب تجاری باز کنیم؟'
+              },
+              {
+                id: 'sf_3',
+                lang: 'fr' as const,
+                badge: '🇫🇷🇨🇦 فرانسوی ویژه مهاجرت کانادا (TEF / Express Entry)',
+                scenarioFa: '۳. مصاحبه شغلی و اداری به فرانسوی در مونترال، اتاوا و تورنتو',
+                targetPhrase: 'Bonjour ! J’ai cinq ans d’expérience professionnelle et je souhaite contribuer à la croissance de votre entreprise au Canada.',
+                phoneticFa: 'بُنژور! ژِ سَنک آن دِکسپریانس پروفسیونِل اِ ژُ سوئِت کُنتریبوئه آ لا کروآسانس دُ وُتر آنترُپریز او کانادا.',
+                englishBridge: 'Hello! I have five years of professional experience and I wish to contribute to the growth of your company in Canada.',
+                persianMeaning: 'روز بخیر! من پنج سال سابقه کار حرفه‌ای دارم و مایل هستم در رشد شرکت شما در کانادا سهیم باشم.'
+              },
+              {
+                id: 'sf_4',
+                lang: 'fr' as const,
+                badge: '🇫🇷🇨🇦 فرانسوی بانک، مسکن و پزشکی در کانادا',
+                scenarioFa: '۴. باز کردن حساب بانکی، اجاره مسکن و خدمات درمانی در کانادا',
+                targetPhrase: 'Je voudrais prendre un rendez-vous avec le conseiller bancaire pour un prêt hypothécaire, s’il vous plaît.',
+                phoneticFa: 'ژُ وودره پراندر آن راندِوو آوِک لُ کُنسیه بانکر پور آن پره ایپوتِکر، سیل وو پله.',
+                englishBridge: 'I would like to make an appointment with the bank advisor for a mortgage loan, please.',
+                persianMeaning: 'لطفاً مایل هستم برای دریافت وام مسکن یک وقت ملاقات با مشاور بانکی بگیرم.'
+              }
+            ].map((item) => (
+              <div
+                key={item.id}
+                className="bg-white rounded-3xl border-2 border-indigo-200 p-6 space-y-3 shadow-xs flex flex-col justify-between"
+              >
+                <div className="space-y-2.5">
+                  <span className="inline-block px-3 py-1 rounded-xl bg-indigo-50 text-indigo-950 font-black text-xs border border-indigo-200">
+                    {item.badge}
+                  </span>
+                  <h3 className="font-black text-sm sm:text-base text-slate-900">{item.scenarioFa}</h3>
+
+                  <div className="p-4 rounded-2xl bg-slate-900 text-white space-y-1.5">
+                    <p className="text-base sm:text-lg font-black text-amber-300" dir="ltr">
+                      "{item.targetPhrase}"
+                    </p>
+                    <p className="text-xs font-bold text-emerald-300" dir="rtl">
+                      🗣️ تلفظ به فارسی: «{item.phoneticFa}»
+                    </p>
+                    <p className="text-xs text-slate-300" dir="ltr">
+                      🇬🇧 English Bridge: "{item.englishBridge}"
+                    </p>
+                    <p className="text-xs sm:text-sm font-black text-white pt-1" dir="rtl">
+                      🇮🇷 معنی فارسی: «{item.persianMeaning}»
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap gap-2 pt-2" dir="ltr">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      speakMultilingual(item.targetPhrase, item.lang, rate);
+                      onEarnLingous(15);
+                    }}
+                    className="flex-1 py-2.5 px-3 rounded-xl bg-indigo-700 hover:bg-indigo-600 text-white font-black text-xs flex items-center justify-center gap-1.5"
+                  >
+                    <Volume2 className="w-4 h-4" />
+                    <span>
+                      {item.lang === 'es' ? '🔊 Hear US Spanish (اسپانیایی)' : '🔊 Hear Canadian French (فرانسوی)'}
+                    </span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => speakEnglish(item.englishBridge, rate)}
+                    className="py-2.5 px-3 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-900 font-black text-xs"
+                  >
+                    🔊 EN
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => speakPersian(item.persianMeaning, 0.86)}
+                    className="py-2.5 px-3 rounded-xl bg-emerald-100 hover:bg-emerald-200 text-emerald-950 font-black text-xs"
+                  >
+                    🔊 فارسی
                   </button>
                 </div>
               </div>

@@ -272,9 +272,36 @@ export const AbleWayCityHub: React.FC<AbleWayCityHubProps> = ({ lingous, onEarnL
         </div>
       )}
 
-      {/* 3. GLOBAL DYNASTY & LEGAL 30% HEBA ENGINE */}
+      {/* 3. GLOBAL DYNASTY, REFERRAL LEAGUE & LEGAL 30% HEBA ENGINE */}
       {subTab === 'dynasty_heba30' && (
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
+        <div className="space-y-5">
+          {/* Global Referral League Banner */}
+          <div className="bg-gradient-to-r from-indigo-950 via-slate-900 to-teal-950 text-white rounded-3xl p-5 sm:p-6 border-2 border-amber-400/60 flex flex-wrap items-center justify-between gap-4">
+            <div className="space-y-1">
+              <span className="px-3 py-1 rounded-xl bg-amber-400 text-slate-950 font-black text-xs">
+                🌍 GLOBAL REFERRAL LEAGUE • لیگ جهانی معرفان (آمریکا، کانادا، اروپا، تاجیکستان، ازبکستان و ایران)
+              </span>
+              <h4 className="text-base sm:text-lg font-black text-amber-300 pt-1">
+                کد دعوت اختصاصی شهروندی شما: <span className="font-mono bg-white/15 px-2.5 py-0.5 rounded-lg text-emerald-300">AWC-SIYAVASH-777</span>
+              </h4>
+              <p className="text-xs text-slate-200">
+                با دعوت هر دوست از آمریکا، اروپا، تاجیکستان، ازبکستان یا ایران، ۱۰۰ امتیاز شهروندی در خزانه مشترک فامیل دریافت کرده و از «شهروند» تا «سفیر، مؤسس فامیل، سناتور، وزیر کابینه و عضو شورای عالی شهر» ارتقا می‌یابید.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                sound.playCoin();
+                navigator.clipboard?.writeText('AWC-SIYAVASH-777');
+                onEarnLingous(25);
+              }}
+              className="px-4 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs shadow-md shrink-0"
+            >
+              📋 کپی کد دعوت و دریافت +25 XP
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
           <div className="lg:col-span-7 bg-white rounded-3xl border-2 border-slate-200 p-6 space-y-4 shadow-xs">
             <h3 className="text-base sm:text-lg font-black text-slate-900">
               💝 موتور قانونی «هبه کردن تا ۳۰٪ امتیازات کسب‌شده» به فرزندان، اعضای فامیل یا افراد دارای معلولیت و ADHD
@@ -350,6 +377,7 @@ export const AbleWayCityHub: React.FC<AbleWayCityHubProps> = ({ lingous, onEarnL
                 </div>
               ))}
             </div>
+          </div>
           </div>
         </div>
       )}
