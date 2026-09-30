@@ -423,10 +423,10 @@ export function App() {
                 >
                   <div>
                     <span className="text-xs sm:text-sm font-black block text-amber-300">
-                      🇹🇯🇺🇿👑 قطب ۲: بخش ویژه تاجیکان و ازبکستان (Тоҷикӣ / خط سیریلیک)
+                      🇹🇯🇺🇿🇬🇪🇷🇺👑 قطب ۲: بخش ویژه تاجیکان، ازبکستان، گرجستان و روس‌زبانان (Тоҷикӣ / Кириллӣ)
                     </span>
                     <span className="text-[11px] text-cyan-100 block">
-                      لوح زرین سامانیان (سمرقند، بخارا و دوشنبه) + فارسی و انگلیسی با خط روسی
+                      لوح زرین سامانیان (سمرقند، بخارا، دوشنبه، تفلیس و کابل) + ۴ ردیفه سیریلیک و ۳۵ حرف تاجیکی
                     </span>
                   </div>
                   <span className="px-2 py-1 rounded-lg bg-cyan-400 text-slate-950 font-black text-[10px] shrink-0">

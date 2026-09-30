@@ -19,20 +19,21 @@ interface AbleWayCityHubProps {
 }
 
 const SEVEN_DEMOCRATIC_RANKS = [
-  { rank: 1, titleEn: '1. Citizen Pioneer', titleFa: '۱. شهروند پیشگام (Citizen Pioneer)', minXp: 0, badge: '🌱', rightsFa: 'حق رأی شهری، دریافت آموزش ۱۰۰٪ رایگان و شرکت در ۸ لیگ ورزش فکری' },
-  { rank: 2, titleEn: '2. Guild Master', titleFa: '۲. استاد صنف و هنر (Guild Master)', minXp: 300, badge: '⚒️', rightsFa: 'دریافت پروانه کسب‌وکار دیجیتال (Commercial Business Right) در بازار شهر' },
-  { rank: 3, titleEn: '3. District Councilor', titleFa: '۳. عضو شورای محله (District Councilor)', minXp: 600, badge: '🏛️', rightsFa: 'دریافت سند رسمی مالکیت زمین (Official Land Deed) در پایتخت AbleWay City' },
-  { rank: 4, titleEn: '4. Dynasty Founder', titleFa: '۴. بنیان‌گذار خاندان جهانی (Dynasty Founder)', minXp: 1000, badge: '🛡️', rightsFa: 'تأسیس رسمی فامیل/خاندان جهانی و فعال‌سازی موتور قانونی هبه ۳۰٪ به فرزندان و معلولان' },
-  { rank: 5, titleEn: '5. City Senator', titleFa: '۵. سناتور منتخب شهر (City Senator)', minXp: 2000, badge: '⚖️', rightsFa: 'عضویت در سنای دموکراسی ثروت و تصویب بورسیه‌های آموزشی شهروندان' },
-  { rank: 6, titleEn: '6. Cabinet Minister', titleFa: '۶. وزیر کابینه فرهنگ و اقتصاد (Cabinet Minister)', minXp: 3500, badge: '👑', rightsFa: 'مدیریت کلان تالارهای ۵ گانه گفتگو و لیگ‌های جهانی' },
-  { rank: 7, titleEn: '7. Supreme Chancellor', titleFa: '۷. صدراعظم منتخب شهر آرمانی (Supreme Chancellor)', minXp: 5000, badge: '🌟', rightsFa: 'بالاترین مقام دموکراتیک AbleWay City با نشان طلایی پاسداشت زبان و فرهنگ' }
+  { rank: 1, titleEn: '1. Citizen Pioneer • Шаҳрванд • Fuqaro', titleFa: '۱. شهروند پیشگام (Шаҳрванд / Citizen Pioneer)', minXp: 0, badge: '🌱', rightsFa: 'حق رأی شهری، دریافت آموزش ۱۰۰٪ رایگان و شرکت در ۸ لیگ ورزش فکری' },
+  { rank: 2, titleEn: '2. Cultural Ambassador • Сафири Фарҳанг • Madaniyat Elchisi', titleFa: '۲. سفیر فرهنگی و استاد صنف (Сафири Фарҳанг)', minXp: 300, badge: '⚒️', rightsFa: 'دریافت پروانه کسب‌وکار دیجیتال (Иҷозатномаи Тиҷорат) در بازار شهر توانا' },
+  { rank: 3, titleEn: '3. District Councilor • Узви Шӯро • Kengash Aʼzosi', titleFa: '۳. عضو شورای محله (Узви Шӯро / District Councilor)', minXp: 600, badge: '🏛️', rightsFa: 'دریافت سند رسمی مالکیت زمین (Эҳдои Замин) در بلوارهای سمرقند، بخارا، دوشنبه و تفلیس' },
+  { rank: 4, titleEn: '4. Dynasty Founder • Асосгузори Оила / Хонадон', titleFa: '۴. مؤسس فامیل و خاندان جهانی (Асосгузори Оила / Хонадон)', minXp: 1000, badge: '🛡️', rightsFa: 'تأسیس رسمی فامیل/خاندان جهانی و فعال‌سازی موتور قانونی هبه ۳۰٪ تا ۳۹٪ (Ҳадяи 30% то 39% EXP)' },
+  { rank: 5, titleEn: '5. City Senator • Сенатори Шаҳри Тавоно • Senator', titleFa: '۵. سناتور منتخب شهر توانا (Сенатор / City Senator)', minXp: 2000, badge: '⚖️', rightsFa: 'عضویت در سنای دموکراسی ثروت و قدرت (Демократияи Сарват ва Қудрат)' },
+  { rank: 6, titleEn: '6. Cabinet Minister • Вазири Девон • Vazir', titleFa: '۶. وزیر کابینه فرهنگ و اقتصاد (Вазири Девон / Cabinet Minister)', minXp: 3500, badge: '👑', rightsFa: 'مدیریت کلان تالارهای ۵ گانه گفتگو و لیگ‌های جهانی' },
+  { rank: 7, titleEn: '7. Supreme Council Seat • Курсии Шӯрои Олии Шаҳри Тавоно', titleFa: '۷. کرسی شورای عالی شهر توانا (Курсии Шӯрои Олии Шаҳри Тавоно)', minXp: 5000, badge: '🌟', rightsFa: 'بالاترین کرسی دموکراسی ثروت و قدرت در شهر توانا (AbleWay / Tavana City)' }
 ];
 
 const CITY_DISTRICTS = [
   { id: 'd_1', nameFa: 'بلوار فردوسی و تالار زبان پارسی', nameEn: 'Ferdowsi Royal Boulevard', plotCode: 'AWC-FERDOWSI-101', businessType: 'آکادمی دوزبانه و کتابخانه دیجیتال' },
-  { id: 'd_2', nameFa: 'چهارراه بازار بزرگ فرش و هنر اصیل ایران', nameEn: 'Grand Persian Carpet & Heritage Plaza', plotCode: 'AWC-CARPET-48', businessType: 'نگارخانه فرش دستباف و صادرات جهانی' },
-  { id: 'd_3', nameFa: 'میدان فناوری، کردیت ۸۵۰ و تجارت جهانی', nameEn: 'Silicon & 850 FinTech Square', plotCode: 'AWC-FINTECH-850', businessType: 'دفتر مشاوره مالی، استارتاپ و حقوق بین‌الملل' },
-  { id: 'd_4', nameFa: 'باغ مولانا و تالار ۸ ورزش فکری خانواده', nameEn: 'Rumi Garden & Mind Sports Arena', plotCode: 'AWC-RUMI-777', businessType: 'باشگاه فرهنگی، شطرنج، تخته‌نرد و موسیقی' }
+  { id: 'd_2', nameFa: 'بلوار زرین سمرقند، بخارا و دوشنبه (Хиёбони Самарқанду Бухоро ва Душанбе)', nameEn: 'Samarkand, Bukhara & Dushanbe Royal Avenue', plotCode: 'AWC-SAMARKAND-777', businessType: 'مرکز تجارت و فرهنگ سامانیان (Эҳдои Замин ва Иҷозатномаи Тиҷорат)' },
+  { id: 'd_3', nameFa: 'بلوار تفلیس، هرات، بلخ و کابل (თბილისი • هرات و بلخ)', nameEn: 'Tbilisi, Herat, Balkh & Kabul Heritage Plaza', plotCode: 'AWC-TBILISI-BALKH-303', businessType: 'نگارخانه دوستی ملل، شعر مولانا و تجارت منطقه‌ای' },
+  { id: 'd_4', nameFa: 'چهارراه بازار بزرگ فرش و هنر اصیل ایران (پلاک ۴۸)', nameEn: 'Grand Persian Carpet & Heritage Plaza', plotCode: 'AWC-CARPET-48', businessType: 'نگارخانه فرش دستباف و صادرات جهانی' },
+  { id: 'd_5', nameFa: 'میدان فناوری، کردیت ۸۵۰ و تجارت جهانی', nameEn: 'Silicon & 850 FinTech Square', plotCode: 'AWC-FINTECH-850', businessType: 'دفتر مشاوره مالی، استارتاپ و حقوق بین‌الملل' }
 ];
 
 export const AbleWayCityHub: React.FC<AbleWayCityHubProps> = ({ lingous, onEarnLingous }) => {
@@ -276,29 +277,55 @@ export const AbleWayCityHub: React.FC<AbleWayCityHubProps> = ({ lingous, onEarnL
       {subTab === 'dynasty_heba30' && (
         <div className="space-y-5">
           {/* Global Referral League Banner */}
-          <div className="bg-gradient-to-r from-indigo-950 via-slate-900 to-teal-950 text-white rounded-3xl p-5 sm:p-6 border-2 border-amber-400/60 flex flex-wrap items-center justify-between gap-4">
-            <div className="space-y-1">
-              <span className="px-3 py-1 rounded-xl bg-amber-400 text-slate-950 font-black text-xs">
-                🌍 GLOBAL REFERRAL LEAGUE • لیگ جهانی معرفان (آمریکا، کانادا، اروپا، تاجیکستان، ازبکستان و ایران)
-              </span>
-              <h4 className="text-base sm:text-lg font-black text-amber-300 pt-1">
-                کد دعوت اختصاصی شهروندی شما: <span className="font-mono bg-white/15 px-2.5 py-0.5 rounded-lg text-emerald-300">AWC-SIYAVASH-777</span>
-              </h4>
-              <p className="text-xs text-slate-200">
-                با دعوت هر دوست از آمریکا، اروپا، تاجیکستان، ازبکستان یا ایران، ۱۰۰ امتیاز شهروندی در خزانه مشترک فامیل دریافت کرده و از «شهروند» تا «سفیر، مؤسس فامیل، سناتور، وزیر کابینه و عضو شورای عالی شهر» ارتقا می‌یابید.
-              </p>
+          <div className="bg-gradient-to-r from-indigo-950 via-slate-900 to-teal-950 text-white rounded-3xl p-5 sm:p-6 border-2 border-amber-400/60 space-y-4">
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <div className="space-y-1">
+                <span className="px-3 py-1 rounded-xl bg-amber-400 text-slate-950 font-black text-xs">
+                  🌍 ЛИГАИ МУАРРИФОНИ ТОҶИКИСТОН, ӮЗБЕКИСТОН, АФҒОНИСТОН ВА ГУРҶИСТОН • لیگ معرفان به خط خود هر ملت
+                </span>
+                <h4 className="text-base sm:text-lg font-black text-amber-300 pt-1">
+                  منشور دموکراسی ثروت و قدرت در شهر توانا (Демократияи Сарват ва Қудрат дар Шаҳри Тавоно) • کد دعوت: <span className="font-mono bg-white/15 px-2.5 py-0.5 rounded-lg text-emerald-300">AWC-SIYAVASH-777</span>
+                </h4>
+                <p className="text-xs text-slate-200">
+                  وعده رسمی شهر توانا: صدرنشینان لیگ معرفان تاجیکستان، ازبکستان، افغانستان، گرجستان، ایران و غرب به کرسی‌های شورای عالی شهر، سند رایگان زمین در بلوارهای سمرقند، بخارا، دوشنبه و تفلیس و حق تأسیس فامیل می‌رسند.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  sound.playCoin();
+                  navigator.clipboard?.writeText('AWC-SIYAVASH-777');
+                  onEarnLingous(25);
+                }}
+                className="px-4 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs shadow-md shrink-0"
+              >
+                📋 کپی کد دعوت (+25 XP)
+              </button>
             </div>
-            <button
-              type="button"
-              onClick={() => {
-                sound.playCoin();
-                navigator.clipboard?.writeText('AWC-SIYAVASH-777');
-                onEarnLingous(25);
-              }}
-              className="px-4 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs shadow-md shrink-0"
-            >
-              📋 کپی کد دعوت و دریافت +25 XP
-            </button>
+
+            {/* Independent Native-Script Leaderboard for Tajikistan, Uzbekistan, Georgia & Afghanistan */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 text-xs" dir="ltr">
+              <div className="p-3 rounded-2xl bg-cyan-950/80 border border-cyan-400/50 space-y-1">
+                <span className="font-black text-amber-300 block">🇹🇯 #1 Тоҷикистон (Душанбе)</span>
+                <p className="font-bold text-white">Сиёвуш Сомонӣ — 4,850 XP</p>
+                <span className="text-[11px] text-cyan-200 block">Курсии Шӯрои Олии Шаҳри Тавоно</span>
+              </div>
+              <div className="p-3 rounded-2xl bg-emerald-950/80 border border-emerald-400/50 space-y-1">
+                <span className="font-black text-amber-300 block">🇺🇿 #1 Oʻzbekiston (Samarqand)</span>
+                <p className="font-bold text-white">Ulugʻbek Buxoriy — 4,420 XP</p>
+                <span className="text-[11px] text-emerald-200 block">Oliy Kengash Raisi • Samarqand Deed</span>
+              </div>
+              <div className="p-3 rounded-2xl bg-rose-950/80 border border-amber-300/50 space-y-1">
+                <span className="font-black text-amber-300 block">🇬🇪 #1 საქართველო (თბილისი)</span>
+                <p className="font-bold text-white">გიორგი თბილისელი — 3,910 XP</p>
+                <span className="text-[11px] text-amber-200 block">სاپატიო სენატორი (Tbilisi Senator)</span>
+              </div>
+              <div className="p-3 rounded-2xl bg-slate-950/90 border border-amber-400/50 space-y-1" dir="rtl">
+                <span className="font-black text-amber-300 block">🇦🇫🇮🇷 #1 هرات، بلخ، کابل و تهران</span>
+                <p className="font-bold text-white">احمدشاه و آریا — 4,950 XP</p>
+                <span className="text-[11px] text-emerald-300 block">کرسی شورای عالی شهر توانا</span>
+              </div>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
@@ -337,13 +364,13 @@ export const AbleWayCityHub: React.FC<AbleWayCityHubProps> = ({ lingous, onEarnL
 
               <div>
                 <label className="text-xs font-black text-slate-700 block mb-1">
-                  درصد هبه مجاز (از ۵٪ تا سقف قانونی ۳۰٪): {hebaPercentage}% (معادل {maxHebaAmount} XP)
+                  درصد هبه مجاز (Ҳадяи 30% то 39% EXP ба Дӯстон — از ۵٪ تا سقف ۳۹٪): {hebaPercentage}% (معادل {maxHebaAmount} XP)
                 </label>
                 <input
                   type="range"
                   min={5}
-                  max={30}
-                  step={5}
+                  max={39}
+                  step={1}
                   value={hebaPercentage}
                   onChange={(e) => setHebaPercentage(Number(e.target.value))}
                   className="w-full accent-emerald-700"
