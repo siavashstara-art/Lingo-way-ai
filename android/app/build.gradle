@@ -1,0 +1,80 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+}
+
+def keystorePropertiesFile = rootProject.file("key.properties")
+def keystoreProperties = new Properties()
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
+android {
+    namespace 'com.ablewaycity.lingoenglish.farsibridge'
+    compileSdk 35
+
+    defaultConfig {
+        applicationId "com.ablewaycity.lingoenglish.farsibridge"
+        minSdk 24
+        targetSdk 35
+        versionCode 30
+        versionName "3.0.0-AbleWayGlobal"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        resValue "string", "admob_app_id", keystoreProperties.getProperty("ADMOB_APP_ID", "ca-app-pub-3940256099942544~3347511713")
+    }
+
+    signingConfigs {
+        release {
+            if (keystorePropertiesFile.exists()) {
+                keyAlias keystoreProperties['keyAlias']
+                keyPassword keystoreProperties['keyPassword']
+                storeFile file(keystoreProperties['storeFile'])
+                storePassword keystoreProperties['storePassword']
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            applicationIdSuffix ".debug"
+            debuggable true
+        }
+    }
+
+    bundle {
+        language {
+            enableSplit = false // Keep Persian (fa), English (en), German (de), French (fr), Spanish (es), Arabic (ar) in one universal bundle
+        }
+        density {
+            enableSplit = true
+        }
+        abi {
+            enableSplit = true
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+}
+
+dependencies {
+    implementation 'androidx.core:core-ktx:1.15.0'
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'com.google.android.material:material:1.12.0'
+    implementation 'androidx.webkit:webkit:1.12.1'
+    // Google Mobile Ads SDK (AdMob) for High-CPM US/Canada/UK/Germany/Australia Monetization
+    implementation 'com.google.android.gms:play-services-ads:23.6.0'
+    // Google Play In-App Review & Billing Readiness
+    implementation 'com.google.android.play:review-ktx:2.0.2'
+}

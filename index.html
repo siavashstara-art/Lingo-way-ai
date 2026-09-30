@@ -3,16 +3,52 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>English-lingou | شهر دوزبانه توانا و مترجم دو طبقه فرش و سفر</title>
-    <meta name="description" content="اپلیکیشن دوزبانه آموزش فارسی به انگلیسی‌زبانان، انگلیسی به فارسی‌زبانان، مترجم صوتی دوطرفه آفلاین و آکادمی تخصصی تجارت فرش ایران به یاد شادروان حاج حسین آقای علی‌میری" />
-    <meta property="og:title" content="English-lingou | شهر دوزبانه توانا و مترجم دو طبقه فرش و سفر" />
-    <meta property="og:description" content="مترجم صوتی دوطرفه آفلاین، آموزش فارسی و تعارف، و مترجم دو طبقه تخصصی تجارت فرش ایران به یاد شادروان حاج حسین آقای علی‌میری" />
+    <meta name="theme-color" content="#064e3b" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="FarsiBridge" />
+    <title>LingoEnglish & Farsi Bridge (AbleWay City Capital): Learn Persian for English Speakers & Learn English for Persian Speakers</title>
+    <meta name="description" content="100% Free Global Super-App for US, Canada, UK, Germany & Australia: Learn Persian (Farsi/Dari/Tajik) with Triple-Script & Native Iranian Voices, Learn English, VictoryPath Visa & Citizenship Prep, 850 Credit Clinic, AbleWay City, 8 Family Mind Sports & Persian Carpet Academy." />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="LingoEnglish & Farsi Bridge (AbleWay City Capital)" />
+    <meta property="og:title" content="LingoEnglish & Farsi Bridge (AbleWay City Capital): Learn Persian for English Speakers & Learn English for Persian Speakers" />
+    <meta property="og:description" content="100% Free Global Super-App: Learn Persian (Farsi/Dari/Tajik) for English, German, French & Spanish Speakers + Learn English, Visa & Citizenship Prep, 850 Credit Clinic, AbleWay City & 8 Family Mind Sports." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="LingoEnglish & Farsi Bridge (AbleWay City Capital)" />
+    <meta name="twitter:description" content="Learn Persian (Farsi/Dari/Tajik) for English Speakers & Learn English for Persian Speakers — 100% Free with ADHD/Blind/Deaf Accessibility, 850 Credit Clinic & 8 Mind Sports." />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+    <link rel="apple-touch-icon" href="/icon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "LingoEnglish & Farsi Bridge (AbleWay City Capital)",
+        "alternateName": "Learn Persian for English Speakers & Learn English for Persian Speakers",
+        "applicationCategory": "EducationalApplication",
+        "operatingSystem": "Android, iOS, Web",
+        "description": "100% Free Dual-Direction Language Super-App teaching Persian (Farsi, Dari, Tajik) to English, German, French & Spanish speakers and American/British/Canadian English to Persian speakers, featuring AbleWay Accessibility & ADHD Focus Bar, VictoryPath Visa & Citizenship Hub, 850 Credit Repair Clinic, AbleWay City, 8 Family Mind Sports, and Persian Carpet Trade Academy.",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        }
+      }
+    </script>
   </head>
   <body class="bg-slate-50 text-slate-900 antialiased selection:bg-teal-500 selection:text-white">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js').catch(() => {});
+        });
+      }
+    </script>
   </body>
 </html>

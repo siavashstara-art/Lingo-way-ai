@@ -1,0 +1,11 @@
+# Copy this file to android/key.properties (DO NOT commit key.properties to public git)
+# Used for signing the Google Play Store Release Bundle (.aab) and configuring Google AdMob
+storePassword=YOUR_KEYSTORE_PASSWORD_HERE
+keyPassword=YOUR_KEY_PASSWORD_HERE
+keyAlias=lingoenglish-farsi-bridge-upload-key
+storeFile=../keystore/lingoenglish-release-key.jks
+
+# Google AdMob Production App ID (Replace with your US/EU Friend's AdMob App ID)
+ADMOB_APP_ID=ca-app-pub-XXXXXXXXXXXXXXXX~YYYYYYYYYY
+ADMOB_HIGH_CPM_FINANCE_INTERSTITIAL=ca-app-pub-XXXXXXXXXXXXXXXX/ZZZZZZZZZZ
+ADMOB_REWARDED_LESSON_UNIT=ca-app-pub-XXXXXXXXXXXXXXXX/WWWWWWWWWW

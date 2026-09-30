@@ -28,7 +28,9 @@ import {
   CARPET_TERMINOLOGY_DB,
   CARPET_MERCHANT_DIALOGUES,
   CARPET_NEGOTIATION_QUIZZES,
-  CarpetTermItem
+  OFFLINE_CARPET_TRADE_SENTENCES,
+  CarpetTermItem,
+  OfflineCarpetSentence
 } from '../data/carpetTradeData';
 import { CarpetSmartTools } from './CarpetSmartTools';
 import { OfflineRajScanner } from './OfflineRajScanner';
@@ -61,16 +63,17 @@ interface ShowroomChatMessage {
 }
 
 const STANDARD_CARPET_DIMENSIONS = [
-  { nameFa: 'پشتی (Poshti)', zar: 'نیم ذرع', metric: '60 × 90 cm', imperial: "2'0\" × 3'0\" ft", arabic: 'بشتي (٦٠×٩٠ سم)', useFa: 'پادری لوکس، روکش پشتی سنتی' },
-  { nameFa: 'ذرع و چارک (Zar-o-Charak)', zar: '۱.۲۵ ذرع', metric: '80 × 125 cm', imperial: "2'7\" × 4'1\" ft", arabic: 'ذرع وربع (٨٠×١٢٥ سم)', useFa: 'ورودی، تابلوفرش یا پای مبل' },
-  { nameFa: 'ذرع و نیم (Zar-o-Nim)', zar: '۱.۵ ذرع', metric: '105 × 155 cm', imperial: "3'5\" × 5'1\" ft", arabic: 'ذرع ونصف (١٠٥×١٥٥ سم)', useFa: 'قالیچه محبوب دکوراتیو و کلکسیونی' },
-  { nameFa: 'دو ذرع / قالیچه (Dozar)', zar: '۲ ذرع', metric: '135 × 205 cm', imperial: "4'5\" × 6'7\" ft", arabic: 'دوزرع / قاليجه (١٣٥×٢٠٥ سم)', useFa: 'پرفروش‌ترین سایز قالیچه صادراتی جهان' },
-  { nameFa: 'پرده‌ای (Pardeh-i)', zar: '۲.۵ ذرع', metric: '150 × 250 cm', imperial: "5'0\" × 8'2\" ft", arabic: 'برده إي (١٥٠×٢٥٠ سم)', useFa: 'سالن‌های متوسط و اتاق مطالعه' },
-  { nameFa: 'قالی ۶ متری (6-Meter / Seh-Zar)', zar: '۳ ذرع', metric: '200 × 300 cm', imperial: "6'7\" × 9'10\" ft", arabic: 'قالي ٦ أمتار (٢٠٠×٣٠٠ سم)', useFa: 'استاندارد اصلی پذیرایی و نشیمن' },
-  { nameFa: 'قالی ۹ متری (9-Meter)', zar: '۳.۵ در ۲.۵ ذرع', metric: '250 × 350 cm', imperial: "8'2\" × 11'6\" ft", arabic: 'قالي ٩ أمتار (٢٥٠×٣٥٠ سم)', useFa: 'تالارها و سالن‌های پذیرایی بزرگ' },
-  { nameFa: 'قالی ۱۲ متری (12-Meter / Chahar-Zar)', zar: '۴ ذرع', metric: '300 × 400 cm', imperial: "9'10\" × 13'1\" ft", arabic: 'قالي ١٢ متراً (٣٠٠×٤٠٠ سم)', useFa: 'قصرها، مجالس بزرگ و لابی‌های مجلل' },
-  { nameFa: 'کناره (Kenareh / Runner)', zar: 'عرض ۰.۸ تا ۱.۲ ذرع', metric: '80–120 × 250–600 cm', imperial: "2'7\"–4' × 8'–20' ft", arabic: 'كناره / ممر طويل', useFa: 'راهروها، پله‌ها و ورودی‌های کشیده' },
-  { nameFa: 'فرش مربع (Morabba / Square)', zar: '۲×۲ یا ۳×۳ ذرع', metric: '200×200 / 300×300 cm', imperial: "6'7\"×6'7\" or 10'×10' ft", arabic: 'سجادة مربعة (٢×٢ أو ٣×٣ م)', useFa: 'زیر میز ناهارخوری گرد یا مربعی و اتاق‌های متقارن' }
+  { nameFa: 'پشتی دستباف (Poshti)', zar: 'نیم ذرع', metric: '60 × 90 cm', imperial: "2'0\" × 3'0\" ft (2×3 ft)", arabic: 'بشتي تقليدي (٦٠×٩٠ سم)', useFa: 'پادری لوکس، تکیه‌گاه سنتی یا تابلو دیواری' },
+  { nameFa: 'ذرع و چارک / زرع چارک (Zar-o-Charak)', zar: '۱.۲۵ ذرع', metric: '80 × 125 cm', imperial: "2'7\" × 4'1\" ft (2.7×4.1 ft)", arabic: 'ذرع وربع (٨٠×١٢٥ سم)', useFa: 'ورودی، جلوی میز کار یا پای مبل' },
+  { nameFa: 'ذرع و نیم / زرع و نیم / زرنیم (Zar-o-Nim)', zar: '۱.۵ ذرع', metric: '105 × 155 cm', imperial: "3'5\" × 5'1\" ft (3.5×5 ft)", arabic: 'ذرع ونصف / زرنيم (١٠٥×١٥٥ سم)', useFa: 'قالیچه محبوب کلکسیونی و چمدانی مسافران خارجی' },
+  { nameFa: 'قالیچه دو ذرع / دوزرع (Dozar)', zar: '۲ ذرع', metric: '135 × 205 cm', imperial: "4'5\" × 6'7\" ft (4.5×6.7 ft)", arabic: 'دوزرع / قاليجه (١٣٥×٢٠٥ سم)', useFa: 'پرفروش‌ترین قواره قالیچه صادراتی ایران در جهان' },
+  { nameFa: 'پرده‌ای (Pardeh-i)', zar: '۲.۵ ذرع', metric: '150 × 250 cm', imperial: "5'0\" × 8'2\" ft (5×8.2 ft)", arabic: 'برده إي (١٥٠×٢٥٠ سم)', useFa: 'سالن‌های متوسط و اتاق مطالعه' },
+  { nameFa: 'قالی ۶ متری (6-Meter Ghali / Seh-Zar)', zar: '۳ ذرع', metric: '200 × 300 cm', imperial: "6'7\" × 9'10\" ft (6.7×10 ft)", arabic: 'قالي ٦ أمتار (٢٠٠×٣٠٠ سم)', useFa: 'استاندارد اصلی قالی پذیرایی و نشیمن' },
+  { nameFa: 'قالی ۹ متری (9-Meter Ghali)', zar: '۳.۵ در ۲.۵ ذرع', metric: '250 × 350 cm', imperial: "8'2\" × 11'6\" ft (8.2×11.5 ft)", arabic: 'قالي ٩ أمتار (٢٥٠×٣٥٠ سم)', useFa: 'تالارها و سالن‌های پذیرایی بزرگ' },
+  { nameFa: 'قالی ۱۲ متری (12-Meter Ghali / Chahar-Zar)', zar: '۴ ذرع', metric: '300 × 400 cm', imperial: "9'10\" × 13'1\" ft (10×13.1 ft)", arabic: 'قالي ١٢ متراً (٣٠٠×٤٠٠ سم)', useFa: 'قصرها، مجالس بزرگ و لابی‌های مجلل' },
+  { nameFa: 'فرش مربع (Morabba / Square Carpet)', zar: '۲×۲ یا ۳×۳ ذرع', metric: '200×200 / 300×300 cm', imperial: "6'7\"×6'7\" or 10'×10' ft", arabic: 'سجادة مربعة (٢×٢ أو ٣×٣ م)', useFa: 'زیر میز ناهارخوری گرد یا مربعی و تالارهای متقارن' },
+  { nameFa: 'گلیم و فرش کُرد (Gelim & Kurdish Bidjar/Senneh)', zar: 'انواع قواره و کناره', metric: '100×150 تا 250×350 cm', imperial: "3.3×5 ft up to 8.2×11.5 ft", arabic: 'كليم وسجاد كردي (بيجار وسنندج)', useFa: 'گلیم دوطرفه و فرش آهنین کُرد با دوام بالای ۱۰۰ سال' },
+  { nameFa: 'کناره راهرویی (Kenareh / Runner)', zar: 'عرض ۰.۸ تا ۱.۲ ذرع', metric: '80–120 × 250–600 cm', imperial: "2'7\"–4' × 8'–20' ft", arabic: 'كناره / سجادة ممر طويل', useFa: 'راهروها، پله‌ها و ورودی‌های کشیده' }
 ];
 
 const CARPET_MULTILINGUAL_RULES: Array<{
@@ -98,6 +101,30 @@ const CARPET_MULTILINGUAL_RULES: Array<{
     pronEn: 'this pees iz koh-neh zaa-tee — aw-then-tik nach-ur-uh-lee aydjd'
   },
   {
+    keywords: ['فرش کرد', 'قالی کرد', 'کردی', 'بیجار', 'سنه', 'سنندج'],
+    en: 'This is an authentic Kurdish Persian rug ("Farsh-e Kord" from Bidjar & Senneh), renowned worldwide as the "Iron Rug of Persia" for its ultra-dense compacted weave and highland wool.',
+    ar: 'هذه سجادة كردية إيرانية أصيلة (من بيجار وسنندج)، وتُلقب عالمياً بـ«سجادة الحديد الفارسية» لمتانتها الفائقة وصوفها الجبلي الطبيعي.',
+    zh: '这是正宗的波斯库尔德手工地毯（毕贾尔与萨南达季），因织法极其紧密被誉为“波斯铁毯”，可流传百年。',
+    ru: 'Это подлинный курдский персидский ковер (Биджар и Сене), всемирно известный как «Железный ковер Персии» благодаря сверхплотному плетению.',
+    pronEn: 'this iz an aw-then-tik kur-dish rug — theh eye-urn rug ov per-zhuh'
+  },
+  {
+    keywords: ['کهنه و قدیمی', 'قدیمی', 'عتیقه'],
+    en: 'This is a rare "Kohneh & Ghadimi" (vintage and antique collector piece) with full healthy pile and rich organic patina.',
+    ar: 'هذه قطعة «قديمة وأثرية» نادرة للمقتنين، تحتفظ بوبرها الكامل وألوانها النباتية المعتّقة.',
+    zh: '这是一件珍稀的古董收藏级波斯地毯（Kohneh & Ghadimi），绒头饱满，包浆醇厚。',
+    ru: 'Это редкий старинный антикварный ковер («Кохне и Гадими») с полным ворсом и благородной патиной.',
+    pronEn: 'this iz ah rair vin-tij and an-teek kuh-lek-ter pees with ful pyle'
+  },
+  {
+    keywords: ['نوبافت', 'نو بافت', 'آکبند'],
+    en: 'This carpet is "Now-baft"—brand-new off the loom, never walked on, in pristine mint condition.',
+    ar: 'هذه السجادة «نوبافت» أي جديدة تماماً من النول ولم تُفرش من قبل.',
+    zh: '这张地毯是全新下机的作品（Now-baft），从未踩踏，品相完美。',
+    ru: 'Этот ковер «Ноу-бафт» — абсолютно новый, только со станка, в идеальном состоянии.',
+    pronEn: 'this kar-pet iz now-baft — brand noo off theh loom'
+  },
+  {
     keywords: ['دو ذرع', 'دوزرع'],
     en: 'It is a classic "Dozar" Ghalicheh size, measuring 200 by 135 centimeters (4.5 by 6.7 feet).',
     ar: 'مقاسها «دوزرع» الكلاسيكي، وأبعادها ٢٠٠ في ١٣٥ سنتيمتراً (٤.٥ في ٦.٧ قدم).',
@@ -106,20 +133,44 @@ const CARPET_MULTILINGUAL_RULES: Array<{
     pronEn: 'doh-zar syze, 200 bye 135 cm (4.5 bye 6.7 feet)'
   },
   {
-    keywords: ['ذرع و نیم', 'زرع و نیم'],
-    en: 'It is a "Zar-o-Nim" area rug size, measuring 150 by 105 centimeters (3.5 by 5 feet).',
-    ar: 'مقاسها «ذرع ونصف»، وأبعادها ١٥٠ في ١٠٥ سنتيمتر (٣.٥ في ٥ قدم).',
+    keywords: ['ذرع و نیم', 'زرع و نیم', 'زرنیم', 'ذرنیم'],
+    en: 'It is a "Zar-o-Nim" (Zarnim) area rug size, measuring 150 by 105 centimeters (3.5 by 5 feet)—easy to pack in your suitcase.',
+    ar: 'مقاسها «ذرع ونصف (زرنيم)»، وأبعادها ١٥٠ في ١٠٥ سنتيمتر (٣.٥ في ٥ قدم)، وسهلة الوضع في حقيبة السفر.',
     zh: '这是“Zar-o-Nim”尺寸（150×105厘米 / 3.5×5英尺），非常适合放入行李箱。',
-    ru: 'Это размер «Зар-о-Ним» — 150 на 105 сантиметров (3,5 на 5 футов).',
+    ru: 'Это размер «Зар-о-Ним» — 150 на 105 сантиметров (3,5 на 5 футов), легко помещается в чемодан.',
     pronEn: 'zar-oh-neem rug, 150 bye 105 cm (3.5 bye 5 feet)'
   },
   {
-    keywords: ['ذرع و چارک', 'چارک'],
+    keywords: ['ذرع و چارک', 'زرع چارک', 'زرع و چارک', 'چارک'],
     en: 'It is a "Zar-o-Charak" size, measuring 125 by 80 centimeters (2.7 by 4.1 feet).',
-    ar: 'مقاسها «ذرع وربع»، وأبعادها ١٢٥ في ٨٠ سنتيمتراً.',
-    zh: '这是“Zar-o-Charak”精致尺寸（125×80厘米）。',
-    ru: 'Это размер «Зар-о-Чарак» — 125 на 80 сантиметров.',
-    pronEn: 'zar-oh-cha-rak syze, 125 bye 80 cm'
+    ar: 'مقاسها «ذرع وربع (زرع تشارك)»، وأبعادها ١٢٥ في ٨٠ سنتيمتراً (٢.٧ في ٤.١ قدم).',
+    zh: '这是“Zar-o-Charak”精致尺寸（125×80厘米 / 2.7×4.1英尺）。',
+    ru: 'Это размер «Зар-о-Чарак» — 125 на 80 сантиметров (2,7 на 4,1 фута).',
+    pronEn: 'zar-oh-cha-rak syze, 125 bye 80 cm (2.7 bye 4.1 feet)'
+  },
+  {
+    keywords: ['گلیم'],
+    en: 'It is a reversible handwoven flat-weave Persian "Gelim" (Kilim) dyed with 100% natural vegetable colors.',
+    ar: 'هذا «كليم» إيراني منسوج يدوياً بدون وبر ويمكن استخدامه على الوجهين بألوان نباتية طبيعية.',
+    zh: '这是正宗波斯手工平织基里姆地毯（Gelim / Kilim），双面可用，天然植物染色。',
+    ru: 'Это двусторонний персидский безворсовый ковер ручной работы «Гелим» (Килим) с натуральными красителями.',
+    pronEn: 'hand-woh-ven flat-weev per-zhun kee-leem'
+  },
+  {
+    keywords: ['پشتی'],
+    en: 'It is a traditional hand-knotted Persian "Poshti" bolster/accent rug measuring 90 by 60 cm (2 by 3 feet).',
+    ar: 'هذه قطعة «بشتي» إيرانية تقليدية معقودة يدوياً بمقاس ٩٠ في ٦٠ سنتيمتراً (٢ في ٣ قدم).',
+    zh: '这是波斯传统手工靠垫/门厅毯“Poshti”，尺寸为90×60厘米（2×3英尺）。',
+    ru: 'Это традиционный персидский коврик «Пошти» ручной работы размером 90 на 60 см (2 на 3 фута).',
+    pronEn: 'truh-dish-un-ul per-zhun posh-tee rug, 90 bye 60 cm (2 bye 3 feet)'
+  },
+  {
+    keywords: ['مربع'],
+    en: 'It is a custom-woven Square Persian carpet ("Morabba", such as 200×200 cm / 6.7×6.7 ft or 300×300 cm / 10×10 ft).',
+    ar: 'هذه سجادة إيرانية «مربعة» نادرة (٢٠٠×٢٠٠ سم أو ٣٠٠×٣٠٠ سم) منسوجة على نول عريض خاص.',
+    zh: '这是定制宽机织造的波斯正方形地毯（Morabba，200×200厘米 / 6.7×6.7英尺）。',
+    ru: 'Это редкий квадратный персидский ковер («Морабба», 200×200 см / 6,7×6,7 футов).',
+    pronEn: 'kus-tum skwair per-zhun kar-pet (mo-rab-ba), 6.7 bye 6.7 feet'
   },
   {
     keywords: ['ابریشم', 'چله', 'کرک', 'رج'],
@@ -515,25 +566,33 @@ export const CarpetTradeAcademy: React.FC<CarpetTradeAcademyProps> = ({
 
           <div className="p-4 sm:p-5 rounded-2xl bg-black/35 border border-amber-400/40 space-y-2">
             <p className="text-xs sm:text-sm text-amber-100 leading-relaxed font-bold">
-              🌹 این بخش در پاسداشت و کمک به ترویج تجارت هنر بومی فرش دستباف ایران و در بزرگداشت پدر مرحومم <strong className="text-amber-300 underline decoration-amber-400/60 underline-offset-4">شادروان حاج حسین آقای علی‌میری</strong> که از تاجران بنام، خوش‌نام و صاحب‌سبک فرش ایران و جهان بودند، به صورت کاملاً رایگان و آفلاین تقدیم به تمامی فرش‌فروشان، بافندگان و علاقه‌مندان فرش ایرانی می‌گردد.
+              🌹 این بخش را فرزندی بزرگ‌شده بر سرِ سفرهٔ پُربرکتِ فرش دستباف در ایران‌زمین، در پاسداشت هنر بومی فرش ایران و در بزرگداشت پدر مرحومم <strong className="text-amber-300 underline decoration-amber-400/60 underline-offset-4">شادروان حاج حسین آقای علی‌میری</strong> (از تاجران بنام، خوش‌نام و صاحب‌سبک فرش ایران و جهان) ساخته است.
             </p>
-            <p className="text-[11px] sm:text-xs text-amber-200/80 italic">
-              Dedicated in loving memory of the late Master Merchant Haj Hossein Agha Ali Miri, a distinguished pioneer of Iranian & international handwoven carpet trade.
+            <p className="text-xs sm:text-sm text-amber-300 font-black leading-relaxed">
+              📍 نشانی حجره و نمایشگاه: تهران، خیابان خیام شمالی، جنب مترو خیام، بازار فرش ایران، طبقه همکف، پلاک ۴۸ — «فرش حسین علی‌میری و پسران»
+            </p>
+            <p className="text-[11px] sm:text-xs text-amber-200/90 italic" dir="ltr">
+              🏛️ Crafted by a son raised at the blessed table of Persian carpet artistry in Iran, in loving memory of Master Merchant Haj Hossein Agha Ali-Miri • <strong>Hossein Ali-Miri & Sons Persian Carpets</strong>: Ground Floor, No. 48, Iran Carpet Bazaar, Next to Khayyam Metro Station, North Khayyam St., Tehran, Iran.
             </p>
           </div>
 
-          <div className="p-4 rounded-2xl bg-amber-500/15 border border-amber-300/40 flex items-center gap-3">
-            <div className="p-2.5 rounded-xl bg-amber-400 text-slate-950 shrink-0">
-              <Store className="w-5 h-5" />
+          <div className="p-4 sm:p-5 rounded-2xl bg-amber-400/20 border-2 border-amber-300/70 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-md">
+            <div className="flex items-start sm:items-center gap-3">
+              <div className="p-3 rounded-xl bg-amber-400 text-slate-950 shrink-0 shadow-xs">
+                <Store className="w-6 h-6" />
+              </div>
+              <div>
+                <h2 className="text-sm sm:text-base font-black text-amber-200">
+                  🌟 دعوت‌نامه ویژه ویژه همکاران و تجار محترم فرش: برنامه «فرش بازار (Farsh Bazaar)»
+                </h2>
+                <p className="text-xs sm:text-sm text-white font-bold mt-1 leading-relaxed">
+                  فرش‌فروشان عزیز می‌توانند به برنامه تخصصی <strong>«فرش بازار (Farsh Bazaar)»</strong> که توسط همین توسعه‌دهنده (<strong>سیاوش علی‌میری</strong>) ساخته شده مراجعه بفرمایند.
+                </p>
+              </div>
             </div>
-            <div>
-              <h2 className="text-xs sm:text-sm font-black text-amber-200">
-                مکمل رسمی برنامه «فرش بازار (Farsh Bazaar)»
-              </h2>
-              <p className="text-xs text-amber-100/90 mt-0.5">
-                فرش‌فروشان و علاقه‌مندان می‌توانند از برنامه جامع <strong>«فرش بازار»</strong> (توسعه‌یافته توسط سیاوش علی‌میری) نیز بازدید و استفاده نمایند.
-              </p>
-            </div>
+            <span className="px-3.5 py-2 rounded-xl bg-amber-400 text-slate-950 font-black text-xs whitespace-nowrap self-start sm:self-center">
+              ۱۰۰٪ آفلاین و رایگان
+            </span>
           </div>
         </div>
       </div>
@@ -816,31 +875,41 @@ export const CarpetTradeAcademy: React.FC<CarpetTradeAcademyProps> = ({
 
             {/* 4-Dropdown Smart Carpet Pitch Builder */}
             <div className="p-4 rounded-2xl bg-white border-2 border-rose-200 space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-black text-rose-900">
+                  ⚡ جمله‌ساز هوشمند ۱۰۰٪ آفلاین فرش‌فروش (ترکیب نوع فرش، قواره ذرع، قدمت و جنس):
+                </span>
+                <span className="text-[11px] font-bold text-emerald-700">پشتیبانی از فرش کُرد، گلیم، پشتی، زرنیم و دوزرع</span>
+              </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 text-xs">
                 <select value={builderType} onChange={(e) => setBuilderType(e.target.value)} className="p-2.5 rounded-xl border border-slate-300 font-bold bg-slate-50">
                   <option value="قالیچه دستباف">قالیچه دستباف (Ghalicheh)</option>
                   <option value="قالی دستباف">قالی دستباف (Ghali)</option>
-                  <option value="گلیم دستباف">گلیم دستباف (Kilim)</option>
-                  <option value="پشتی سنتی">پشتی سنتی (Poshti)</option>
-                  <option value="فرش مربع">فرش مربع (Square Rug)</option>
+                  <option value="فرش کُرد دستباف (بیجار و سنه)">فرش کُرد (Kurdish Iron Rug - Bidjar/Senneh)</option>
+                  <option value="گلیم دستباف">گلیم دستباف (Gelim / Kilim)</option>
+                  <option value="پشتی سنتی">پشتی سنتی (Poshti 2×3 ft)</option>
+                  <option value="فرش مربع">فرش مربع (Morabba Square Rug)</option>
                 </select>
                 <select value={builderSize} onChange={(e) => setBuilderSize(e.target.value)} className="p-2.5 rounded-xl border border-slate-300 font-bold bg-slate-50">
-                  <option value="دو ذرع (۲۰۰×۱۳۵ سانت)">دو ذرع (200×135 cm)</option>
-                  <option value="ذرع و نیم (۱۵۰×۱۰۵ سانت)">ذرع و نیم (150×105 cm)</option>
-                  <option value="ذرع و چارک (۱۲۵×۸۰ سانت)">ذرع و چارک (125×80 cm)</option>
-                  <option value="۶ متری (۲۰۰×۳۰۰ سانت)">قالی ۶ متری (200×300 cm)</option>
-                  <option value="۹ متری (۲۵۰×۳۵۰ سانت)">قالی ۹ متری (250×350 cm)</option>
-                  <option value="۱۲ متری (۳۰۰×۴۰۰ سانت)">قالی ۱۲ متری (300×400 cm)</option>
+                  <option value="دو ذرع / دوزرع (۲۰۰×۱۳۵ سانت - 4.5×6.7 ft)">دو ذرع / دوزرع (200×135 cm / 4.5×6.7 ft)</option>
+                  <option value="ذرع و نیم / زرنیم (۱۵۰×۱۰۵ سانت - 3.5×5 ft)">ذرع و نیم / زرنیم (150×105 cm / 3.5×5 ft)</option>
+                  <option value="ذرع و چارک / زرع چارک (۱۲۵×۸۰ سانت - 2.7×4.1 ft)">ذرع و چارک / زرع چارک (125×80 cm / 2.7×4.1 ft)</option>
+                  <option value="پشتی (۹۰×۶۰ سانت - 2×3 ft)">پشتی (90×60 cm / 2×3 ft)</option>
+                  <option value="مربع (۲۰۰×۲۰۰ سانت - 6.7×6.7 ft)">مربع (200×200 cm / 6.7×6.7 ft)</option>
+                  <option value="۶ متری (۲۰۰×۳۰۰ سانت - 6.7×10 ft)">قالی ۶ متری (200×300 cm / 6.7×10 ft)</option>
+                  <option value="۹ متری (۲۵۰×۳۵۰ سانت - 8.2×11.5 ft)">قالی ۹ متری (250×350 cm / 8.2×11.5 ft)</option>
+                  <option value="۱۲ متری (۳۰۰×۴۰۰ سانت - 10×13.1 ft)">قالی ۱۲ متری (300×400 cm / 10×13.1 ft)</option>
                 </select>
                 <select value={builderAge} onChange={(e) => setBuilderAge(e.target.value)} className="p-2.5 rounded-xl border border-slate-300 font-bold bg-slate-50">
-                  <option value="کهنه ذاتی">کهنه ذاتی (پاخور طبیعی)</option>
-                  <option value="نوبافت">نوبافت (آکبند)</option>
+                  <option value="کهنه ذاتی">کهنه ذاتی (Kohneh Zaati - پاخور طبیعی)</option>
+                  <option value="کهنه و قدیمی">کهنه و قدیمی (Vintage & Antique)</option>
+                  <option value="نوبافت">نوبافت (Now-baft - آکبند)</option>
                   <option value="کارکرده">کارکرده سالم و گوشت‌دار</option>
-                  <option value="قدیمی و عتیقه">قدیمی و عتیقه (Antique)</option>
                 </select>
                 <select value={builderMaterial} onChange={(e) => setBuilderMaterial(e.target.value)} className="p-2.5 rounded-xl border border-slate-300 font-bold bg-slate-50">
                   <option value="چله ابریشم، رنگ گیاهی و ۶۰ رج">چله ابریشم + رنگ گیاهی + ۶۰ رج</option>
-                  <option value="پشم کرک دست‌ریس و رنگ گیاهی">پشم کرک + رنگ گیاهی</option>
+                  <option value="پشم کرک دست‌ریس و رنگ گیاهی">پشم کرک دست‌ریس + رنگ گیاهی</option>
+                  <option value="بافت آهنین کُردی (بیجار و سنه) با دوام صد ساله">بافت آهنین کُردی با دوام ۱۰۰ ساله</option>
                   <option value="شناسنامه اصالت و ارسال هوایی">همراه با شناسنامه اصالت و کارگو</option>
                 </select>
               </div>
@@ -852,6 +921,35 @@ export const CarpetTradeAcademy: React.FC<CarpetTradeAcademyProps> = ({
                 <Volume2 className="w-4 h-4" />
                 <span>🔊 ساخت جمله تخصصی، ارسال به طبقه بالا و پخش صوتی ۵ زبانه</span>
               </button>
+
+              {/* 1-Tap Offline Quick Bazaar Chips */}
+              <div className="pt-2 border-t border-slate-100 space-y-1.5">
+                <span className="text-[11px] font-bold text-slate-600 block">
+                  🎯 دکمه‌های گفتار فوری ۱۰۰٪ آفلاین (با یک لمس به انگلیسی، عربی، چینی و روسی پخش می‌شود):
+                </span>
+                <div className="flex flex-wrap gap-1.5">
+                  {[
+                    { label: '✨ کهنه ذاتی (Kohneh Zaati)', text: 'این فرش صد در صد کهنه ذاتی و رنگ گیاهی است و شست‌وشوی شیمیایی ندارد.' },
+                    { label: '🦁 فرش کُرد (بیجار و سنه)', text: 'این یک فرش کرد اصیل بافت بیجار و سنه با دوام صد ساله و رنگ گیاهی است.' },
+                    { label: '📏 قالیچه دوزرع (4.5×6.7 ft)', text: 'این قالیچه سایز دو ذرع (دوزرع) با ابعاد ۲۰۰ در ۱۳۵ سانتی‌متر است.' },
+                    { label: '🧳 ذرع و نیم / زرنیم (3.5×5 ft)', text: 'این قالیچه سایز ذرع و نیم (زرنیم) با ابعاد ۱۵۰ در ۱۰۵ سانتی‌متر و مناسب چمدان است.' },
+                    { label: '🖼️ ذرع و چارک (2.7×4.1 ft)', text: 'این قالیچه سایز ذرع و چارک (زرع چارک) با ابعاد ۱۲۵ در ۸۰ سانتی‌متر است.' },
+                    { label: '🧶 گلیم و پشتی دستباف', text: 'این گلیم دستباف دوطرفه و پشتی سنتی با پشم دست‌ریس و رنگ گیاهی بافته شده است.' },
+                    { label: '⬛ فرش مربع (Square)', text: 'این فرش مربع کمیاب با ابعاد متقارن برای زیر میز گرد یا اتاق مربع عالی است.' },
+                    { label: '🕰️ کهنه و قدیمی در برابر نوبافت', text: 'ما هم فرش کهنه و قدیمی کلکسیونی داریم و هم فرش نوبافت آکبند.' },
+                    { label: '✈️ تخفیف + شناسنامه + کارگو', text: 'قابل نداره! با تخفیف ویژه، شناسنامه اصالت و ارسال هوایی تقدیم می‌شود.' }
+                  ].map((chip, idx) => (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => handleMerchantSend(chip.text)}
+                      className="px-3 py-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 border border-amber-300 text-rose-950 font-black text-[11px] transition-all"
+                    >
+                      {chip.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
             </div>
 
             <div className="flex flex-col sm:flex-row gap-2">
@@ -881,29 +979,70 @@ export const CarpetTradeAcademy: React.FC<CarpetTradeAcademyProps> = ({
 
       {/* TAB 2: LEXICON */}
       {activeTab === 'lexicon' && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-          {filteredTerms.map((item: CarpetTermItem) => (
-            <div key={item.id} className="bg-white border border-slate-200 rounded-3xl p-6 space-y-3 shadow-xs">
-              <div className="flex items-center justify-between text-xs text-rose-800 font-bold">
-                <span>{item.categoryLabelFa}</span>
-                <button onClick={() => handleCopy(`${item.termEn} | ${item.termAr}`, item.id)}>
-                  {copiedId === item.id ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
+        <div className="space-y-4">
+          <div className="bg-white p-4 rounded-2xl border border-slate-200 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+            <div className="flex flex-wrap gap-1.5">
+              {[
+                { id: 'all', label: 'همه اصطلاحات تخصصی فرش' },
+                { id: 'types', label: 'قالی، قالیچه، گلیم، پشتی، مربع و فرش کُرد' },
+                { id: 'sizes', label: 'ابعاد: دوزرع، زرنیم، زرع چارک' },
+                { id: 'condition_age', label: 'کهنه ذاتی، کهنه قدیمی و نوبافت' },
+                { id: 'structure_materials', label: 'رجشمار، ابریشم و کارشناسی' }
+              ].map((cat) => (
+                <button
+                  key={cat.id}
+                  onClick={() => setSelectedCategory(cat.id)}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-black ${
+                    selectedCategory === cat.id ? 'bg-rose-800 text-white' : 'bg-slate-100 text-slate-700'
+                  }`}
+                >
+                  {cat.label}
                 </button>
-              </div>
-              <h3 className="text-lg font-black text-slate-900">{item.termFa}</h3>
-              <p className="text-sm font-black text-slate-900" dir="ltr">🇬🇧 {item.termEn}</p>
-              <p className="text-sm font-black text-amber-900">🇸🇦 {item.termAr}</p>
-              <p className="text-xs text-slate-600">💡 {item.technicalNoteFa}</p>
-              <div className="flex gap-2 pt-2">
-                <button onClick={() => speakEnglish(item.merchantPitchEn, speechVoiceRate)} className="flex-1 py-2 rounded-xl bg-rose-800 text-white text-xs font-bold">
-                  🔊 پخش انگلیسی
-                </button>
-                <button onClick={() => speakArabic(item.merchantPitchAr, speechVoiceRate)} className="flex-1 py-2 rounded-xl bg-amber-500 text-slate-950 text-xs font-bold">
-                  🔊 پخش عربی
-                </button>
-              </div>
+              ))}
             </div>
-          ))}
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="جستجو (مثلاً: فرش کرد، زرنیم، کهنه ذاتی، گلیم)..."
+              className="px-3.5 py-2 rounded-xl border border-slate-300 text-xs font-bold"
+            />
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+            {filteredTerms.map((item: CarpetTermItem) => (
+              <div key={item.id} className="bg-white border border-slate-200 rounded-3xl p-6 space-y-3 shadow-xs">
+                <div className="flex items-center justify-between text-xs text-rose-800 font-bold">
+                  <span>{item.categoryLabelFa}</span>
+                  <button onClick={() => handleCopy(`${item.termEn} | ${item.termAr}`, item.id)}>
+                    {copiedId === item.id ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
+                  </button>
+                </div>
+                <h3 className="text-lg font-black text-slate-900">{item.termFa}</h3>
+                <p className="text-sm font-black text-slate-900" dir="ltr">🇬🇧 {item.termEn}</p>
+                <p className="text-xs font-mono text-slate-500" dir="ltr">🔊 Pronunciation: {item.pronunciationEn}</p>
+                <p className="text-sm font-black text-amber-900">🇸🇦 {item.termAr}</p>
+                {(item.dimensionsMetric || item.dimensionsImperial) && (
+                  <div className="p-2.5 rounded-xl bg-amber-50 border border-amber-200 text-xs font-bold text-slate-800" dir="ltr">
+                    📏 {item.dimensionsMetric} | {item.dimensionsImperial}
+                  </div>
+                )}
+                <p className="text-xs text-slate-600 leading-relaxed">💡 {item.technicalNoteFa}</p>
+                <div className="p-3 rounded-2xl bg-slate-50 border border-slate-200 space-y-1.5">
+                  <p className="text-xs font-bold text-slate-900" dir="ltr">🗣️ "{item.merchantPitchEn}"</p>
+                  <p className="text-xs font-bold text-amber-950">🗣️ «{item.merchantPitchAr}»</p>
+                </div>
+                <div className="flex gap-2 pt-1">
+                  <button onClick={() => speakEnglish(item.merchantPitchEn, speechVoiceRate)} className="flex-1 py-2.5 rounded-xl bg-rose-800 text-white text-xs font-bold">
+                    🔊 پخش جمله تخصصی انگلیسی
+                  </button>
+                  <button onClick={() => speakArabic(item.merchantPitchAr, speechVoiceRate)} className="flex-1 py-2.5 rounded-xl bg-amber-500 text-slate-950 text-xs font-bold">
+                    🔊 پخش جمله تخصصی عربی
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       )}
 
@@ -944,26 +1083,77 @@ export const CarpetTradeAcademy: React.FC<CarpetTradeAcademyProps> = ({
         </div>
       )}
 
-      {/* TAB 4: DIALOGUES */}
+      {/* TAB 4: DIALOGUES & OFFLINE SENTENCE BANK */}
       {activeTab === 'dialogues' && (
-        <div className="space-y-4">
-          {CARPET_MERCHANT_DIALOGUES.map((dlg) => (
-            <div key={dlg.id} className="bg-white border border-slate-200 rounded-3xl p-6 space-y-3">
-              <h3 className="text-base font-black text-rose-900">{dlg.stageTitleFa}</h3>
-              <p className="text-sm font-bold text-slate-800">🇮🇷 «{dlg.merchantReplyFa}»</p>
-              <p className="text-sm font-black text-slate-950" dir="ltr">🇬🇧 "{dlg.merchantReplyEn}"</p>
-              <p className="text-sm font-black text-amber-950">🇸🇦 «{dlg.merchantReplyAr}»</p>
-              <p className="text-xs text-rose-900 font-bold">✨ {dlg.tradeTipFa}</p>
-              <div className="flex gap-2">
-                <button onClick={() => speakEnglish(dlg.merchantReplyEn, speechVoiceRate)} className="px-4 py-2 rounded-xl bg-rose-800 text-white text-xs font-bold">
-                  🔊 پخش انگلیسی
-                </button>
-                <button onClick={() => speakArabic(dlg.merchantReplyAr, speechVoiceRate)} className="px-4 py-2 rounded-xl bg-amber-500 text-slate-950 text-xs font-bold">
-                  🔊 پخش عربی
-                </button>
-              </div>
+        <div className="space-y-6">
+          {/* Complete Offline Carpet Sentence Bank */}
+          <div className="bg-gradient-to-br from-slate-950 via-rose-950 to-slate-900 text-white rounded-3xl p-6 space-y-4 border-2 border-amber-400/50">
+            <div className="border-b border-amber-400/30 pb-3">
+              <h3 className="text-lg sm:text-xl font-black text-amber-300">
+                🗣️ بانک جامع جملات ۱۰۰٪ آفلاین مذاکره با مشتری خارجی (انگلیسی 🇬🇧 و عرب 🇸🇦)
+              </h3>
+              <p className="text-xs text-amber-100/85 mt-1">
+                تمامی جملات تخصصی درباره قالی، قالیچه، گلیم، پشتی، فرش کُرد، ذرع و نیم (زرنیم)، دوزرع، ذرع و چارک، مربع، کهنه ذاتی، کهنه و قدیمی، نوبافت و ابعاد فرش‌ها به صورت ۱۰۰٪ آفلاین آماده پخش صوتی است.
+              </p>
             </div>
-          ))}
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {OFFLINE_CARPET_TRADE_SENTENCES.map((sent: OfflineCarpetSentence) => (
+                <div key={sent.id} className="p-4 rounded-2xl bg-white/10 border border-amber-400/30 space-y-2.5">
+                  <span className="inline-block px-2.5 py-0.5 rounded-lg bg-amber-400 text-slate-950 text-[11px] font-black">
+                    {sent.topicLabelFa}
+                  </span>
+                  <p className="text-xs sm:text-sm font-black text-amber-100">🇮🇷 {sent.fa}</p>
+                  <p className="text-xs sm:text-sm font-black text-white" dir="ltr">🇬🇧 "{sent.en}"</p>
+                  <p className="text-[11px] font-mono text-emerald-300" dir="ltr">🔊 {sent.pronEn}</p>
+                  <p className="text-xs sm:text-sm font-black text-amber-300">🇸🇦 «{sent.ar}»</p>
+                  <div className="flex gap-2 pt-1">
+                    <button
+                      onClick={() => speakEnglish(sent.en, speechVoiceRate)}
+                      className="flex-1 py-2 px-3 rounded-xl bg-rose-700 hover:bg-rose-600 text-white text-xs font-black"
+                    >
+                      🔊 پخش انگلیسی
+                    </button>
+                    <button
+                      onClick={() => speakArabic(sent.ar, speechVoiceRate)}
+                      className="flex-1 py-2 px-3 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 text-xs font-black"
+                    >
+                      🔊 پخش عربی
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Step-by-Step Showroom Dialogues */}
+          <div className="space-y-4">
+            <h3 className="text-base sm:text-lg font-black text-slate-900">
+              📋 سناریوهای گام‌به‌گام ورود مشتری به حجره تا بستن معامله:
+            </h3>
+            {CARPET_MERCHANT_DIALOGUES.map((dlg) => (
+              <div key={dlg.id} className="bg-white border border-slate-200 rounded-3xl p-6 space-y-3 shadow-xs">
+                <h4 className="text-base font-black text-rose-900">{dlg.stageTitleFa}</h4>
+                <div className="p-3 rounded-2xl bg-slate-50 border border-slate-200 text-xs space-y-1">
+                  <p className="font-bold text-slate-700" dir="ltr">👤 Customer (EN): "{dlg.customerQuestionEn}"</p>
+                  <p className="font-bold text-amber-900">👤 المشتري (AR): «{dlg.customerQuestionAr}»</p>
+                  <p className="text-slate-600">معنی فارسی سوال مشتری: «{dlg.customerMeaningFa}»</p>
+                </div>
+                <p className="text-sm font-bold text-slate-800">🇮🇷 پاسخ شما: «{dlg.merchantReplyFa}»</p>
+                <p className="text-sm font-black text-slate-950" dir="ltr">🇬🇧 "{dlg.merchantReplyEn}"</p>
+                <p className="text-sm font-black text-amber-950">🇸🇦 «{dlg.merchantReplyAr}»</p>
+                <p className="text-xs text-rose-900 font-bold">✨ {dlg.tradeTipFa}</p>
+                <div className="flex gap-2">
+                  <button onClick={() => speakEnglish(dlg.merchantReplyEn, speechVoiceRate)} className="px-4 py-2 rounded-xl bg-rose-800 text-white text-xs font-bold">
+                    🔊 پخش انگلیسی
+                  </button>
+                  <button onClick={() => speakArabic(dlg.merchantReplyAr, speechVoiceRate)} className="px-4 py-2 rounded-xl bg-amber-500 text-slate-950 text-xs font-bold">
+                    🔊 پخش عربی
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </div>

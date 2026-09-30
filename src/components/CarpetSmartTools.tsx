@@ -24,7 +24,9 @@ export const CarpetSmartTools: React.FC = () => {
   const [pricePerSqmUsd, setPricePerSqmUsd] = useState<number>(450);
 
   // 2. Digital Certificate of Authenticity Generator State
-  const [certGalleryName, setCertGalleryName] = useState<string>('گالری فرش علی‌میری (یادمان شادروان حاج حسین آقای علی‌میری)');
+  const [certGalleryName, setCertGalleryName] = useState<string>(
+    'فرش حسین علی‌میری و پسران — خیابان خیام شمالی، جنب مترو خیام، بازار فرش ایران، طبقه همکف، پلاک ۴۸ (Hossein Ali-Miri & Sons Carpets, No. 48)'
+  );
   const [certBuyerName, setCertBuyerName] = useState<string>('Valued International Collector');
   const [certOrigin, setCertOrigin] = useState<string>('Tabriz / Isfahan Master Weave (تبریز / اصفهان)');
   const [certTypeSize, setCertTypeSize] = useState<string>('Dozar Ghalicheh (200×135 cm / 4.5×6.7 ft)');

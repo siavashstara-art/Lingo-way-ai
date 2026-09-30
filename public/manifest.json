@@ -1,0 +1,29 @@
+{
+  "id": "/",
+  "name": "LingoEnglish & Farsi Bridge (AbleWay City Capital): Learn Persian for English Speakers & Learn English for Persian Speakers",
+  "short_name": "FarsiBridge",
+  "description": "100% Free Global Super-App: Learn Persian (Farsi/Dari/Tajik) for English, German, French & Spanish Speakers + Learn English, Visa & Citizenship Prep, 850 Credit Clinic, AbleWay City & 8 Family Mind Sports.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0f172a",
+  "theme_color": "#064e3b",
+  "lang": "fa",
+  "dir": "auto",
+  "categories": ["education", "books", "games", "finance", "lifestyle"],
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}

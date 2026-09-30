@@ -6,12 +6,12 @@
 
 export interface VisualCaptionEventDetail {
   text: string;
-  lang: 'fa' | 'en' | 'ar' | 'zh' | 'ru';
+  lang: 'fa' | 'en' | 'de' | 'fr' | 'es' | 'ar' | 'zh' | 'ru';
   phonetic?: string;
   timestamp: string;
 }
 
-const emitVisualCaptionForDeaf = (text: string, lang: 'fa' | 'en' | 'ar' | 'zh' | 'ru', phonetic?: string) => {
+const emitVisualCaptionForDeaf = (text: string, lang: 'fa' | 'en' | 'de' | 'fr' | 'es' | 'ar' | 'zh' | 'ru', phonetic?: string) => {
   if (typeof window === 'undefined') return;
   try {
     if ('vibrate' in navigator) {
@@ -250,6 +250,61 @@ export const transliteratePersianToFingilish = (faText: string): string => {
   return out.replace(/\s+/g, ' ').trim();
 };
 
+let activeNeuralAudio: HTMLAudioElement | null = null;
+let preferredPersianVoiceGender: 'female' | 'male' = 'female';
+
+export const setPersianVoiceGender = (gender: 'female' | 'male') => {
+  preferredPersianVoiceGender = gender;
+};
+
+export const getPersianVoiceGender = (): 'female' | 'male' => {
+  return preferredPersianVoiceGender;
+};
+
+const stopAllActiveSpeech = () => {
+  if (typeof window === 'undefined') return;
+  try {
+    if (activeNeuralAudio) {
+      activeNeuralAudio.pause();
+      activeNeuralAudio.currentTime = 0;
+      activeNeuralAudio = null;
+    }
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+    }
+  } catch {}
+};
+
+const playServerNeuralTts = (
+  text: string,
+  lang: 'fa' | 'de' | 'fr' | 'es' | 'ar' | 'zh' | 'ru' | 'en',
+  rate: number,
+  voiceGender: 'female' | 'male',
+  onFallback: () => void
+) => {
+  if (typeof window === 'undefined' || !text) return;
+  stopAllActiveSpeech();
+  try {
+    const url = `/api/tts?lang=${encodeURIComponent(lang)}&voice=${encodeURIComponent(
+      voiceGender
+    )}&text=${encodeURIComponent(text)}`;
+    const audio = new Audio(url);
+    audio.playbackRate = Math.max(0.5, Math.min(1.5, rate <= 0.75 ? 0.78 : 1.0));
+    activeNeuralAudio = audio;
+    audio.onerror = () => {
+      onFallback();
+    };
+    const playPromise = audio.play();
+    if (playPromise && typeof playPromise.catch === 'function') {
+      playPromise.catch(() => {
+        onFallback();
+      });
+    }
+  } catch {
+    onFallback();
+  }
+};
+
 export const speakEnglish = (
   text: string,
   rate: number = 0.9,
@@ -257,6 +312,7 @@ export const speakEnglish = (
 ) => {
   if (typeof window === 'undefined' || !text) return;
   emitVisualCaptionForDeaf(text, 'en', text);
+  stopAllActiveSpeech();
   try {
     const androidBridge = (window as any).AndroidBridge;
     if (androidBridge && typeof androidBridge.speak === 'function') {
@@ -265,9 +321,6 @@ export const speakEnglish = (
     }
 
     if (!('speechSynthesis' in window)) return;
-    if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
-      window.speechSynthesis.cancel();
-    }
     setTimeout(() => {
       try {
         const utterance = new SpeechSynthesisUtterance(text);
@@ -285,51 +338,44 @@ export const speakEnglish = (
 export const speakPersian = (
   text: string,
   rate: number = 0.85,
-  fingilishHint?: string
+  fingilishHint?: string,
+  voiceGenderOverride?: 'female' | 'male'
 ) => {
   if (typeof window === 'undefined' || !text) return;
   const phoneticText = fingilishHint || transliteratePersianToFingilish(text);
   emitVisualCaptionForDeaf(text, 'fa', phoneticText);
-  try {
-    const androidBridge = (window as any).AndroidBridge;
-    if (androidBridge && typeof androidBridge.speakPersian === 'function') {
-      androidBridge.speakPersian(text, phoneticText);
-      return;
-    }
 
-    if (!('speechSynthesis' in window)) return;
-    if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
-      window.speechSynthesis.cancel();
-    }
-    setTimeout(() => {
-      try {
-        const voices = window.speechSynthesis.getVoices() || [];
-        const farsiVoice = voices.find(v =>
+  const gender = voiceGenderOverride || preferredPersianVoiceGender;
+
+  // Primary: 100% Authentic Native Iranian Tehrani Persian Voice (fa-IR-DilaraNeural / fa-IR-FaridNeural)
+  playServerNeuralTts(text, 'fa', rate, gender, () => {
+    // Offline Fallback: Native OS fa-IR voice with Persian Script ONLY (NEVER en-US reading Fingilish or Persian!)
+    try {
+      const androidBridge = (window as any).AndroidBridge;
+      if (androidBridge && typeof androidBridge.speakPersian === 'function') {
+        androidBridge.speakPersian(text, phoneticText);
+        return;
+      }
+
+      if (!('speechSynthesis' in window)) return;
+      const voices = window.speechSynthesis.getVoices() || [];
+      const farsiVoice = voices.find(
+        v =>
           v.lang.toLowerCase().startsWith('fa') ||
           v.name.toLowerCase().includes('persian') ||
           v.name.toLowerCase().includes('farsi')
-        );
-        const arabicVoice = voices.find(v => v.lang.toLowerCase().startsWith('ar'));
+      );
 
-        const utterance = new SpeechSynthesisUtterance();
+      // Strictly require a real Persian voice so Chrome never uses an English robot voice
+      if (farsiVoice) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'fa-IR';
         utterance.rate = rate;
-
-        if (farsiVoice) {
-          utterance.text = text;
-          utterance.lang = 'fa-IR';
-          utterance.voice = farsiVoice;
-        } else if (arabicVoice && /[\u0600-\u06FF]/.test(text)) {
-          utterance.text = text;
-          utterance.lang = arabicVoice.lang;
-          utterance.voice = arabicVoice;
-        } else {
-          utterance.text = phoneticText;
-          utterance.lang = 'en-US';
-        }
+        utterance.voice = farsiVoice;
         window.speechSynthesis.speak(utterance);
-      } catch {}
-    }, 45);
-  } catch {}
+      }
+    } catch {}
+  });
 };
 
 export const speakArabic = (
@@ -340,35 +386,26 @@ export const speakArabic = (
   if (typeof window === 'undefined' || !text) return;
   const phon = phoneticHint || transliteratePersianToFingilish(text);
   emitVisualCaptionForDeaf(text, 'ar', phon);
-  try {
-    const androidBridge = (window as any).AndroidBridge;
-    if (androidBridge && typeof androidBridge.speak === 'function') {
-      androidBridge.speak(text, 'ar');
-      return;
-    }
 
-    if (!('speechSynthesis' in window)) return;
-    if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
-      window.speechSynthesis.cancel();
-    }
-    setTimeout(() => {
-      try {
-        const voices = window.speechSynthesis.getVoices() || [];
-        const arabicVoice = voices.find(v => v.lang.toLowerCase().startsWith('ar') || v.name.toLowerCase().includes('arabic'));
-        const utterance = new SpeechSynthesisUtterance();
-        utterance.rate = rate;
-        if (arabicVoice) {
-          utterance.text = text;
-          utterance.lang = arabicVoice.lang;
-          utterance.voice = arabicVoice;
-        } else {
-          utterance.text = phon;
-          utterance.lang = 'en-US';
-        }
-        window.speechSynthesis.speak(utterance);
-      } catch {}
-    }, 45);
-  } catch {}
+  playServerNeuralTts(text, 'ar', rate, 'female', () => {
+    try {
+      const androidBridge = (window as any).AndroidBridge;
+      if (androidBridge && typeof androidBridge.speak === 'function') {
+        androidBridge.speak(text, 'ar');
+        return;
+      }
+      if (!('speechSynthesis' in window)) return;
+      const voices = window.speechSynthesis.getVoices() || [];
+      const arabicVoice = voices.find(
+        v => v.lang.toLowerCase().startsWith('ar') || v.name.toLowerCase().includes('arabic')
+      );
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'ar-SA';
+      utterance.rate = rate;
+      if (arabicVoice) utterance.voice = arabicVoice;
+      window.speechSynthesis.speak(utterance);
+    } catch {}
+  });
 };
 
 export const speakChinese = (
@@ -378,29 +415,26 @@ export const speakChinese = (
 ) => {
   if (typeof window === 'undefined' || !text) return;
   emitVisualCaptionForDeaf(text, 'zh', pinyinHint || text);
-  try {
-    const androidBridge = (window as any).AndroidBridge;
-    if (androidBridge && typeof androidBridge.speak === 'function') {
-      androidBridge.speak(text, 'zh');
-      return;
-    }
 
-    if (!('speechSynthesis' in window)) return;
-    if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
-      window.speechSynthesis.cancel();
-    }
-    setTimeout(() => {
-      try {
-        const voices = window.speechSynthesis.getVoices() || [];
-        const zhVoice = voices.find(v => v.lang.toLowerCase().startsWith('zh') || v.name.toLowerCase().includes('chinese'));
-        const utterance = new SpeechSynthesisUtterance(zhVoice ? text : (pinyinHint || text));
-        utterance.lang = zhVoice ? zhVoice.lang : 'zh-CN';
-        if (zhVoice) utterance.voice = zhVoice;
-        utterance.rate = rate;
-        window.speechSynthesis.speak(utterance);
-      } catch {}
-    }, 45);
-  } catch {}
+  playServerNeuralTts(text, 'zh', rate, 'female', () => {
+    try {
+      const androidBridge = (window as any).AndroidBridge;
+      if (androidBridge && typeof androidBridge.speak === 'function') {
+        androidBridge.speak(text, 'zh');
+        return;
+      }
+      if (!('speechSynthesis' in window)) return;
+      const voices = window.speechSynthesis.getVoices() || [];
+      const zhVoice = voices.find(
+        v => v.lang.toLowerCase().startsWith('zh') || v.name.toLowerCase().includes('chinese')
+      );
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'zh-CN';
+      if (zhVoice) utterance.voice = zhVoice;
+      utterance.rate = rate;
+      window.speechSynthesis.speak(utterance);
+    } catch {}
+  });
 };
 
 export const speakRussian = (
@@ -410,28 +444,68 @@ export const speakRussian = (
 ) => {
   if (typeof window === 'undefined' || !text) return;
   emitVisualCaptionForDeaf(text, 'ru', phoneticHint || text);
-  try {
-    const androidBridge = (window as any).AndroidBridge;
-    if (androidBridge && typeof androidBridge.speak === 'function') {
-      androidBridge.speak(text, 'ru');
-      return;
-    }
 
-    if (!('speechSynthesis' in window)) return;
-    if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
-      window.speechSynthesis.cancel();
-    }
-    setTimeout(() => {
-      try {
-        const voices = window.speechSynthesis.getVoices() || [];
-        const ruVoice = voices.find(v => v.lang.toLowerCase().startsWith('ru') || v.name.toLowerCase().includes('russian'));
-        const utterance = new SpeechSynthesisUtterance(ruVoice ? text : (phoneticHint || text));
-        utterance.lang = ruVoice ? ruVoice.lang : 'ru-RU';
-        if (ruVoice) utterance.voice = ruVoice;
-        utterance.rate = rate;
-        window.speechSynthesis.speak(utterance);
-      } catch {}
-    }, 45);
-  } catch {}
+  playServerNeuralTts(text, 'ru', rate, 'female', () => {
+    try {
+      const androidBridge = (window as any).AndroidBridge;
+      if (androidBridge && typeof androidBridge.speak === 'function') {
+        androidBridge.speak(text, 'ru');
+        return;
+      }
+      if (!('speechSynthesis' in window)) return;
+      const voices = window.speechSynthesis.getVoices() || [];
+      const ruVoice = voices.find(
+        v => v.lang.toLowerCase().startsWith('ru') || v.name.toLowerCase().includes('russian')
+      );
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'ru-RU';
+      if (ruVoice) utterance.voice = ruVoice;
+      utterance.rate = rate;
+      window.speechSynthesis.speak(utterance);
+    } catch {}
+  });
+};
+
+export const speakMultilingual = (
+  text: string,
+  lang: 'fa' | 'en' | 'de' | 'fr' | 'es' | 'ar' | 'zh' | 'ru',
+  rate: number = 0.88,
+  phoneticHint?: string
+) => {
+  if (typeof window === 'undefined' || !text) return;
+  if (lang === 'fa') {
+    speakPersian(text, rate, phoneticHint);
+    return;
+  }
+  if (lang === 'en') {
+    speakEnglish(text, rate);
+    return;
+  }
+  if (lang === 'ar') {
+    speakArabic(text, rate, phoneticHint);
+    return;
+  }
+  if (lang === 'zh') {
+    speakChinese(text, rate, phoneticHint);
+    return;
+  }
+  if (lang === 'ru') {
+    speakRussian(text, rate, phoneticHint);
+    return;
+  }
+
+  emitVisualCaptionForDeaf(text, lang, phoneticHint || text);
+  playServerNeuralTts(text, lang, rate, 'female', () => {
+    try {
+      if (!('speechSynthesis' in window)) return;
+      const voices = window.speechSynthesis.getVoices() || [];
+      const targetVoice = voices.find((v) => v.lang.toLowerCase().startsWith(lang));
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = lang === 'de' ? 'de-DE' : lang === 'fr' ? 'fr-CA' : 'es-US';
+      if (targetVoice) utterance.voice = targetVoice;
+      utterance.rate = rate;
+      window.speechSynthesis.speak(utterance);
+    } catch {}
+  });
 };
 

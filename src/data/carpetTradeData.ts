@@ -1,6 +1,6 @@
-// Specialized Persian Carpet Trade & Bazaar Terminology & Trilingual Dialogues (Persian - English - Arabic)
+// Specialized Persian Carpet Trade & Bazaar Terminology & Trilingual Offline Sentence Bank (Persian - English - Arabic)
 // Dedicated in honored memory of the late Haj Hossein Agha Ali Miri (شادروان حاج حسین آقای علی‌میری)
-// Companion educational module to the "Farsh Bazaar (فرش بازار)" app by the same developer.
+// Official linguistic & trade companion to the "Farsh Bazaar (فرش بازار)" app by developer Siavash Ali Miri.
 
 export interface CarpetTermItem {
   id: string;
@@ -17,6 +17,17 @@ export interface CarpetTermItem {
   technicalNoteFa: string;
   merchantPitchEn: string;
   merchantPitchAr: string;
+}
+
+export interface OfflineCarpetSentence {
+  id: string;
+  topic: 'welcome' | 'types_kurd' | 'sizes_dimensions' | 'age_kohneh' | 'knots_materials' | 'price_shipping';
+  topicLabelFa: string;
+  fa: string;
+  en: string;
+  pronEn: string;
+  ar: string;
+  pronAr: string;
 }
 
 export interface CarpetMerchantDialogue {
@@ -60,9 +71,25 @@ export const CARPET_TERMINOLOGY_DB: CarpetTermItem[] = [
     pronunciationEn: 'aw-THEN-tik NACH-ur-uh-lee aydjd puh-TEE-nuh',
     termAr: 'سجادة معتّقة طبيعياً (كهنه ذاتي أصيل بدون غسيل كيميائي)',
     pronunciationAr: 'Sajjāda mu‘attaqa tabī‘iyyan (Kohneh Zātī)',
-    technicalNoteFa: 'مهم‌ترین اصطلاح بازار فرش کهنه‌فروشی: فرشی که رنگ‌های گیاهی آن در اثر گذر دهه‌ها و پاخور طبیعی پخته و مخملی شده، نه با اسیدشویی یا دکلره شیمیایی.',
+    technicalNoteFa: 'مهم‌ترین اصطلاح بازار فرش کهنه‌فروشی: فرشی که رنگ‌های گیاهی آن در اثر گذر دهه‌ها و پاخور طبیعی پخته و مخملی شده، نه با اسیدشویی یا دکلره شیمیایی (تیغ‌خور و دواشور نشده).',
     merchantPitchEn: 'This piece is 100% "Kohneh Zaati"—its lustrous patina developed naturally over decades of gentle use, never chemically washed.',
     merchantPitchAr: 'هذه القطعة «كهنه ذاتي» ١٠٠٪، فقد اكتسبت لمعانها وهدوء ألوانها طبيعياً عبر العقود بدون أي معالجة كيميائية.'
+  },
+  {
+    id: 'ct_kurd',
+    category: 'types',
+    categoryLabelFa: 'انواع دستبافته (فرش کُرد)',
+    termFa: 'فرش کُرد (قالی کردی: بیجار، سنه سنندج، کلیایی و افشار)',
+    fingilish: 'Farsh-e Kord (Kurdish Rug: Bidjar, Senneh, Kolyaei)',
+    termEn: 'Kurdish Hand-Knotted Rug — "The Iron Rug of Persia" (Bidjar, Senneh & Kolyaei)',
+    pronunciationEn: 'KUR-dish hand-NOT-ed rug — theh EYE-urn rug ov PER-zhuh (bee-JAR & seh-NEH)',
+    termAr: 'السجاد الكردي الإيراني الأصيل (بيجار «سجادة الحديد»، سنه سنندج، وكليائي)',
+    pronunciationAr: 'As-Sajjād al-Kurdī al-Īrānī (Bījār wa Sanandaj)',
+    dimensionsMetric: 'ذرع و نیم، دو ذرع، کناره و قالی بزرگ‌پارچه',
+    dimensionsImperial: "All collector sizes (3.5×5 ft, 4.5×6.7 ft & Runners)",
+    technicalNoteFa: 'فرش کُرد در بازار جهانی به «فرش آهنین ایران (Iron Rug of Persia)» شهرت دارد؛ به دلیل بافت لول و کوبیده، گره متقارن مستحکم، پشم دست‌ریس کوهستان و طرح‌های اصیل هراتی، ماهی در هم و ترنج کُردی که تا بیش از یک قرن عمر می‌کند.',
+    merchantPitchEn: 'This is an authentic Kurdish Persian rug ("Farsh-e Kord" from Bidjar/Senneh), famous worldwide as the "Iron Rug of Persia" for its ultra-dense compacted weave and vibrant mountain wool.',
+    merchantPitchAr: 'هذه سجادة كردية إيرانية أصيلة (من بيجار وسنندج)، وتُلقّب عالمياً بـ«سجادة الحديد الفارسية» لمتانتها الفائقة وصوفها الجبلي الطبيعي.'
   },
   {
     id: 'ct_2',
@@ -70,121 +97,277 @@ export const CARPET_TERMINOLOGY_DB: CarpetTermItem[] = [
     categoryLabelFa: 'سایز و قواره (ذرع)',
     termFa: 'قالیچه دو ذرع (دوزرع)',
     fingilish: 'Ghalicheh Do-Zar (Dozar)',
-    termEn: 'Dozar Area Rug (Classic 2-Zar Ghalicheh)',
+    termEn: 'Dozar Area Rug (Classic 2-Zar Ghalicheh — 4.5 × 6.7 ft)',
     pronunciationEn: 'doh-ZAR air-ee-uh rug (4.5 by 6.7 feet)',
-    termAr: 'قاليجه مقاس دوزرع (ذراعان: ٢٠٠ × ١٣٥ سم)',
+    termAr: 'قاليجه مقاس دوزرع (ذراعان: ٢٠٠ × ١٣٥ سم / ٤.٥ × ٦.٧ قدم)',
     pronunciationAr: 'Qālījah maqās Do-Zar (200 × 135 cm)',
     dimensionsMetric: '200 × 135 cm (تا 210 × 140 cm)',
     dimensionsImperial: "4'5\" × 6'7\" ft (approx. 4.5 × 6.7 feet)",
     technicalNoteFa: 'پرطرفدارترین قواره قالیچه ایرانی در بازار جهانی که خریداران غربی آن را با نام Dozar یا 4.5x6.7 ft می‌شناسند.',
     merchantPitchEn: 'This is a classic Persian "Dozar" area rug, measuring 200 by 135 centimeters, which is about 4.5 by 6.7 feet.',
-    merchantPitchAr: 'هذه قاليجه إيرانية بمقاس «دوزرع» الكلاسيكي، وأبعادها ٢٠٠ في ١٣٥ سنتيمتراً.'
+    merchantPitchAr: 'هذه قاليجه إيرانية بمقاس «دوزرع» الكلاسيكي، وأبعادها ٢٠٠ في ١٣٥ سنتيمتراً (٤.٥ في ٦.٧ قدم).'
   },
   {
     id: 'ct_3',
     category: 'sizes',
     categoryLabelFa: 'سایز و قواره (ذرع)',
-    termFa: 'ذرع و نیم (زرع و نیم)',
-    fingilish: 'Zar-o-Nim',
-    termEn: 'Zar-o-Nim Accent Rug (1.5 Zar)',
+    termFa: 'ذرع و نیم / زرع و نیم / زرنیم',
+    fingilish: 'Zar-o-Nim (Zarnim)',
+    termEn: 'Zar-o-Nim Accent Rug (1.5 Zar — 3.5 × 5.0 ft)',
     pronunciationEn: 'zar-oh-NEEM rug (3.5 by 5 feet)',
-    termAr: 'قاليجه مقاس ذرع ونصف (١٥٥ × ١٠٥ سم)',
-    pronunciationAr: 'Maqās Zar wa Nisf (155 × 105 cm)',
+    termAr: 'قاليجه مقاس ذرع ونصف / زرنيم (١٥٠ × ١٠٥ سم / ٣.٥ × ٥ قدم)',
+    pronunciationAr: 'Maqās Zar wa Nisf / Zarnīm (150 × 105 cm)',
     dimensionsMetric: '150 × 105 cm (تا 160 × 110 cm)',
-    dimensionsImperial: "3'5\" × 5'0\" ft",
-    technicalNoteFa: 'قالیچه ۱.۵ ذرع، بسیار محبوب برای کلکسیونرها و مسافران هوایی چون به راحتی در چمدان جا می‌شود.',
-    merchantPitchEn: 'This "Zar-o-Nim" piece measures 150 by 105 cm (3.5 by 5 feet)—ideal as a collector’s focal rug and easy to pack in your luggage.',
-    merchantPitchAr: 'هذا المقاس يسمى «ذرع ونصف» (١٥٠×١٠٥ سم)، وهو مثالي للمقتنين وسهل الحمل في حقيبة السفر.'
+    dimensionsImperial: "3'5\" × 5'0\" ft (3.5 × 5 feet)",
+    technicalNoteFa: 'قالیچه ۱.۵ ذرع (که در بازار به آن ذرع و نیم، زرع و نیم یا زرنیم می‌گویند)، محبوب‌ترین سایز برای کلکسیونرها و مسافران هوایی چون به راحتی در چمدان جا می‌شود.',
+    merchantPitchEn: 'This "Zar-o-Nim" (Zarnim) piece measures 150 by 105 cm (3.5 by 5 feet)—ideal as a collector’s focal rug and easy to pack in your luggage.',
+    merchantPitchAr: 'هذا المقاس يسمى «ذرع ونصف» (١٥٠×١٠٥ سم أي ٣.٥×٥ قدم)، وهو مثالي للمقتنين وسهل الحمل في حقيبة السفر.'
   },
   {
     id: 'ct_4',
     category: 'sizes',
     categoryLabelFa: 'سایز و قواره (ذرع)',
-    termFa: 'ذرع و چارک (زرع و چارک)',
-    fingilish: 'Zar-o-Charak',
-    termEn: 'Zar-o-Charak Small Rug (1.25 Zar)',
+    termFa: 'ذرع و چارک / زرع چارک',
+    fingilish: 'Zar-o-Charak (Zarcharak)',
+    termEn: 'Zar-o-Charak Small Collector Rug (1.25 Zar — 2.7 × 4.1 ft)',
     pronunciationEn: 'zar-oh-cha-RAK (2.7 by 4.1 feet)',
-    termAr: 'مقاس ذرع وربع (١٢٥ × ٨٠ سم)',
+    termAr: 'مقاس ذرع وربع / زرع تشارك (١٢٥ × ٨٠ سم / ٢.٧ × ٤.١ قدم)',
     pronunciationAr: 'Maqās Zar wa Rub‘ (125 × 80 cm)',
     dimensionsMetric: '125 × 80 cm',
-    dimensionsImperial: "2'7\" × 4'1\" ft",
-    technicalNoteFa: 'معادل یک ذرع و یک چهارم ذرع؛ مناسب ورودی، جلوی میز کار یا قاب کردن به عنوان اثر هنری.',
-    merchantPitchEn: 'This size is called "Zar-o-Charak" (125 by 80 cm or 2.7 by 4.1 feet), perfect for entryways or hanging on a wall.',
-    merchantPitchAr: 'هذا المقاس يسمى «ذرع وربع» (١٢٥×٨٠ سم)، وهو رائع للمداخل أو للتعليق كلوحة فنية.'
+    dimensionsImperial: "2'7\" × 4'1\" ft (2.7 × 4.1 feet)",
+    technicalNoteFa: 'معادل یک ذرع و یک چهارم ذرع (زرع چارک)؛ مناسب ورودی، جلوی میز کار یا قاب کردن به عنوان اثر هنری.',
+    merchantPitchEn: 'This size is called "Zar-o-Charak" (125 by 80 cm or 2.7 by 4.1 feet), perfect for entryways, study rooms, or hanging on a wall.',
+    merchantPitchAr: 'هذا المقاس يسمى «ذرع وربع» (١٢٥×٨٠ سم أي ٢.٧×٤.١ قدم)، وهو رائع للمداخل أو للتعليق كلوحة فنية.'
   },
   {
     id: 'ct_5',
     category: 'types',
     categoryLabelFa: 'انواع دستبافته',
-    termFa: 'قالی و قالیچه دستباف',
-    fingilish: 'Ghali & Ghalicheh Dastbaaf',
-    termEn: 'Hand-Knotted Palace Carpet (Ghali) & Area Rug (Ghalicheh)',
+    termFa: 'قالی، قالیچه و فرش دستباف ایرانی',
+    fingilish: 'Ghali, Ghalicheh & Farsh-e Dastbaaf',
+    termEn: 'Hand-Knotted Palace Carpet (Ghali) & Fine Area Rug (Ghalicheh)',
     pronunciationEn: 'hand-NOT-ed GHA-lee and gha-lee-CHEH',
-    termAr: 'قالي (سجادة كبيرة) وقاليجه (سجادة متوسطة) يدوية الصنع',
+    termAr: 'قالي (سجادة كبيرة) وقاليجه (سجادة متوسطة) وفرش إيراني يدوي الصنع',
     pronunciationAr: 'Qālī wa Qālījah Yadawiyyah',
-    technicalNoteFa: 'در بازار ایران فرش‌های ۶ متری و بزرگ‌تر را «قالی» و فرش‌های کوچک‌تر از ۴ متر (مثل دو ذرع و ذرع و نیم) را «قالیچه» می‌نامند.',
-    merchantPitchEn: 'In Persian tradition, large room carpets (6m² and above) are called "Ghali", while finer smaller pieces like Dozar are called "Ghalicheh".',
-    merchantPitchAr: 'في التراث الإيراني نسمي السجاد الكبير «قالي»، بينما القطع المتوسطة والدقيقة نسميها «قاليجه».'
+    dimensionsMetric: 'قالی: ۶ متری (200×300)، ۹ متری (250×350)، ۱۲ متری (300×400 cm)',
+    dimensionsImperial: "Ghali: 6.7×10 ft (6m), 8.2×11.5 ft (9m), 10×13.1 ft (12m)",
+    technicalNoteFa: 'در بازار ایران فرش‌های ۶ متری (سه‌ذرع) و بزرگ‌تر را «قالی» و فرش‌های کوچک‌تر از ۴ متر (مثل دوزرع، زرنیم و زرع چارک) را «قالیچه» می‌نامند.',
+    merchantPitchEn: 'In Persian tradition, large room carpets (6m² / 6.7×10 ft and larger) are called "Ghali", while finer smaller rugs like Dozar and Zar-o-Nim are called "Ghalicheh".',
+    merchantPitchAr: 'في التراث الإيراني نسمي السجاد الكبير (٦ أو ٩ أو ١٢ متراً) «قالي»، بينما القطع المتوسطة والدقيقة نسميها «قاليجه».'
   },
   {
     id: 'ct_6',
     category: 'types',
     categoryLabelFa: 'انواع دستبافته',
-    termFa: 'گلیم و پشتی دستباف',
-    fingilish: 'Gelim (Kilim) & Poshti',
-    termEn: 'Flat-Woven Tribal Kilim & Traditional Bolster Rug (Poshti)',
-    pronunciationEn: 'flat-WOH-ven kee-LEEM and posh-TEE',
-    termAr: 'كليم منسوج مسطح وبشتي تقليدي (٦٠×٩٠ سم)',
-    pronunciationAr: 'Kilīm wa Pushtī Taqlīdī',
-    dimensionsMetric: 'پشتی: 90 × 60 cm',
-    dimensionsImperial: "Poshti: 2'0\" × 3'0\" ft",
-    technicalNoteFa: 'گلیم بدون پرز و دوطرفه است و پشتی (۹۰×۶۰ سانت) برای تکیه‌گاه سنتی یا پادری نفیس کاربرد دارد.',
-    merchantPitchEn: 'This is a reversible flat-woven tribal Kilim, and beside it is a hand-knotted "Poshti" (2 by 3 feet).',
-    merchantPitchAr: 'هذا كليم عشائري مسطح ذو وجهين، وبجانبه «بشتي» تقليدي معقود يدوياً بمقاس ٩٠×٦٠ سم.'
+    termFa: 'گلیم و گلیم‌فرش دستباف (سنه، سیرجان و قشقایی)',
+    fingilish: 'Gelim (Kilim) & Gelim-Farsh (Soumak)',
+    termEn: 'Reversible Flat-Woven Tribal Kilim (Gelim) & Embossed Soumak Weave',
+    pronunciationEn: 'flat-WOH-ven kee-LEEM and soo-MAK',
+    termAr: 'كليم إيراني منسوج مسطح ذو وجهين (كليم وسوماك)',
+    pronunciationAr: 'Kilīm Īrānī Musattah wa Sūmāk',
+    dimensionsMetric: '100×150 cm تا 200×300 cm',
+    dimensionsImperial: "3.3×5 ft up to 6.7×10 ft",
+    technicalNoteFa: 'گلیم دستباف بدون پرز، سبک و دوطرفه است (مخصوصاً گلیم سنه کُردستان، شیرکی‌پیچ سیرجان و قشقایی) و برای دکوراسیون مدرن بسیار پرفروش است.',
+    merchantPitchEn: 'This is a handwoven flat-weave Persian "Gelim" (Kilim) made with 100% hand-spun wool and vegetable dyes—lightweight, reversible, and timeless.',
+    merchantPitchAr: 'هذا «كليم» إيراني منسوج يدوياً بدون وبر من الصوف الطبيعي والأصباغ النباتية، خفيف الوزن ويمكن استخدامه على الوجهين.'
+  },
+  {
+    id: 'ct_poshti',
+    category: 'types',
+    categoryLabelFa: 'انواع دستبافته',
+    termFa: 'پشتی دستباف سنتی (قالیچه پشتی)',
+    fingilish: 'Poshti-ye Dastbaaf',
+    termEn: 'Traditional Hand-Knotted Persian Poshti (Accent & Bolster Rug — 2 × 3 ft)',
+    pronunciationEn: 'truh-DISH-un-ul posh-TEE rug (2 by 3 feet)',
+    termAr: 'بشتي إيراني تقليدي معقود يدوياً (مقاس ٩٠ × ٦٠ سم / ٢ × ٣ قدم)',
+    pronunciationAr: 'Pushtī Īrānī Taqlīdī (90 × 60 cm)',
+    dimensionsMetric: '90 × 60 cm (تا 100 × 70 cm)',
+    dimensionsImperial: "2'0\" × 3'0\" ft (2 × 3 feet)",
+    technicalNoteFa: 'پشتی (نیم‌ذرع) هم به عنوان تکیه‌گاه شاه‌نشین سنتی و هم به عنوان قالیچه ورودی، پادری لوکس یا اثر کلکسیونی روی دیوار به توریست‌ها فروخته می‌شود.',
+    merchantPitchEn: 'This charming piece is a traditional Persian "Poshti" measuring 90 by 60 cm (2 by 3 feet), ideal as an accent mat, chair throw, or collector wall art.',
+    merchantPitchAr: 'هذه القطعة الجميلة تسمى «بشتي» بمقاس ٩٠×٦٠ سم (٢×٣ قدم)، وهي مثالية كسجادة مدخل فاخرة أو لوحة جدارية.'
   },
   {
     id: 'ct_7',
     category: 'types',
-    categoryLabelFa: 'انواع دستبافته',
-    termFa: 'فرش مربع و کناره راهرویی',
+    categoryLabelFa: 'انواع دستبافته و ابعاد خاص',
+    termFa: 'فرش مربع (چهارگوش) و کناره راهرویی',
     fingilish: 'Farsh-e Morabba & Kenareh',
-    termEn: 'Square Carpet (Morabba) & Hallway Runner (Kenareh)',
+    termEn: 'Custom Square Carpet (Morabba) & Long Hallway Runner (Kenareh)',
     pronunciationEn: 'skwair kar-pet (mo-rab-BA) and RUN-er (ke-na-REH)',
     termAr: 'سجادة مربعة (مربع) وسجادة ممر طويلة (كناره)',
     pronunciationAr: 'Sajjāda Murabba‘a wa Kinārah',
-    dimensionsMetric: 'مربع: 200×200 یا 300×300 cm | کناره: عرض 80-120 cm',
-    dimensionsImperial: "Square: 6'7\"×6'7\" or 10'×10' ft",
-    technicalNoteFa: 'فرش مربع برای زیر میز ناهارخوری گرد/مربع و فضاهای متقارن بسیار کمیاب و ارزشمند است.',
-    merchantPitchEn: 'Square Persian carpets ("Morabba") are specially commissioned on wide looms, and "Kenareh" runners are tailored for corridors.',
-    merchantPitchAr: 'السجاد المربع يُنسج خصيصاً على أنوال عريضة للغرف المتناظرة، والـ«كناره» مخصصة للممرات الطويلة.'
+    dimensionsMetric: 'مربع: 150×150، 200×200، 250×250، 300×300 cm | کناره: عرض 80–120 cm',
+    dimensionsImperial: "Square: 5×5 ft, 6.7×6.7 ft, 8.2×8.2 ft, 10×10 ft",
+    technicalNoteFa: 'فرش مربع به دلیل نیاز به دار عریض اختصاصی، در بازار کمیاب‌تر و بسیار مورد تقاضای معماران و خریداران خارجی برای زیر میز گرد یا اتاق‌های مربع است.',
+    merchantPitchEn: 'Square Persian carpets ("Morabba", such as 6.7×6.7 ft or 10×10 ft) are specially woven on wide custom looms, while "Kenareh" runners fit long hallways.',
+    merchantPitchAr: 'السجاد المربع (مثل ٢×٢ أو ٣×٣ متر) يُنسج خصيصاً على أنوال عريضة للغرف المتناظرة، والـ«كناره» مخصصة للممرات الطويلة.'
   },
   {
     id: 'ct_8',
     category: 'condition_age',
-    categoryLabelFa: 'قدمت و وضعیت',
-    termFa: 'نوبافت، کارکرده و کهنه عتیقه',
-    fingilish: 'Now-baaft, Kaar-kardeh, Kohneh Atigheh',
-    termEn: 'Newly Woven (Off-Loom), Pre-Owned Full-Pile & Antique Collector Rug',
-    pronunciationEn: 'noo-lee WOH-ven, pree-OHND, and an-TEEK',
-    termAr: 'نوبافت (جديد من النول)، مستعمل بحالة ممتازة، وقديم أثري (أنتيك)',
-    pronunciationAr: 'Now-bāft (Jadīd), Musta‘mal, wa Qadīm Atharī',
-    technicalNoteFa: 'تفکیک شفاف سه وضعیت فرش برای جلب اعتماد کامل خریدار خارجی.',
-    merchantPitchEn: 'We categorize our collection transparently: "Now-baft" (brand new off the loom), gently pre-owned full-pile vintage, and rare "Kohneh" antiques.',
-    merchantPitchAr: 'نصنّف مجموعتنا بشفافية تامة: «نوبافت» الجديد تماماً، والمستعمل النظيف ذو الوبر الكامل، والقطع الأثرية النادرة.'
+    categoryLabelFa: 'قدمت و وضعیت (کهنه، قدیمی و نوبافت)',
+    termFa: 'کهنه و قدیمی (عتیقه) در برابر نوبافت (آکبند)',
+    fingilish: 'Kohneh va Ghadimi (Antique) vs. Now-baaft (Newly Woven)',
+    termEn: 'Antique & Vintage Collector Rugs (Kohneh & Ghadimi) vs. Newly Woven Off-Loom (Now-baft)',
+    pronunciationEn: 'an-TEEK and VIN-tij vs noo-lee WOH-ven (now-baft)',
+    termAr: 'السجاد القديم والأثري المعتّق (كهنه وقديمي) مقابل الجديد من النول (نوبافت)',
+    pronunciationAr: 'Qadīm wa Atharī (Kohneh) muqābil Jadīd (Now-bāft)',
+    technicalNoteFa: 'در اصطلاح بازار: «نوبافت» یعنی آکبند و پا نخورده؛ «کهنه و قدیمی» (بین ۳۰ تا ۸۰ سال) دارای ارزش کلکسیونی و رنگ‌پختگی است؛ و بالای ۸۰-۱۰۰ سال «عتیقه (Antique)» محسوب می‌شود.',
+    merchantPitchEn: 'We offer both "Now-baft" (brand-new off the loom, never walked on) and rare "Kohneh & Ghadimi" (vintage and antique pieces aged 40 to 90+ years with full authentic pile).',
+    merchantPitchAr: 'يتوفر لدينا السجاد «نوبافت» الجديد تماماً من النول، وكذلك القطع «القديمة والأثرية» المعتّقة التي يتراوح عمرها بين ٤٠ و٩٠ عاماً بحالة ممتازة.'
   },
   {
     id: 'ct_9',
     category: 'structure_materials',
     categoryLabelFa: 'بافت، ابریشم و رج‌شمار',
-    termFa: 'رج‌شمار (۵۰ تا ۸۰ رج)، چله ابریشم و رنگ گیاهی',
-    fingilish: 'Raj-shomar, Chelleh Abrisham, Rang-e Giyahi',
-    termEn: 'Knot Density (Raj / KPSI), Pure Silk Foundation & 100% Vegetable Dyes',
+    termFa: 'رج‌شمار (۳۰ تا ۸۰ رج)، چله ابریشم، کرک و رنگ گیاهی',
+    fingilish: 'Raj-shomar, Chelleh Abrisham, Kork & Rang-e Giyahi',
+    termEn: 'Knot Density (Raj / KPSI), Pure Silk Foundation, Kork Wool & 100% Vegetable Dyes',
     pronunciationEn: 'not DEN-si-tee, pyoor silk fown-DAY-shun, vej-tuh-bul dyez',
-    termAr: 'كثافة العقد (الرج)، سدى الحرير الخالص، وأصباغ نباتية طبيعية ١٠٠٪',
+    termAr: 'كثافة العقد (الرج)، سدى الحرير الخالص، صوف الكرك، وأصباغ نباتية طبيعية ١٠٠٪',
     pronunciationAr: 'Kathāfat al-‘Uqad (Raj), Sadā al-Harīr, wa Asbāgh Nabātiyyah',
-    technicalNoteFa: 'هر «رج» تعداد گره در هر ۷ سانتی‌متر عرض فرش است (مثلاً ۶۰ رج معادل حدود ۶۵۰ گره در اینچ مربع / KPSI).',
-    merchantPitchEn: 'This is a 60-Raj masterpiece on a pure silk warp foundation, woven with Kork lambswool and 100% natural vegetable dyes.',
-    merchantPitchAr: 'هذه تحفة فنية بكثافة ٦٠ رج على أساس من الحرير الخالص، منسوجة بصوف الكرك وألوان نباتية طبيعية ١٠٠٪.'
+    technicalNoteFa: 'هر «رج» تعداد گره در هر ۷ سانتی‌متر عرض فرش است (مثلاً ۵۰ رج معادل حدود ۳۳۰ گره در اینچ مربع / KPSI و ۶۰ رج معادل حدود ۴۷۵ KPSI).',
+    merchantPitchEn: 'This is a 60-Raj masterpiece on a pure silk warp foundation, woven with Kork lambswool and 100% natural vegetable dyes (madder root, walnut husk, and saffron).',
+    merchantPitchAr: 'هذه تحفة فنية بكثافة ٦٠ رج على أساس من الحرير الخالص، منسوجة بصوف الكرك وألوان نباتية طبيعية ١٠٠٪ (من الفوة وقشر الجوز والزعفران).'
+  },
+  {
+    id: 'ct_appraisal',
+    category: 'structure_materials',
+    categoryLabelFa: 'کارشناسی فنی بازار',
+    termFa: 'ابرش (دورنگه طبیعی)، گوشت‌دار، تیغ‌خور نشده و سلامت ریشه و شیرازه',
+    fingilish: 'Abrash, Goosht-daar, Bedoone Tigh-khor, Shirzeh Saalem',
+    termEn: 'Natural Abrash Color Striation, Full Thick Pile, Unshaved & Original Selvedge/Fringes',
+    pronunciationEn: 'NACH-ur-ul ah-BRASH, ful pyle, or-IJ-in-ul sel-vij',
+    termAr: 'تموّج لوني طبيعي (أبرش)، وبر كامل وسميك، وحواف وشراريب أصلية سليمة',
+    pronunciationAr: 'Tamawwuj Lawnī Tabī‘ī (Abrash) wa Wabar Kāmil',
+    technicalNoteFa: 'مشتریان حرفه‌ای خارجی عاشق «ابرش طبیعی (Natural Abrash)» در فرش‌های عشایری و کُردی هستند چون اثبات می‌کند پشم‌ها به صورت دست‌ریس و با دیگ‌های رنگرزی سنتی رنگ شده‌اند.',
+    merchantPitchEn: 'Notice the subtle "Abrash" color variation—this proves the wool was hand-spun and dyed in small organic batches. It also has full thick pile ("Goosht-dar") and original borders.',
+    merchantPitchAr: 'لاحظ التدرج اللوني الطبيعي المسمى «أبرش»، وهو دليل قاطع على الغزل اليدوي والصباغة الطبيعية، كما أن وبر السجادة كامل وحوافها أصلية تماماً.'
+  }
+];
+
+// Comprehensive 100% Offline Carpet Trade Sentences for Instant Showroom Conversation (Persian, English, Arabic)
+export const OFFLINE_CARPET_TRADE_SENTENCES: OfflineCarpetSentence[] = [
+  {
+    id: 'ocs_1',
+    topic: 'welcome',
+    topicLabelFa: '۱. خوش‌آمدگویی و تعارف در حجره',
+    fa: 'خوش آمدید! قدم رنجه فرمودید، بفرمایید بنشینید و چای زعفرانی میل کنید تا فرش‌ها را بدون هیچ اجباری برایتان پهن کنم.',
+    en: 'Welcome! You honor our showroom. Please have a seat and enjoy fresh saffron tea while we unroll our carpets for you—with zero obligation to buy.',
+    pronEn: 'wel-kum! yoo on-er owr show-room. pleez hav ah seet and en-joy saf-ron tee',
+    ar: 'أهلاً وسهلاً بكم، شرّفتم معرضنا! تفضّلوا بالجلوس وتناول الشاي بالزعفران بينما نفرش لكم السجاد للمشاهدة بكل راحة وبدون أي التزام بالشراء.',
+    pronAr: 'Ahlan wa sahlan bikum! Tafaddalū bil-julūs wa tanāwul ash-shāy bil-za‘farān.'
+  },
+  {
+    id: 'ocs_2',
+    topic: 'types_kurd',
+    topicLabelFa: '۲. معرفی انواع فرش (قالی، قالیچه، گلیم، پشتی، مربع و فرش کُرد)',
+    fa: 'در حجره ما انواع قالی بزرگ، قالیچه، گلیم دستباف، پشتی، فرش مربع و همچنین فرش کُرد اصیل (بیجار و سنه) موجود است.',
+    en: 'In our collection we have large room carpets (Ghali), area rugs (Ghalicheh), flat-woven Kilims, traditional Poshti bolsters, custom Square rugs, and authentic Kurdish "Iron Rugs" from Bidjar and Senneh.',
+    pronEn: 'in owr kuh-lek-shun wee hav gha-lee, gha-lee-cheh, kee-leem, posh-tee, skwair rugz, and kur-dish eye-urn rugz',
+    ar: 'يتوفر في معرضنا السجاد الكبير (قالي)، والقاليجه، والكليم اليدوي، والبشتي التقليدي، والسجاد المربع، بالإضافة إلى السجاد الكردي الأصيل (بيجار وسنندج).',
+    pronAr: 'Yatawaffaru fī ma‘ridinā al-Qālī, wal-Qālījah, wal-Kilīm, wal-Pushtī, was-Sajjād al-Kurdī al-Asīl.'
+  },
+  {
+    id: 'ocs_3',
+    topic: 'types_kurd',
+    topicLabelFa: '۲. معرفی انواع فرش (قالی، قالیچه، گلیم، پشتی، مربع و فرش کُرد)',
+    fa: 'این یک «فرش کُرد» اصیل و کهنه است که در جهان به «فرش آهنین ایران» شهرت دارد؛ با پشم کوهستان و گره فوق‌العاده محکم که صد سال عمر می‌کند.',
+    en: 'This is a genuine vintage Kurdish rug ("Farsh-e Kord"), world-renowned as the "Iron Rug of Persia"—hand-knotted with highland wool so densely compacted that it lasts for over a century.',
+    pronEn: 'this iz ah jen-yoo-in kur-dish rug, nohn az theh eye-urn rug ov per-zhuh',
+    ar: 'هذه سجادة كردية إيرانية أصيلة ومعتّقة، تُعرف عالمياً بـ«سجادة الحديد الفارسية» لشدة تماسك عقدها وصوفها الجبلي الذي يدوم لأكثر من مئة عام.',
+    pronAr: 'Hādhihi sajjāda Kurdiyyah asīlah tu‘rafu bi-sajjādat al-hadīd al-Fārisiyyah.'
+  },
+  {
+    id: 'ocs_4',
+    topic: 'sizes_dimensions',
+    topicLabelFa: '۳. اعلام تخصصی ابعاد به انگلیسی و عربی (ذرع، متر و فوت)',
+    fa: 'این قالیچه سایز «دو ذرع (دوزرع)» است؛ ابعاد دقیق آن ۲۰۰ در ۱۳۵ سانتی‌متر، معادل ۴.۵ در ۶.۷ فوت (4.5 × 6.7 feet) می‌باشد.',
+    en: 'This area rug is the classic Persian "Dozar" size—measuring 200 by 135 centimeters, which equals 4 feet 5 inches by 6 feet 7 inches (4.5 × 6.7 ft).',
+    pronEn: 'this iz theh doh-zar syze, 200 bye 135 sen-ti-mee-terz, or 4.5 bye 6.7 feet',
+    ar: 'هذه القاليجه بمقاس «دوزرع» الكلاسيكي، وأبعادها الدقيقة ٢٠٠ في ١٣٥ سنتيمتراً، أي ما يعادل ٤.٥ في ٦.٧ قدم.',
+    pronAr: 'Hādhihi al-Qālījah bi-maqās Dozar: 200 fī 135 cm (4.5 × 6.7 qadam).'
+  },
+  {
+    id: 'ocs_5',
+    topic: 'sizes_dimensions',
+    topicLabelFa: '۳. اعلام تخصصی ابعاد به انگلیسی و عربی (ذرع، متر و فوت)',
+    fa: 'این سایز را در ایران «ذرع و نیم (زرنیم)» می‌نامیم؛ ابعاد آن ۱۵۰ در ۱۰۵ سانتی‌متر (معادل ۳.۵ در ۵ فوت) است و به راحتی داخل چمدان شما جا می‌شود.',
+    en: 'In Iran we call this size "Zar-o-Nim" (Zarnim). It measures 150 by 105 centimeters (3.5 by 5 feet) and folds compactly right inside your suitcase.',
+    pronEn: 'wee kawl this zar-oh-neem, 150 bye 105 cm (3.5 bye 5 feet), ee-zee too pak in yor soot-kays',
+    ar: 'نسمي هذا المقاس في إيران «ذرع ونصف (زرنيم)»، وأبعاده ١٥٠ في ١٠٥ سنتيمتر (٣.٥ في ٥ قدم)، ويمكن طيّه بسهولة داخل حقيبة السفر.',
+    pronAr: 'Nusammī hādhal-maqās Zar wa Nisf (150 × 105 cm), wa yudha‘u bi-suhūlah fī haqībat as-safar.'
+  },
+  {
+    id: 'ocs_6',
+    topic: 'sizes_dimensions',
+    topicLabelFa: '۳. اعلام تخصصی ابعاد به انگلیسی و عربی (ذرع، متر و فوت)',
+    fa: 'این قالیچه کوچک‌تر سایز «ذرع و چارک (زرع چارک)» با ابعاد ۱۲۵ در ۸۰ سانتی‌متر (۲.۷ در ۴.۱ فوت) و آن یکی «پشتی» سایز ۹۰ در ۶۰ سانتی‌متر (۲ در ۳ فوت) است.',
+    en: 'This smaller rug is a "Zar-o-Charak" measuring 125 by 80 cm (2.7 by 4.1 feet), and the smaller accent piece is a "Poshti" measuring 90 by 60 cm (2 by 3 feet).',
+    pronEn: 'zar-oh-cha-rak iz 2.7 bye 4.1 feet, and posh-tee iz 2 bye 3 feet',
+    ar: 'هذه القطعة بمقاس «ذرع وربع» وأبعادها ١٢٥×٨٠ سم (٢.٧×٤.١ قدم)، والقطعة الأصغر هي «بشتي» بمقاس ٩٠×٦٠ سم (٢×٣ قدم).',
+    pronAr: 'Hādhihi Zar wa Rub‘ (125×80 cm), wal-asghar hiya Pushtī (90×60 cm).'
+  },
+  {
+    id: 'ocs_7',
+    topic: 'sizes_dimensions',
+    topicLabelFa: '۳. اعلام تخصصی ابعاد به انگلیسی و عربی (ذرع، متر و فوت)',
+    fa: 'این یک «فرش مربع» کمیاب سایز ۲۰۰ در ۲۰۰ سانتی‌متر (۶.۷ در ۶.۷ فوت) است، و قالی‌های بزرگ ما ۶ متری (6.7×10 ft)، ۹ متری (8.2×11.5 ft) و ۱۲ متری (10×13.1 ft) هستند.',
+    en: 'This is a rare Square carpet ("Morabba") measuring 200 by 200 cm (6.7 by 6.7 feet). Our large room carpets are 6-meter (6.7×10 ft), 9-meter (8.2×11.5 ft), and 12-meter (10×13.1 ft).',
+    pronEn: 'this iz ah skwair kar-pet (6.7 bye 6.7 feet), and wee hav 6, 9, and 12 mee-ter gha-leez',
+    ar: 'هذه سجادة مربعة نادرة بمقاس ٢٠٠×٢٠٠ سم (٦.٧×٦.٧ قدم)، ولدينا أيضاً قالي كبير بمقاسات ٦ أمتار (٢×٣ م) و٩ أمتار (٢.٥×٣.٥ م) و١٢ متراً (٣×٤ م).',
+    pronAr: 'Hādhihi sajjāda murabba‘a nādirah (200×200 cm), wa ladaynā Qālī 6 wa 9 wa 12 mitran.'
+  },
+  {
+    id: 'ocs_8',
+    topic: 'age_kohneh',
+    topicLabelFa: '۴. توضیح تخصصی کهنه ذاتی، کهنه قدیمی و نوبافت',
+    fa: 'این فرش صد در صد «کهنه ذاتی» است؛ یعنی رنگ‌های گیاهی آن در طول ۵۰ سال به صورت طبیعی پخته و مخملی شده و هیچ‌گونه شست‌وشوی شیمیایی یا اسیدی ندارد.',
+    en: 'This carpet is 100% "Kohneh Zaati" (authentic naturally aged patina). Its vegetable dyes mellowed organically over 50 years with zero acid or chemical washing.',
+    pronEn: 'this kar-pet iz 100 per-sent koh-neh zaa-tee — nach-ur-uh-lee aydjd with zee-roh kem-i-kul wash-ing',
+    ar: 'هذه السجادة «كهنه ذاتي» ١٠٠٪، أي أن ألوانها النباتية تعتّقت طبيعياً عبر خمسين عاماً ولم تتعرض لأي غسيل كيميائي أو حمضي.',
+    pronAr: 'Hādhihi as-sajjāda Kohneh Zātī 100%, mu‘attaqa tabī‘iyyan bidūn aiyy ghasīl kīmiyā’ī.'
+  },
+  {
+    id: 'ocs_9',
+    topic: 'age_kohneh',
+    topicLabelFa: '۴. توضیح تخصصی کهنه ذاتی، کهنه قدیمی و نوبافت',
+    fa: 'به ریشه گره‌ها در پشت فرش نگاه کنید: فرش «کهنه و قدیمی» اصیل، پرز گوشت‌دار دارد، اما فرش «نوبافت» تازه از دار قالی پایین آمده و آکبند است.',
+    en: 'Look at the base of the knots on the back: this genuine "Kohneh & Ghadimi" (vintage/antique) piece still has a full healthy pile, whereas that "Now-baft" piece is brand-new off the loom.',
+    pronEn: 'look at theh bak ov theh nots: this koh-neh pees haz ful pyle, and that now-baft iz brand noo',
+    ar: 'انظر إلى جذور العقد خلف السجادة: هذه القطعة «القديمة والأصيلة» تحتفظ بوبرها الكامل، بينما تلك القطعة «نوبافت» جديدة تماماً من النول.',
+    pronAr: 'Unzur ilā khalf as-sajjāda: hādhihi al-qit‘a al-qadīmah wabaruhā kāmil, wa tilka Now-bāft jadīdah.'
+  },
+  {
+    id: 'ocs_10',
+    topic: 'knots_materials',
+    topicLabelFa: '۵. توضیح چله ابریشم، پشم کرک، رجشمار و رنگ گیاهی',
+    fa: 'چله و گل‌های این فرش ابریشم خالص است، پشم آن کرک دست‌ریس است و با روناس، پوست گردو، نیل و زعفران به صورت ۱۰۰٪ گیاهی رنگرزی شده است.',
+    en: 'The warp foundation and highlights are 100% pure natural silk, the pile is hand-spun Kork lambswool, and the dyes are 100% organic—extracted from madder root, walnut husk, indigo, and saffron.',
+    pronEn: 'pyoor silk fown-day-shun, hand-spun kork wool, and 100 per-sent vej-tuh-bul dyez',
+    ar: 'سدى هذه السجادة ونقوشها البارزة من الحرير الطبيعي الخالص ١٠٠٪، والوبر من صوف الكرك المغزول يدوياً، والأصباغ نباتية خالصة من الفوة وقشر الجوز والنيلي والزعفران.',
+    pronAr: 'Sadā as-sajjāda min al-harīr al-khālis, wal-wabar sūf al-kork, wal-asbāgh nabātiyyah 100%.'
+  },
+  {
+    id: 'ocs_11',
+    topic: 'price_shipping',
+    topicLabelFa: '۶. مذاکره قیمت، تخفیف، شناسنامه اصالت و ارسال هوایی',
+    fa: 'قابل شما را ندارد! به احترام حضور شما، بهترین قیمت کلکسیونی را با تخفیف ویژه حساب می‌کنم و شناسنامه رسمی اصالت و بسته‌بندی چمدانی تقدیمتان می‌کنم.',
+    en: 'It is unworthy of your honor ("Ghabel nadareh")! Out of respect for your visit, I will give you our best collector’s price with an official Certificate of Authenticity and compact luggage wrapping.',
+    pronEn: 'eye wil giv yoo owr best kuh-lek-terz prys with ah ser-tif-i-kut ov aw-then-tis-i-tee',
+    ar: 'إنها مقدّمة لكم ولا تغلى عليكم! تكريماً لزيارتكم سأحسب لكم أفضل سعر خاص للمقتنين مع شهادة أصالة رسمية وتغليف مدمج مناسب لحقيبة الطائرة.',
+    pronAr: 'Innahā muqaddamah lakum! Sa-ahsubu lakum afdal si‘r ma‘a shahādat asālah wa taghlīf lil-tā’irah.'
+  },
+  {
+    id: 'ocs_12',
+    topic: 'price_shipping',
+    topicLabelFa: '۶. مذاکره قیمت، تخفیف، شناسنامه اصالت و ارسال هوایی',
+    fa: 'ما فرش‌های بزرگ را از طریق کارگو هوایی بین‌المللی (DHL / Aramex) با بیمه کامل ظرف ۵ تا ۷ روز کاری مستقیماً درب منزل شما در کشورتان تحویل می‌دهیم.',
+    en: 'For larger carpets, we provide fully insured door-to-door international air cargo shipping (via DHL or Aramex) delivered directly to your home address within 5 to 7 business days.',
+    pronEn: 'wee pro-vyde ful-ee in-shoord dor-too-dor in-ter-nash-un-ul air ship-ing in 5 too 7 dayz',
+    ar: 'بالنسبة للسجاد الكبير، نوفر شحناً جوياً دولياً مؤمّناً بالكامل (عبر DHL أو أرامكس) يصل مباشرة إلى باب منزلكم خلال ٥ إلى ٧ أيام عمل.',
+    pronAr: 'Nuwaffiru shahnan jawwiyan mu’ammanan bil-kāmil ilā bāb manzilikum khilāl 5 ilā 7 ayyām.'
   }
 ];
 
@@ -205,31 +388,45 @@ export const CARPET_MERCHANT_DIALOGUES: CarpetMerchantDialogue[] = [
   },
   {
     id: 'cmd_2',
-    stageTitleFa: '۲. توضیح تخصصی «کهنه ذاتی» و سایز «دو ذرع / ذرع و نیم»',
+    stageTitleFa: '۲. توضیح تخصصی «کهنه ذاتی»، «کهنه قدیمی» و سایز «دو ذرع / ذرع و نیم (زرنیم)»',
     stageTitleEn: 'Stage 2: Explaining Kohneh Zaati & Traditional Zar Sizes',
-    customerQuestionEn: 'This rug has such a soft, antique glow! Is it chemically washed, and what is its exact size?',
+    customerQuestionEn: 'This rug has such a soft, antique glow! Is it chemically washed, and what is its exact size in feet?',
     customerQuestionAr: 'هذه السجادة لها بريق هادئ وعتيق جداً! هل هي مغسولة كيميائياً وما هو مقاسها الدقيق؟',
-    customerMeaningFa: 'این قالیچه درخشش عتیقه و ملایمی دارد! آیا شست‌وشوی شیمیایی شده و سایز دقیقش چیست؟',
-    merchantReplyFa: 'این قالیچه سایز «دو ذرع» (۲۰۰ در ۱۳۵ سانتی‌متر) و صد در صد «کهنه ذاتی» است؛ یعنی درخشش و پختگی رنگ‌های گیاهی آن حاصل دهه‌ها گذر طبیعی زمان است، نه اسیدشویی شیمیایی.',
+    customerMeaningFa: 'این قالیچه درخشش عتیقه و ملایمی دارد! آیا شست‌وشوی شیمیایی شده و سایز دقیقش به فوت چیست؟',
+    merchantReplyFa: 'این قالیچه سایز «دو ذرع» (۲۰۰ در ۱۳۵ سانتی‌متر معادل ۴.۵ در ۶.۷ فوت) و صد در صد «کهنه ذاتی» است؛ یعنی درخشش و پختگی رنگ‌های گیاهی آن حاصل دهه‌ها گذر طبیعی زمان است، نه اسیدشویی شیمیایی.',
     merchantReplyEn: 'This is a classic "Dozar" Ghalicheh measuring 200 by 135 cm (4.5 by 6.7 feet). Its sheen is 100% "Kohneh Zaati"—naturally aged over decades with pure vegetable dyes, never chemically treated.',
     merchantReplyEnPhonetic: 'this iz ah doh-ZAR rug (4.5 bye 6.7 feet). it iz 100% koh-neh zaa-tee, nach-ur-uh-lee aydjd',
-    merchantReplyAr: 'هذه قاليجه بمقاس «دوزرع» (٢٠٠×١٣٥ سم). وبريقها «كهنه ذاتي» أصيل ١٠٠٪، أي معتّقة طبيعياً عبر السنين بأصباغ نباتية خالصة بدون أي مواد كيميائية.',
+    merchantReplyAr: 'هذه قاليجه بمقاس «دوزرع» (٢٠٠×١٣٥ سم / ٤.٥×٦.٧ قدم). وبريقها «كهنه ذاتي» أصيل ١٠٠٪، أي معتّقة طبيعياً عبر السنين بأصباغ نباتية خالصة بدون أي مواد كيميائية.',
     merchantReplyArPhonetic: 'Hādhihi Qālījah Dozar (200×135 cm), wa hiya Kohneh Zātī mu‘attaqa tabī‘iyyan.',
     tradeTipFa: 'وقتی به مشتری خارجی تفاوت «کهنه ذاتی (Naturally Aged Patina)» و «کهنه‌شویی شیمیایی (Chemical Wash)» را پشت فرش نشان می‌دهید، ارزش فرش در نگاه او چند برابر می‌شود.'
   },
   {
+    id: 'cmd_kurd',
+    stageTitleFa: '۳. معرفی تخصصی «فرش کُرد (بیجار و سنه)»، «گلیم»، «پشتی» و «فرش مربع»',
+    stageTitleEn: 'Stage 3: Presenting Kurdish "Iron Rugs", Kilims, Poshti & Square Carpets',
+    customerQuestionEn: 'We also want a very durable tribal rug or a flat-woven Kilim. What makes Kurdish Persian rugs so famous?',
+    customerQuestionAr: 'نبحث أيضاً عن سجادة عشائرية شديدة التحمل أو كليم يدوي. لماذا يشتهر السجاد الكردي الإيراني بهذا القدر؟',
+    customerMeaningFa: 'ما یک فرش عشایری بسیار بادوام یا یک گلیم دستباف هم می‌خواهیم. چرا فرش کُرد ایرانی این‌قدر مشهور است؟',
+    merchantReplyFa: 'این «فرش کُرد» اصیل (بافت بیجار و سنه) در جهان به «فرش آهنین ایران» معروف است چون گره‌های آن با شانه آهنی کوبیده شده و بیش از صد سال عمر می‌کند. در کنار آن هم گلیم دوطرفه، پشتی (۲ در ۳ فوت) و فرش مربع داریم.',
+    merchantReplyEn: 'This authentic Kurdish rug ("Farsh-e Kord" from Bidjar and Senneh) is known worldwide as the "Iron Rug of Persia" because its wet-compacted knots last over a century. Beside it we also have reversible Senneh Kilims, 2×3 ft Poshtis, and rare Square rugs.',
+    merchantReplyEnPhonetic: 'this kur-dish rug iz nohn az theh eye-urn rug ov per-zhuh, las-ting oh-ver ah sen-chuh-ree',
+    merchantReplyAr: 'هذه السجادة الكردية الأصيلة (من بيجار وسنندج) تُلقب عالمياً بـ«سجادة الحديد الفارسية» لأن عقدها المضغوطة تدوم لأكثر من مئة عام، وبجانبها كليم سنندج ذو الوجهين والبشتي والسجاد المربع.',
+    merchantReplyArPhonetic: 'Hādhihi as-sajjāda al-Kurdiyyah tu‘rafu bi-sajjādat al-hadīd al-Fārisiyyah.',
+    tradeTipFa: 'خریداران اروپایی و عرب وقتی عبارت «Iron Rug of Persia (فرش آهنین ایران)» را درباره فرش کُرد بیجار و سنه می‌شنوند و استحکام پشت فرش را لمس می‌کنند، به شدت مجذوب خرید آن می‌شوند.'
+  },
+  {
     id: 'cmd_3',
-    stageTitleFa: '۳. مذاکره قیمت، شناسنامه اصالت و ارسال هوایی (کارگو)',
-    stageTitleEn: 'Stage 3: Pricing, Certificate of Authenticity & Worldwide Shipping',
+    stageTitleFa: '۴. مذاکره قیمت، شناسنامه اصالت و ارسال هوایی (کارگو)',
+    stageTitleEn: 'Stage 4: Pricing, Certificate of Authenticity & Worldwide Shipping',
     customerQuestionEn: 'We love this Zar-o-Nim silk foundation rug! What is your best price, and how can we take it home?',
     customerQuestionAr: 'لقد أعجبتنا هذه القطعة (ذرع ونصف) ذات الأساس الحريري! ما هو السعر النهائي وكيف يمكن شحنها؟',
-    customerMeaningFa: 'ما عاشق این قالیچه ذرع و نیم چله ابریشم شدیم! بهترین قیمت شما چقدر است و چطور آن را ببریم؟',
+    customerMeaningFa: 'ما عاشق این قالیچه ذرع و نیم (زرنیم) چله ابریشم شدیم! بهترین قیمت شما چقدر است و چطور آن را ببریم؟',
     merchantReplyFa: 'قابل شما را ندارد! به رسم یادگاری و برکت حجره، تخفیف ویژه پای معامله تقدیمتان می‌کنم، همراه با شناسنامه رسمی اصالت و بسته‌بندی چمدانی یا ارسال هوایی بیمه‌شده درب منزل شما.',
     merchantReplyEn: 'It is unworthy of your honor ("Ghabel nadareh")! I will offer you our best collector’s discount, complete with a signed Certificate of Authenticity and either compact luggage wrapping or insured DHL door-to-door shipping.',
     merchantReplyEnPhonetic: 'eye wil of-er owr best kuh-LEK-terz dis-kownt with ah ser-TIF-i-kut ov aw-then-TIS-i-tee',
     merchantReplyAr: 'إنها مقدّمة لكم ولا تغلى عليكم! سأمنحكم خصماً خاصاً للمقتنين مع شهادة أصالة رسمية، وتغليف مدمج للطائرة أو شحن جوي مؤمّن حتى باب منزلكم.',
     merchantReplyArPhonetic: 'Sa-amnahukum khasman khāssan ma‘a shahādat asālah wa shahn jawwī mu’amman.',
-    tradeTipFa: 'همیشه به توریست اطمینان دهید که فرش ذرع و نیم یا دو ذرع را می‌توانید به اندازه یک کیف دستی کوچک «وکیوم چمدانی» کنید یا با کارگو بفرستید.'
+    tradeTipFa: 'همیشه به توریست اطمینان دهید که فرش ذرع و نیم (زرنیم) یا دو ذرع را می‌توانید به اندازه یک کیف دستی کوچک «وکیوم چمدانی» کنید یا با کارگو بفرستید.'
   }
 ];
 
