@@ -747,6 +747,46 @@ const STRUCTURED_FARSI_ROADMAP: StructuredRoadmapLesson[] = [
       { fa: 'با کشورهای فارسی‌زبان', fingilish: 'Bā keshvar-hā-ye Fārsi-zabān', en: 'With Persian-speaking nations', role: 'Target Partner' },
       { fa: 'هستیم', fingilish: 'Hastim', en: 'We are', role: 'Formal Verb' }
     ]
+  },
+  {
+    id: 'srl_9_money_colloquial',
+    stageId: 'stage_4',
+    stageTitleEn: 'Stage 4 (B2): Real-World Colloquial & Figurative Iranian Persian',
+    stageTitleFa: 'مرحله ۴ (B2): کنایه‌ها و اصطلاحات عامیانه روزمره مردم ایران',
+    lessonNumber: 9,
+    titleEn: 'Lesson 9: Everyday Figurative Idioms — "Dastam kheyli khāliyeh" (Strapped for Cash) & Mood',
+    persianSpoken: 'راستش این روزا دستم خیلی خالیه و حالم هم یکم تو قوطیه!',
+    persianFormal: 'در حقیقت این روزها از نظر مالی در مضیقه هستم و کمی هم بی‌حوصله‌ام.',
+    fingilish: 'Rāstesh in roozā dastam kheyli khāliyeh o hālam ham yekam too ghootiyeh!',
+    englishMeaning: 'Honestly, I am really strapped for cash (short on money) these days, and I am feeling a bit down in the dumps too!',
+    grammarSecretEn:
+      '"Dastam kheyli khāliyeh" (literally: "My hand is very empty") is the most natural, polite colloquial metaphor in Iran for having tight finances or being short on money. "Hālam too ghootiyeh" (literally: "My mood is in a box/can") means feeling down or out of sorts.',
+    wordBreakdown: [
+      { fa: 'این روزا', fingilish: 'In roozā', en: 'These days (Spoken for In rooz-hā)', role: 'Time Phrase' },
+      { fa: 'دستم خیلی خالیه', fingilish: 'Dastam kheyli khāliyeh', en: 'I am strapped for cash / short on money (lit. my hand is empty)', role: 'Figurative Idiom' },
+      { fa: 'حالم تو قوطیه', fingilish: 'Hālam too ghootiyeh', en: 'I am feeling down / in a funk', role: 'Colloquial Idiom' },
+      { fa: 'میزونی؟', fingilish: 'Mizooni?', en: 'Are you doing alright / sorted?', role: 'Friendly Check-in' }
+    ]
+  },
+  {
+    id: 'srl_10_street_idioms',
+    stageId: 'stage_5',
+    stageTitleEn: 'Stage 5 (C1): Native Iranian Street Idioms & Humor',
+    stageTitleFa: 'مرحله ۵ (C1): اصطلاحات خودمانی و شیرین گفتار امروز ایران',
+    lessonNumber: 10,
+    titleEn: 'Lesson 10: Vivid Iranian Colloquial Expressions (Shock, Banter & Nerves)',
+    persianSpoken: 'چته کشتی‌هات غرق شده؟ بابا انقدر رو مخ من راه نرو، هرچی زده بودیم پرید!',
+    persianFormal: 'چرا این‌قدر غمگین و درهم هستید؟ لطفاً مرا کلافه نکنید، تمام حال خوشمان از بین رفت.',
+    fingilish: 'Cheteh keshti-hāt ghargh shodeh? Bābā enghadr roo mokh-e man rāh naro, harchi zadeh boodim parid!',
+    englishMeaning: 'Why the long face—did all your ships sink? Man, stop walking all over my nerves, you totally killed our vibe!',
+    grammarSecretEn:
+      'Also includes: "Bā fak khordam zamin" (I fell flat on my face), "Pashmām/Bargām rikht!" (Mind blown!), "Chiyeh kalak? Emrooz khabariyeh?" (What’s up, sly fox?), and "In pāsh beh oon pāsh penālti mizaneh" (He trips over his own feet).',
+    wordBreakdown: [
+      { fa: 'کشتی‌هات غرق شده؟', fingilish: 'Keshti-hāt ghargh shodeh?', en: 'Did your ships sink? (Why so sad?)', role: 'Figurative Question' },
+      { fa: 'رو مخ من راه نرو', fingilish: 'Roo mokh-e man rāh naro', en: 'Stop walking on my nerves / bugging me', role: 'Colloquial Idiom' },
+      { fa: 'هرچی زده بودیم پرید', fingilish: 'Harchi zadeh boodim parid', en: 'Killed our buzz / ruined the vibe', role: 'Youth Idiom' },
+      { fa: 'با فک خوردم زمین / برگام ریخت', fingilish: 'Bā fak khordam zamin / Bargām rikht', en: 'Fell flat on my face / Mind blown!', role: 'Everyday Slang' }
+    ]
   }
 ];
 
@@ -779,6 +819,26 @@ const SENTENCE_ASSEMBLER_DRILLS = [
       { fa: 'همکاریِ اقتصادی', fingilish: 'hamkāri-ye eghtesādi', en: 'economic cooperation' },
       { fa: 'با کشورهای فارسی‌زبان', fingilish: 'bā keshvar-hā-ye Fārsi-zabān', en: 'with Persian-speaking countries' },
       { fa: 'هستیم.', fingilish: 'hastim.', en: 'are.' }
+    ]
+  },
+  {
+    id: 'sad_4_colloquial_money',
+    englishTarget: "I'm really strapped for cash these days, my hand is empty! (Colloquial Iranian)",
+    correctOrder: [
+      { fa: 'راستش این روزا', fingilish: 'Rāstesh in roozā', en: 'Honestly these days' },
+      { fa: 'دستم خیلی خالیه', fingilish: 'dastam kheyli khāliyeh', en: 'my hand is very empty (short on money)' },
+      { fa: 'ولی ایشالا', fingilish: 'vali ishālā', en: 'but hopefully' },
+      { fa: 'ماه بعد جبران می‌کنم!', fingilish: 'māh-e ba’d jobrān mikonam!', en: "I'll make it up next month!" }
+    ]
+  },
+  {
+    id: 'sad_5_colloquial_street',
+    englishTarget: 'Bless you buddy, you really went all out and everything is sorted! (Colloquial Iranian)',
+    correctOrder: [
+      { fa: 'دمت گرم رفیق،', fingilish: 'Damet garm rafigh,', en: 'Bless you my friend,' },
+      { fa: 'واقعاً سنگ تموم گذاشتی', fingilish: 'vāghe’an sang tamoom gozāshti', en: 'you truly went all out' },
+      { fa: 'و الان همه چی', fingilish: 'o alān hameh chi', en: 'and right now everything' },
+      { fa: 'کاملاً میزونه!', fingilish: 'kāmelan mizooneh!', en: 'is completely sorted!' }
     ]
   }
 ];
@@ -903,6 +963,54 @@ const C2_PROVERBS_SLANG_AND_17PLUS_DB: C2ProverbAnd17PlusItem[] = [
     fingilish: 'Eyval dādāsh, rasman terkoondi, ākhare-shi! Vali man emrooz az khastegi jenāzam o dahanam servis shodeh.',
     europeanBridges: '🇩🇪 Du hast es echt gerockt, Bruder! Ich bin heute völlig fertig. • 🇫🇷 Tu as tout déchiré frérot ! Je suis crevé.',
     explanationEnFa: '"Terkoondi" (you blew it up / killed it), "Ākhare-shi" (you’re the ultimate/best), and the 17+ colloquial "Dahanam servis shodeh" (I got worked to death / exhausted).'
+  },
+  {
+    id: 'c2_7_money_short',
+    tier: 'colloquial_idiom',
+    badgeEn: '💸 Everyday Figurative Idiom • Strapped for Cash / Short on Money',
+    badgeFa: '💸 کنایه روزمره و بسیار رایج از وضع نامساعد مالی («این روزا دستم خیلی خالیه»)',
+    englishSlangOrProverb: "I'm really strapped for cash / short on money / broke these days (my hands are empty).",
+    persianSpokenStreet: 'این روزا دستم خیلی خالیه! (یا: دست‌و بالم تنگه / هشتم گروِ نُهُمه)',
+    persianFormalOrProverb: 'در حال حاضر از نظر مالی در مضیقه هستم و بودجه کافی ندارم.',
+    fingilish: 'In roozā dastam kheyli khāliyeh! (Dast-o-bālam tangeh / Hashtam gerov-e nohomeh)',
+    europeanBridges: '🇩🇪 Ich bin zurzeit knapp bei Kasse. • 🇫🇷 Je suis vraiment à court d’argent ces jours-ci.',
+    explanationEnFa: 'کنایه بسیار محترمانه و عامیانه از وضع نامساعد مالی: در فرهنگ گفتاری ایران به جای اینکه مستقیم بگویند «پول ندارم»، می‌گویند «این روزا دستم خیلی خالیه» (Literally: "My hand is very empty these days" = I am short on money / strapped for cash).'
+  },
+  {
+    id: 'c2_8_mood_shock',
+    tier: 'colloquial_idiom',
+    badgeEn: '😲 Everyday Iranian Idioms • Feeling Down, Shocked & Falling Flat',
+    badgeFa: '😲 اصطلاحات عامیانه روزمره ایران: «حالم تو قوطیه»، «با فک خوردم زمین» و «برگام/پشمام ریخت»',
+    englishSlangOrProverb: "I wiped out flat on my face! / I'm feeling down in the dumps today / My mind is totally blown!",
+    persianSpokenStreet: 'با فک خوردم زمین! • امروز حالم تو قوطیه! • پشمام ریخت! (مودبانه: برگام ریخت!)',
+    persianFormalOrProverb: 'به شدت زمین خوردم • امروز کسل و بی‌حوصله هستم • بسیار شگفت‌زده شدم.',
+    fingilish: 'Bā fak khordam zamin! • Emrooz hālam too ghootiyeh! • Pashmām rikht! (Polite: Bargām rikht!)',
+    europeanBridges: '🇩🇪 Ich bin voll auf die Nase gefallen! / Ich bin heute schlecht drauf / Ich bin völlig baff!',
+    explanationEnFa: 'سه اصطلاح بسیار زنده در گفتار روزمره ایران: ۱) «با فک خوردم زمین» (محکم زمین خوردن)، ۲) «حالم تو قوطیه» (کسل و دلگیر بودن)، ۳) «پشمام ریخت / برگام ریخت» (نهایت تعجب و شگفتی).'
+  },
+  {
+    id: 'c2_9_friends_banter',
+    tier: 'colloquial_idiom',
+    badgeEn: '🤝 Everyday Banter • "Mizooni?", "Keshti-hāt ghargh shodeh?" & "Chiyeh kalak?"',
+    badgeFa: '🤝 صمیمیت و شوخی‌های روزمره: «میزونی؟»، «کشتی‌هات غرق شده؟» و «چیه کلک؟ امروز خبریه؟»',
+    englishSlangOrProverb: "Are you all good/sorted? — Nah, things are rough! / Why the long face, did your ships sink? / What's up, sly fox?",
+    persianSpokenStreet: 'میزونی؟ — نه، بدجوری درگیرم! • چته؟ کشتی‌هات غرق شده؟ • چیه کلک؟ امروز خبریه؟',
+    persianFormalOrProverb: 'آیا اوضاع شما روبه‌راه است؟ • چرا غمگین هستید؟ • امروز چه خبر خوشی در راه است؟',
+    fingilish: 'Mizooni? — Nah, bad-joori dargiram! • Cheteh? Keshti-hāt ghargh shodeh? • Chiyeh kalak? Emrooz khabariyeh?',
+    europeanBridges: '🇩🇪 Alles im Lot bei dir? / Warum ziehst du so ein Gesicht? / Was ist los, du Schlitzohr?',
+    explanationEnFa: 'اصطلاحات صمیمی بین دوستان در ایران: «میزونی؟» (حالت خوب و روبه‌راهه؟)، «کشتی‌هات غرق شده؟» (کنایه به قیافه غمگین و درهم)، «چیه کلک؟» (شوخی با دوستی که تیپ زده یا رازی دارد).'
+  },
+  {
+    id: 'c2_10_nerves_vibe',
+    tier: 'colloquial_idiom',
+    badgeEn: '🧠 Everyday Expressions • "Roo mokham rāh naro!", "Penālti mizaneh" & "Harchi zadeh boodim parid!"',
+    badgeFa: '🧠 کنایه‌های روزمره: «رو مخ من راه نرو!»، «این پاش به اون پاش پنالتی می‌زنه» و «هرچی زده بودیم پرید!»',
+    englishSlangOrProverb: "Man, stop walking all over my nerves! / He's tripping over his own two feet! / Man, you totally killed our buzz!",
+    persianSpokenStreet: 'بابا انقدر رو مخ من راه نرو! • فلانی این پاش به اون پاش پنالتی می‌زنه! • بابا هرچی زده بودیم پرید!',
+    persianFormalOrProverb: 'لطفاً مرا کلافه نکنید • ایشان تعادل و هماهنگی ندارد • ناگهان آرامش و شادی ما از بین رفت.',
+    fingilish: 'Bābā enghadr roo mokh-e man rāh naro! • In pāsh beh oon pāsh penālti mizaneh! • Bābā harchi zadeh boodim parid!',
+    europeanBridges: '🇩🇪 Geh mir nicht so auf die Nerven! / Er stolpert über seine eigenen Füße! / Du hast die ganze Stimmung ruiniert!',
+    explanationEnFa: '۱) «رو مخ من راه نرو / تو مخ من نرو» (اعصابم را خرد نکن)، ۲) «این پاش به اون پاش پنالتی می‌زنه» (کنایه از خستگی شدید یا دست‌وپاچلفتی بودن)، ۳) «بابا هرچی زده بودیم پرید!» (وقتی کسی ناگهان شما را می‌ترساند یا حال خوشتان را می‌گیرد).'
   }
 ];
 
@@ -921,6 +1029,11 @@ export const PersianForDiasporaHub: React.FC<PersianForDiasporaHubProps> = ({ on
   const [slowMode, setSlowMode] = useState<boolean>(false);
   const [persianVoice, setPersianVoice] = useState<'female' | 'male'>('female');
   const [selectedBuilderIdx, setSelectedBuilderIdx] = useState<number>(0);
+
+  // Finglish-to-Persian-Script Bridge Mode (Section 1: Finglish treated as a bridge to Persian script, not a replacement)
+  const [scriptBridgeMode, setScriptBridgeMode] = useState<'bridge_full' | 'script_focus' | 'pure_script'>('bridge_full');
+  const [revealedFinglishIds, setRevealedFinglishIds] = useState<Record<string, boolean>>({});
+  const [activeProgressionStep, setActiveProgressionStep] = useState<number>(0);
 
   // State for Live Bilateral C2 Colloquial, Proverb & 17+ Street Translator
   const [liveTransInput, setLiveTransInput] = useState<string>('');
@@ -1053,8 +1166,10 @@ export const PersianForDiasporaHub: React.FC<PersianForDiasporaHubProps> = ({ on
   const [onlyShowReviewQueue, setOnlyShowReviewQueue] = useState<boolean>(false);
 
   // Interactive Sentence Assembler State
-  const [activeDrillIdx, setActiveDrillIdx] = useState<number>(0);
+  const [activeDrillIdx, setActiveDrillIdx] = useState<number>(3); // Default to Colloquial Iranian "این روزا دستم خیلی خالیه"
   const [pickedChunks, setPickedChunks] = useState<number[]>([]);
+  const [assemblerErrorTopBanner, setAssemblerErrorTopBanner] = useState<string | null>(null);
+  const [revealFullSentenceTopBar, setRevealFullSentenceTopBar] = useState<boolean>(true);
 
   const speechRate = slowMode ? 0.68 : 0.88;
   const currentBuilder = FARSI_SENTENCE_BUILDER_PRESETS[selectedBuilderIdx] || FARSI_SENTENCE_BUILDER_PRESETS[0];
@@ -1331,23 +1446,99 @@ export const PersianForDiasporaHub: React.FC<PersianForDiasporaHubProps> = ({ on
               The Complete Persian (Farsi) Academy for English Speakers, Diaspora Youth, Diplomats & Global Trade
             </h2>
             <p className="text-xs sm:text-sm text-emerald-100 leading-relaxed">
-              Over <strong>300 million people worldwide</strong> speak or understand Persian across strategic economic and cultural hubs, and <strong>10 million Iranians live abroad</strong> whose children want to master their mother tongue. Unlike weak generic apps, this flagship section teaches: <strong>1) Family, Taarof, Colloquial Street Slang & Boundaries, 2) Diplomatic, Political & Economic Trade Persian, 3) Spoken Tehrani vs. Textbook Farsi, 4) Persian Script & Alphabet, and 5) Bilingual Audio Stories</strong>.
+              Over <strong>300 million people worldwide</strong> speak or understand Persian across strategic economic and cultural hubs, and <strong>10 million Iranians live abroad</strong> whose children want to master their mother tongue. While introductory Persian courses provide a helpful starting point with basic words, Lingo completes the full learning journey: <strong>English ➔ Finglish Bridge ➔ Pronunciation ➔ Persian Script ➔ Reading ➔ Writing ➔ Conversation ➔ Real-World Persian ➔ Iranian Culture</strong>.
             </p>
           </div>
 
           <div className="lg:col-span-5 p-4 rounded-2xl bg-black/40 border-2 border-amber-400/50 space-y-1.5">
             <h3 className="text-xs sm:text-sm font-black text-amber-300">
-              🌟 بال پرواز و برگ برنده بی‌رقیب برنامه در جهان:
+              🌟 تکمیل زنجیرهٔ آموزش فارسی (بدون ادعای منفی درباره سایر برنامه‌ها):
             </h3>
             <p className="text-xs text-emerald-100 leading-relaxed">
-              پوشش هم‌زمان <strong>۳ گروه بزرگ جهانی</strong> که هیچ اپلیکیشن قدرتمندی نداشتند:
+              در این بخش، <strong>فینگلیش (Finglish) صرفاً به عنوان یک پل موقت برای عبور به خط اصلی فارسی</strong> استفاده می‌شود و ۷ حلقهٔ کلیدی تکمیل شده است:
               <br />
-              ۱) <strong>فرزندان ۱۰ میلیون ایرانی خارج از کشور</strong> (مکالمه با خانواده، محاوره تهرانی، تعارف و کوچه‌بازار)
+              ۱) <strong>پل گذار از فینگلیش به خواندن و نوشتن خط فارسی</strong>
               <br />
-              ۲) <strong>دیپلمات‌ها، دفاتر نمایندگی سیاسی و تجار خارجی</strong> در ارتباط با بازار <strong>۳۰۰ میلیون نفری فارسی‌زبانان</strong>
+              ۲) <strong>تمرین مکالمه صوتی، محاوره تهرانی و پشتیبانی از فرزندان خارج از کشور</strong>
               <br />
-              ۳) <strong>انگلیسی‌زبانان علاقه‌مند به فرهنگ، شعر و خط شیرین فارسی</strong>.
+              ۳) <strong>سناریوهای واقعی زندگی، فرهنگ ایرانی، تعارف و دیپلماسی ۳۰۰ میلیونی</strong>.
             </p>
+          </div>
+        </div>
+
+        {/* ================================================================= */}
+        {/* 9-STEP CORE PROGRESSION & FINGLISH-TO-SCRIPT BRIDGE CONTROLLER    */}
+        {/* ================================================================= */}
+        <div className="p-4 sm:p-5 rounded-2xl bg-black/35 border border-emerald-400/40 space-y-3" dir="ltr">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <span className="text-xs sm:text-sm font-black text-amber-300 block">
+                🌉 9-Step Core Progression Path (Finglish as a Bridge to Real Persian Script):
+              </span>
+              <span className="text-[11px] text-emerald-200">
+                Click any stage in the 9-step journey, or switch your Script Bridge Mode on the right as your reading confidence grows:
+              </span>
+            </div>
+
+            {/* Interactive 3-Level Finglish Bridge Mode Switcher */}
+            <div className="inline-flex flex-wrap items-center gap-1 bg-slate-950/90 p-1 rounded-xl border border-amber-400/50">
+              {[
+                { id: 'bridge_full' as const, label: '1. Full Bridge (Finglish + Script)' },
+                { id: 'script_focus' as const, label: '2. Script Transition (Tap to Peek Finglish)' },
+                { id: 'pure_script' as const, label: '3. Pure Persian Script Mastery (خط فارسی)' }
+              ].map((m) => (
+                <button
+                  key={m.id}
+                  type="button"
+                  onClick={() => {
+                    sound.playClick();
+                    setScriptBridgeMode(m.id);
+                  }}
+                  className={`px-2.5 py-1.5 rounded-lg text-[11px] font-black transition-all ${
+                    scriptBridgeMode === m.id
+                      ? 'bg-amber-400 text-slate-950 shadow-xs'
+                      : 'text-emerald-100 hover:bg-white/10'
+                  }`}
+                >
+                  {m.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* 9-Step Progression Interactive Bar */}
+          <div className="grid grid-cols-3 sm:grid-cols-9 gap-1.5">
+            {[
+              { step: '1. English', desc: 'Start with clear English meaning & thought', targetTab: 'roadmap_srs' as const },
+              { step: '2. Finglish', desc: 'Phonetic Latin bridge (temporary scaffold)', targetTab: 'roadmap_srs' as const },
+              { step: '3. Pronunciation', desc: 'Native Tehrani audio (0.68x slow & 0.88x normal)', targetTab: 'roadmap_srs' as const },
+              { step: '4. Persian Script', desc: 'Connect sounds directly to 32 Persian letters', targetTab: 'alphabet' as const },
+              { step: '5. Reading', desc: 'Read connected right-to-left words & stories', targetTab: 'stories' as const },
+              { step: '6. Writing', desc: 'Draw & assemble Persian script on touch canvas', targetTab: 'alphabet' as const },
+              { step: '7. Conversation', desc: 'Spoken Tehrani vs. textbook Persian rules', targetTab: 'spoken_vs_formal' as const },
+              { step: '8. Real-World', desc: 'Family, bazaar, diplomacy & everyday boundaries', targetTab: 'phrases' as const },
+              { step: '9. Iranian Culture', desc: 'Taarof, Nowruz, Yalda, Ferdowsi, Rumi & Hafez', targetTab: 'stories' as const }
+            ].map((item, idx) => (
+              <button
+                key={idx}
+                type="button"
+                onClick={() => {
+                  sound.playClick();
+                  setActiveProgressionStep(idx);
+                  setSubTab(item.targetTab);
+                }}
+                className={`p-2 rounded-xl border text-left transition-all ${
+                  activeProgressionStep === idx
+                    ? 'bg-emerald-400 text-slate-950 border-amber-200 font-black shadow-md'
+                    : 'bg-white/5 text-white border-white/15 hover:bg-white/15 font-bold'
+                }`}
+              >
+                <span className="text-[11px] block leading-tight">{item.step}</span>
+                <span className={`text-[9px] block mt-0.5 leading-snug ${activeProgressionStep === idx ? 'text-slate-900' : 'text-emerald-200/80'}`}>
+                  {item.desc}
+                </span>
+              </button>
+            ))}
           </div>
         </div>
 
@@ -1883,7 +2074,7 @@ export const PersianForDiasporaHub: React.FC<PersianForDiasporaHubProps> = ({ on
                       </p>
                     </div>
 
-                    {/* Persian Script + Spoken vs Formal + Fingilish */}
+                    {/* Persian Script + Spoken vs Formal + Fingilish Bridge */}
                     <div className="p-4 rounded-2xl bg-emerald-950 text-white space-y-1.5">
                       <p className="text-lg sm:text-xl font-black text-amber-300 leading-relaxed" dir="rtl">
                         🇮🇷 محاوره: «{lesson.persianSpoken}»
@@ -1891,9 +2082,35 @@ export const PersianForDiasporaHub: React.FC<PersianForDiasporaHubProps> = ({ on
                       <p className="text-xs text-slate-300" dir="rtl">
                         📘 رسمی/کتابی: «{lesson.persianFormal}»
                       </p>
-                      <p className="text-xs sm:text-sm font-mono font-black text-emerald-200" dir="ltr">
-                        🗣️ Fingilish: "{lesson.fingilish}"
-                      </p>
+                      {scriptBridgeMode === 'bridge_full' && (
+                        <p className="text-xs sm:text-sm font-mono font-black text-emerald-200" dir="ltr">
+                          🌉 Finglish Bridge: "{lesson.fingilish}"
+                        </p>
+                      )}
+                      {scriptBridgeMode === 'script_focus' && (
+                        <div dir="ltr">
+                          {revealedFinglishIds[lesson.id] ? (
+                            <p className="text-xs sm:text-sm font-mono font-black text-emerald-200">
+                              🌉 Finglish Bridge: "{lesson.fingilish}"
+                            </p>
+                          ) : (
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setRevealedFinglishIds((prev) => ({ ...prev, [lesson.id]: true }))
+                              }
+                              className="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-amber-300 text-[11px] font-black"
+                            >
+                              👁️ Read Persian Script First — Tap to Peek Finglish Bridge
+                            </button>
+                          )}
+                        </div>
+                      )}
+                      {scriptBridgeMode === 'pure_script' && (
+                        <p className="text-[11px] text-amber-300/90 font-bold" dir="ltr">
+                          ✨ Pure Persian Script Mode Active (Finglish scaffold hidden)
+                        </p>
+                      )}
                       <p className="text-xs sm:text-sm font-black text-white pt-1" dir="ltr">
                         🇬🇧 Meaning: "{lesson.englishMeaning}"
                       </p>
@@ -1915,7 +2132,9 @@ export const PersianForDiasporaHub: React.FC<PersianForDiasporaHubProps> = ({ on
                             <p className="text-sm font-black text-slate-900 text-right" dir="rtl">
                               {wb.fa} 🔊
                             </p>
-                            <p className="text-xs font-mono font-bold text-emerald-800">{wb.fingilish}</p>
+                            {scriptBridgeMode !== 'pure_script' && (
+                              <p className="text-xs font-mono font-bold text-emerald-800">{wb.fingilish}</p>
+                            )}
                             <p className="text-[11px] font-bold text-slate-700">{wb.en}</p>
                             <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-200 text-slate-700 font-bold inline-block mt-1">
                               {wb.role}
@@ -1981,7 +2200,7 @@ export const PersianForDiasporaHub: React.FC<PersianForDiasporaHubProps> = ({ on
                 </h3>
               </div>
 
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2">
                 {SENTENCE_ASSEMBLER_DRILLS.map((d, idx) => (
                   <button
                     key={d.id}
@@ -1990,6 +2209,7 @@ export const PersianForDiasporaHub: React.FC<PersianForDiasporaHubProps> = ({ on
                       sound.playClick();
                       setActiveDrillIdx(idx);
                       setPickedChunks([]);
+                      setAssemblerErrorTopBanner(null);
                     }}
                     className={`px-3 py-1.5 rounded-xl text-xs font-black ${
                       activeDrillIdx === idx
@@ -1997,15 +2217,82 @@ export const PersianForDiasporaHub: React.FC<PersianForDiasporaHubProps> = ({ on
                         : 'bg-white/10 text-white hover:bg-white/20'
                     }`}
                   >
-                    Drill #{idx + 1}
+                    جمله #{idx + 1}
                   </button>
                 ))}
               </div>
             </div>
 
-            <p className="text-sm sm:text-base font-bold text-indigo-100">
-              🎯 Target English Sentence: <span className="text-amber-300 font-black">"{currentAssemblerDrill.englishTarget}"</span>
-            </p>
+            {/* TOP BAR SHOWING CORRECT DICTATION & FULL CORRECT SENTENCE IF STUCK OR WRONG ORDER */}
+            {(revealFullSentenceTopBar ||
+              assemblerErrorTopBanner ||
+              pickedChunks.length === currentAssemblerDrill.correctOrder.length) && (
+              <div
+                className={`p-4 rounded-2xl border-2 space-y-1.5 shadow-lg ${
+                  assemblerErrorTopBanner
+                    ? 'bg-rose-950/95 border-amber-400 animate-pulse'
+                    : 'bg-emerald-950/90 border-emerald-400/70'
+                }`}
+                dir="rtl"
+              >
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <span className="px-2.5 py-0.5 rounded-lg bg-amber-400 text-slate-950 text-xs font-black">
+                    {assemblerErrorTopBanner
+                      ? '🚨 نوار بالای صفحه: اصلاح جمله‌سازی و نمایش کل جمله صحیح'
+                      : '✅ نوار بالای صفحه: کل جمله صحیح و دیکته کامل (خودمانی و استاندارد)'}
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        sound.playSuccess();
+                        setPickedChunks(currentAssemblerDrill.correctOrder.map((_, i) => i));
+                        setAssemblerErrorTopBanner(null);
+                        speakPersian(
+                          currentAssemblerDrill.correctOrder.map((c) => c.fa).join(' '),
+                          speechRate,
+                          currentAssemblerDrill.correctOrder.map((c) => c.fingilish).join(' ')
+                        );
+                      }}
+                      className="px-3 py-1 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 text-xs font-black"
+                    >
+                      ✨ تکمیل خودکار کل جمله صحیح
+                    </button>
+                  </div>
+                </div>
+
+                <p className="text-base sm:text-xl font-black text-amber-300">
+                  🌟 کل جمله صحیح: «{currentAssemblerDrill.correctOrder.map((c) => c.fa).join(' ')}»
+                </p>
+                <p className="text-xs font-mono text-emerald-200" dir="ltr">
+                  🗣️ Full Finglish Dictation: "{currentAssemblerDrill.correctOrder.map((c) => c.fingilish).join(' ')}"
+                </p>
+                {assemblerErrorTopBanner && (
+                  <p className="text-xs text-rose-200 font-bold">{assemblerErrorTopBanner}</p>
+                )}
+              </div>
+            )}
+
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <p className="text-sm sm:text-base font-bold text-indigo-100">
+                🎯 Target English Sentence:{' '}
+                <span className="text-amber-300 font-black">"{currentAssemblerDrill.englishTarget}"</span>
+              </p>
+              <button
+                type="button"
+                onClick={() => {
+                  sound.playClick();
+                  setRevealFullSentenceTopBar(true);
+                  setPickedChunks(currentAssemblerDrill.correctOrder.map((_, i) => i));
+                  setAssemblerErrorTopBanner(
+                    'جمله کامل و دیکته صحیح در نوار بالای این بخش برای شما نمایش داده شد!'
+                  );
+                }}
+                className="px-3 py-1.5 rounded-xl bg-rose-500/30 hover:bg-rose-500/50 text-amber-200 border border-amber-300/50 text-xs font-black"
+              >
+                🆘 نتوانستم جمله را بسازم (نمایش کل جمله صحیح در نوار بالا)
+              </button>
+            </div>
 
             {/* Clickable Word Blocks */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
@@ -2018,6 +2305,17 @@ export const PersianForDiasporaHub: React.FC<PersianForDiasporaHubProps> = ({ on
                     onClick={() => {
                       speakPersian(chunk.fa, speechRate, chunk.fingilish);
                       if (!isAdded) {
+                        const expectedNextIdx = pickedChunks.length;
+                        if (idx !== expectedNextIdx) {
+                          setAssemblerErrorTopBanner(
+                            `قطعه شماره ${idx + 1} خارج از ترتیب انتخاب شد؛ کل جمله صحیح و دیکته کامل را در نوار بالای صفحه ببینید: «${currentAssemblerDrill.correctOrder
+                              .map((c) => c.fa)
+                              .join(' ')}»`
+                          );
+                          setRevealFullSentenceTopBar(true);
+                        } else {
+                          setAssemblerErrorTopBanner(null);
+                        }
                         const next = [...pickedChunks, idx];
                         setPickedChunks(next);
                         if (next.length === currentAssemblerDrill.correctOrder.length) {

@@ -87,6 +87,14 @@ class SoundEngine {
     this.playCoin();
   }
 
+  public playPop() {
+    this.playClick();
+  }
+
+  public playSuccess() {
+    this.playCoin();
+  }
+
   public playError() {
     if (!this.enabled) return;
     const ctx = this.getContext();

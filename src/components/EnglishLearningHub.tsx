@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { sound, speakEnglish, speakPersian, speakMultilingual, transliteratePersianToFingilish } from '../utils/audio';
 import { EmbassyVisaEnglish } from './EmbassyVisaEnglish';
+import { LatinCyrillicBlackboardStudio } from './LatinCyrillicBlackboardStudio';
 
 export type EnglishCategoryTab =
   | 'core'
@@ -171,6 +172,54 @@ const REAL_LIFE_SCENARIOS: RealLifeItem[] = [
     faColloquial: 'غصه نخور درست میشه! امروز دهنم از کار سرویس شد.',
     vocabFa: 'Don’t sweat it (سخت نگیر / غصه نخور) • My bad (تقصیر من بود) • Space out (حواس‌پرت شدن) • Wiped out / Beat (له و خسته بودن)'
   },
+  {
+    id: 'rl_slang_5_money',
+    subCategory: 'street_colloquial',
+    badgeFa: 'محاوره خودمانی و کوچه‌بازار 💸',
+    place: '💸 کنایه عامیانه از وضع نامساعد مالی (این روزا دستم خیلی خالیه / دست‌و بالم تنگه)',
+    en: "Honestly, I'm super strapped for cash these days—my budget is really tight right now!",
+    enCasualVariant: "Bro, I'm flat broke / short on cash these days, gotta pass this time!",
+    pron: 'ON-ist-lee, eym SOO-per STRAPT for kash theez dayz — eym flat brohk ryte now!',
+    fa: 'راستش این روزا دستم خیلی خالیه و دست‌و بالم حسابی تنگه (کنایه از وضع نامساعد مالی).',
+    faColloquial: 'داداش این روزا دستم خیلی خالیه و جیبم خالیه، بذار واسه دفعه بعد!',
+    vocabFa: 'Strapped for cash / Short on money (دستم خالیه / دست‌و بالم تنگه) • Flat broke (بی‌پول / کفگیر به ته دیگ خورده)'
+  },
+  {
+    id: 'rl_slang_6_mood_shock',
+    subCategory: 'street_colloquial',
+    badgeFa: 'محاوره خودمانی و کوچه‌بازار 😲',
+    place: '😲 اصطلاحات خودمانی: «حالم تو قوطیه»، «با فک خوردم زمین» و «برگام / پشمام ریخت!»',
+    en: "I'm in a total funk today! Earlier I tripped and wiped out flat on my face—and when I heard the news, my mind was blown!",
+    enCasualVariant: "I'm feeling super bummed out today! I totally ate it on the stairs, and bro, no freakin' way—mind blown!",
+    pron: 'eym in ah TOH-tul funk tuh-DAY! eye wypt owt flat on mye fays — mynd blohn!',
+    fa: 'امروز حالم تو قوطیه! صبح پام سر خورد با فک خوردم زمین، بعدش هم که اون خبر رو شنیدم پشمام (برگام) ریخت!',
+    faColloquial: 'حالم تو قوطیه • با فک خوردم زمین • برگام / پشمام ریخت!',
+    vocabFa: 'In a funk / Bummed out (حالم تو قوطیه) • Wipe out / Eat it (با فک زمین خوردن) • Mind blown / No way! (برگام / پشمام ریخت!)'
+  },
+  {
+    id: 'rl_slang_7_banter',
+    subCategory: 'street_colloquial',
+    badgeFa: 'محاوره خودمانی و کوچه‌بازار 🤝',
+    place: '🤝 شوخی و صمیمیت: «میزونی؟»، «چته کشتی‌هات غرق شده؟» و «چیه کلک؟ امروز خبریه؟»',
+    en: "You good, bro? Why the long face—did all your ships sink? And hey, looking sharp, you sly fox—what're you up to today?",
+    enCasualVariant: "Everything cool with you? — Nah man, having a rough week! / What's eating you? / What's the occasion, sly fox?",
+    pron: 'yoo good broh? wye theh long fays? luk-ing sharp, yoo slye foks — whut ar yoo up too?',
+    fa: 'میزونی رفیق؟ چته از صبح کشتی‌هات غرق شده؟ راستی چه تیپی زدی، چیه کلک؟ امروز خبریه؟',
+    faColloquial: 'میزونی؟ (نه والا بدجوری درگیرم) • چته کشتی‌هات غرق شده؟ • چیه کلک؟ امروز خبریه؟',
+    vocabFa: 'You good? / Sorted? (میزونی؟) • Why the long face? (چته کشتی‌هات غرق شده؟) • Sly fox / Rascal (کلک! — به معنی شوخ و زرنگ)'
+  },
+  {
+    id: 'rl_slang_8_nerves_vibe',
+    subCategory: 'street_colloquial',
+    badgeFa: 'محاوره خودمانی و کوچه‌بازار 🧠',
+    place: '🧠 کنایه‌های خودمانی: «رو مخ من راه نرو!»، «این پاش به اون پاش پنالتی می‌زنه» و «هرچی زده بودیم پرید!»',
+    en: "Man, stop getting on my nerves and bugging me! You startled me so bad you totally killed my buzz—and look at that guy tripping over his own two feet!",
+    enCasualVariant: "Quit walking all over my head, bro! You ruined the whole vibe! He's such a klutz, tripping over his own feet.",
+    pron: 'man, stop GET-ing on mye nervz! yoo TOH-tuh-lee kild mye buz! TRIP-ing OH-ver hiz ohn too feet!',
+    fa: 'بابا انقدر رو مخ من راه نرو (تو مخ من نرو)! یهویی ترسوندیمون، هرچی زده بودیم پرید! اون هم از خستگی این پاش به اون پاش پنالتی می‌زنه!',
+    faColloquial: 'بابا انقدر رو مخم راه نرو! • بابا هرچی زده بودیم پرید! • فلانی این پاش به اون پاش پنالتی می‌زنه!',
+    vocabFa: 'Get on someone’s nerves / Bug someone (رو مخ کسی راه رفتن) • Kill the buzz / Ruin the vibe (هرچی زده بودیم پرید) • Trip over one’s own feet (این پاش به اون پاش پنالتی زدن)'
+  },
 
   // 3. Everyday Boundaries & Street/Bazaar Self-Defense (حدهای روزمره و دفاع از حق خود در کوچه و بازار)
   {
@@ -301,9 +350,10 @@ export const EnglishLearningHub: React.FC<EnglishLearningHubProps> = ({
   onEarnLingous
 }) => {
   const [slowMode, setSlowMode] = useState<boolean>(false);
+  const [showAlphabetBoard, setShowAlphabetBoard] = useState<boolean>(true);
   const [realLifeFilter, setRealLifeFilter] = useState<
     'all' | 'daily_travel' | 'street_colloquial' | 'boundaries_street' | 'proverbs_idioms'
-  >('all');
+  >('street_colloquial');
   const rate = slowMode ? 0.68 : 0.88;
 
   const filteredRealLife = REAL_LIFE_SCENARIOS.filter((item) =>
@@ -321,26 +371,42 @@ export const EnglishLearningHub: React.FC<EnglishLearningHubProps> = ({
               🎓 بخش دوطرفه آموزش زبان (انگلیسی برای فارسی‌زبانان ⇄ فارسی اصیل و فینگلیش برای فرزندان ایرانیان خارج از کشور):
             </span>
           </div>
-          <button
-            type="button"
-            onClick={() => {
-              sound.playClick();
-              setSlowMode(!slowMode);
-            }}
-            className={`px-3 py-1 rounded-xl text-xs font-black border ${
-              slowMode
-                ? 'bg-amber-400 text-slate-950 border-amber-300'
-                : 'bg-slate-100 text-slate-700 border-slate-200 hover:bg-slate-200'
-            }`}
-          >
-            🐢 {slowMode ? 'پخش صوتی شمرده: روشن (0.68x)' : 'پخش صوتی عادی (کلیک برای شمرده)'}
-          </button>
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                sound.playClick();
+                setShowAlphabetBoard((prev) => !prev);
+              }}
+              className={`px-3 py-1 rounded-xl text-xs font-black border transition-all ${
+                showAlphabetBoard
+                  ? 'bg-emerald-800 text-amber-300 border-amber-400 shadow-sm'
+                  : 'bg-emerald-50 text-emerald-900 border-emerald-200 hover:bg-emerald-100'
+              }`}
+            >
+              🖍️ {showAlphabetBoard ? 'تخته سیاه الفبای انگلیسی و پاک‌کن (باز)' : 'باز کردن تخته سیاه الفبای انگلیسی (A–Z)'}
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                sound.playClick();
+                setSlowMode(!slowMode);
+              }}
+              className={`px-3 py-1 rounded-xl text-xs font-black border ${
+                slowMode
+                  ? 'bg-amber-400 text-slate-950 border-amber-300'
+                  : 'bg-slate-100 text-slate-700 border-slate-200 hover:bg-slate-200'
+              }`}
+            >
+              🐢 {slowMode ? 'پخش صوتی شمرده: روشن (0.68x)' : 'پخش صوتی عادی (کلیک برای شمرده)'}
+            </button>
+          </div>
         </div>
 
-        {/* Iranian Diaspora & Heritage Learners Banner */}
-        <div className="p-3 rounded-2xl bg-gradient-to-r from-emerald-50 via-teal-50 to-amber-50 border border-teal-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
-          <p className="font-bold text-teal-950">
-            🌍 <strong>ویژه ایرانیان مقیم خارج از کشور و انگلیسی‌زبانان (Farsi for Iranian Diaspora & Heritage Learners):</strong> تمامی دروس علاوه بر آموزش انگلیسی، دارای <strong>خط فارسی، نگارش آوایی فینگلیش (Fingilish) و پخش صوتی فارسی</strong> هستند تا فرزندان ایرانیان خارج از کشور نیز فارسی رسمی و محاوره‌ای را به آسانی بیاموزند.
+        {/* Colloquial & Street-First Philosophy Banner */}
+        <div className="p-3.5 rounded-2xl bg-gradient-to-r from-amber-100 via-emerald-50 to-teal-50 border-2 border-amber-400 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+          <p className="font-black text-slate-900 leading-relaxed">
+            🗣️ <strong>رویکرد اصلی برنامه (آموزش ۱۰۰٪ عامیانه، خودمانی و کوچه‌بازاری — نه کتابی!):</strong> در تمام بخش‌های این برنامه، هدف ما یادگیری زبان زنده، خودمانی و محاوره‌ای کوچه و بازار است (هم در انگلیسی خیابانی و روزمره غرب و هم در فارسی خودمانی ایران مانند <em>«این روزا دستم خیلی خالیه»، «حالم تو قوطیه»، «میزونی؟»، «رو مخم راه نرو!»</em>)، نه جملات خشک و کتابی!
           </p>
         </div>
 
@@ -415,6 +481,14 @@ export const EnglishLearningHub: React.FC<EnglishLearningHubProps> = ({
           })}
         </div>
       </div>
+
+      {/* Interactive English Alphabet (A–Z) Touch Blackboard with Chalk & Hand Eraser */}
+      {showAlphabetBoard && (
+        <LatinCyrillicBlackboardStudio
+          mode="english_for_persian"
+          onEarnLingous={onEarnLingous}
+        />
+      )}
 
       {/* =================================================================== */}
       {/* 1. 🎓 CORE ENGLISH LEARNING                                         */}

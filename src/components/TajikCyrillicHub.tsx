@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { sound, speakPersian, speakEnglish, speakRussian } from '../utils/audio';
+import { LatinCyrillicBlackboardStudio } from './LatinCyrillicBlackboardStudio';
 
 interface TajikCyrillicHubProps {
   onEarnLingous: (amount: number) => void;
@@ -23,19 +24,19 @@ interface TajikCyrillicHubProps {
 // GEORGIA (ქართული) & AFGHAN BROTHERS AND SISTERS
 // ============================================================================
 export const FOUNDER_TRIBUTE_FA =
-  '«به نام پیوند جاودان هم‌ریشگان؛ در روزگاری درخشان، امپراتوری اصیل سامانیان در این سرزمین می‌درخشید و پایتخت ایران در سمرقند و بخارا (در ازبکستان کنونی) قرار داشت. ملت شریف تاجیکستان ادامه و وارثان برحق سامانیان و ایرانیان و همواره نگهبانان آیین، شرف و قداست مرزهای ایران بودند؛ آن‌ها همواره حافظان قدرتمند، سربازان رشید و مدافعان خلق باستان ایران بوده‌اند. من هیچ ایرانی را ندیده‌ام که به اندازه یک تاجیک با غرور بگوید «من ایرانی‌ام»؛ آن‌ها با تمام وجود این را فریاد می‌زنند و بعد از این‌همه سال دوری و جدایی از ایران، سرشار از اصالت و ریشه هستند! آن‌ها مردمی بسیار با عشق و صفا و با محبت و کَرَم هستند؛ مردمِ ایران قدیم‌اند و درست مثل ایران قدیم، شیرین و اصیل سخن می‌گویند. مردم تاجیک تا ابد هویت ایران هستند و یا شاید بهتر باشد بگوییم ایران هویت تاجیک دارد! من به عنوان یک ایرانی، خودم را از آن‌ها و از مردم شریف ازبکستان جدا نمی‌دانم. همچنین از صمیم قلب گرم‌ترین درودها و مهر بی‌پایان خود را به مردم عزیز، باصفا و عالیقدر گرجستان و نیز به تمامی عزیزان، برادران و خواهران هم‌زبان و هم‌ریشهٔ افغانستانی و همه فارسی‌زبانان جهان می‌فرستم و واقعاً همه شما را دوست دارم. خرسندم که می‌توانم خدمتی در جهت فرهنگ و پررنگ‌تر کردن زبان شیرین فارسی و آموزش رایگان فارسی و انگلیسی به شما عزیزان انجام دهم. به امید دیدار شما در سمرقند، بخارا، دوشنبه، تفلیس، هرات، بلخ و کابل و بوسیدن روی ماهتان در کنار مجسمه سیاوش و اسماعیل سامانی! دوستتان دارم عزیزان من!»';
+  '«به نام پیوند جاودان هم‌ریشگان؛ آریا قوم باستانی ماست و ما حتی پیش از نام‌های امروزین، همگی آریایی بودیم؛ از تمدن کهن ایلام و پارس و ایران تا کُرد و لُر و تاجیک و بلوچ و آذری و گیلک و مازنی و خراسان و افغانستان و ازبکستان و گرجستان و هندوستان، همگی فرزندان یک جهان و شاخه‌های یک درخت کهن و هم‌ریشه‌ایم. در روزگار درخشان سامانیان نیز سمرقند و بخارا و دوشنبه مهد این تمدن بزرگ بودند و مردم شریف و باصفای تاجیکستان همواره همچون ایران قدیم، شیرین و اصیل سخن گفته‌اند. زبان شیرین فارسی، زبان یک تمدن عظیم، زبان تاریخ و فرهنگ و ریشهٔ مشترک و حلقهٔ وصل همهٔ ماست. همهٔ هم‌وطنان نازنینم در ایران و همهٔ هم‌ریشگان عزیزم در سراسر جهان برای من یکسان و عزیزترینند. از صمیم قلب دوستتان دارم و خرسندم که می‌توانم خدمتی در جهت فرهنگ، همبستگی و آموزش رایگان فارسی و انگلیسی به همهٔ شما عزیزان انجام دهم. به امید دیدار شما در تهران، سمرقند، بخارا، دوشنبه، تفلیس، هرات، بلخ و کابل در کنار مجسمه سیاوش و اسماعیل سامانی!»';
 
 export const FOUNDER_TRIBUTE_TG =
-  '«Ба номи пайванди ҷовидони ҳамрешагон! Дар рӯзгори дурахшон, Империяи асили Сомониён дар ин сарзамин медурахшид ва пойтахти Эрон дар Самарқанду Бухоро қарор дошт. Миллати шарифи Тоҷикистон идома ва ворисони барҳаққи Сомониёну Эрониён ва ҳамвора нигаҳбонони ойин, шараф ва қидосати марзҳои Эрон буданд; онҳо ҳамвора ҳофизони қудратманд, сарбозони рашид ва мудофеони халқи бостони Эрон будаанд. Ман ҳеҷ эрониро надидаам, ки ба андозаи як Тоҷик бо ғурур бигӯяд: «Ман Эрониам!»; онҳо бо тамоми вуҷуд инро фарёд мезананд ва баъд аз ин ҳама соли дурӣ ва ҷудоӣ аз Эрон, саршор аз асолат ва реша ҳастанд! Онҳо мардуми бисёр бо ишқу сафо ва бо муҳаббату карам ҳастанд; мардуми Эрони қадиманд ва дуруст мисли Эрони қадим ширину асил сухан мегӯянд! Мардуми Тоҷик то абад ҳувияти Эрон ҳастанд ва ё шояд беҳтар бошад бигӯем, ки Эрон ҳувияти Тоҷик дорад! Ман ба унвони як эронӣ, худамро аз онҳо ва аз мардуми шарифи Ӯзбекистон ҷудо намедонам. Ҳамчунин аз самими қалб гармтарин дурудҳо ва меҳри бепоёни худро ба мардуми азизу олиқадри Гурҷистон ва низ ба тамоми азизон, бародарону хоҳарони ҳамзабони Афғонистонӣ ва ҳамаи форсизабонони ҷаҳон мефиристам ва воқеан ҳамаи шуморо дӯст медорам. Ба умеди дидори шумо дар Самарқанд, Бухоро, Душанбе, Тифлис, Ҳирот, Балх ва Кобул ва бӯсидани рӯйи моҳатон дар канори муҷассамаи Сиёвуш ва Исмоили Сомонӣ! Дӯстатон дорам, азизони ман!»';
+  '«Ба номи пайванди ҷовидони ҳамрешагон! Ориё қавми бостонии мост ва мо ҳамагӣ аз як решаи куҳани Ориёӣ ҳастем — аз тамаддуни Элому Порс ва Эрон то Курду Лур, Тоҷику Балуч, Афғонистону Ӯзбекистон, Гурҷистон ва Ҳиндустон, ҳамагӣ фарзандони як ҷаҳон ва шохаҳои як дарахти бузургем. Дар рӯзгори дурахшони Сомониён низ Самарқанду Бухоро ва Душанбе гаҳвораи ин тамаддуни бузург буданд ва мардуми шарифу босафои Тоҷикистон ҳамвора ширину асил сухан гуфтаанд. Забони ширини Форсӣ (Тоҷикӣ / Дарӣ) — забони тамаддуни азим, забони таъриху фарҳанг ва ҳалқаи васли ҳамаи мост! Ҳамаи ҳамватанони азизам дар Эрон ва ҳамаи ҳамрешагонам дар саросари ҷаҳон барои ман яксон ва азизтаринанд. Аз самими қалб дӯстатон дорам ва ба умеди дидори шумо дар Теҳрон, Самарқанд, Бухоро, Душанбе, Тифлис, Ҳирот, Балх ва Кобул дар канори муҷассамаи Сиёвуш ва Исмоили Сомонӣ!»';
 
 export const FOUNDER_TRIBUTE_KA =
   '«გულითადი სალამი და უდიდესი პატივისცემა საქართველოს ძვირფას, კეთილშობილ და დიდებულ ხალხს! ჩვენ საუკუნოვანი მეგობრობა, სიყვარული და კულტურული ძმობა გვაკავშირებს. მიყვარხართ ჩემო ძვირფასებო, თბილისში შეხვედრის იმედით!»';
 
 export const FOUNDER_TRIBUTE_UZ =
-  '«Aziz va sharif Oʻzbekiston, Samarqand, Buxoro va Toshkent ahliga qalbim toʻridan eng qaynoq salom va mehrimni yoʻllayman! Bizning tariximiz, madaniyatimiz va ildizimiz бирdir. Sizlarni chin dildan yaxshi koʻraman va Samarqand hamda Buxoroda diydor koʻrishishga umid qilaman!»';
+  '«Aziz va sharif Oʻzbekiston, Samarqand, Buxoro va Toshkent ahliga qalbim toʻridan eng qaynoq salom va mehrimni yoʻllayman! Bizning tariximiz, madaniyatimiz va ildizimiz birdir. Sizlarni chin dildan yaxshi koʻraman va Samarqand hamda Buxoroda diydor koʻrishishga umid qilaman!»';
 
 export const FOUNDER_TRIBUTE_EN =
-  '"In honor of our eternal shared roots: During the golden era of the Samanid Empire, the capital of Iran shone in Samarkand and Bukhara. The noble nation of Tajikistan are the true heirs of the Samanids and Iranians, standing forever as the mighty guardians, brave soldiers, and defenders of the honor, sacred borders, and ancient people of Iran. I have never seen any Iranian say \'I am Iranian\' with as much pride as a Tajik; they cry it out with all their soul, and after all these years of separation from Iran, they remain brimming with authenticity and deep roots! They are people of immense love, purity, affection, and generosity—they are the people of ancient Iran and speak just as sweetly and authentically as ancient Iran. The Tajik people are eternally the identity of Iran—or perhaps it is truer to say that Iran carries the Tajik identity! As an Iranian, I never see myself separate from them or from the noble people of Uzbekistan. I also send my warmest greetings and boundless love to the dear and noble people of Georgia, as well as to all our beloved Afghan brothers and sisters and all Persian speakers worldwide. I truly love you all and am overjoyed to offer free Iranian Persian and English education to you. Hoping to meet you in Samarkand, Bukhara, Dushanbe, Tbilisi, Herat, Balkh, and Kabul, and to kiss your radiant faces beside the monuments of Siavash and Ismail Somoni! I love you, my dear ones!"';
+  '"In honor of our eternal shared roots: Arya is our ancient ancestral heritage—long before modern borders, from ancient Elam and Pars and Iran to Kurd, Lur, Tajik, Baluch, Afghan, Uzbek, Georgian, and Indian peoples, we have all been branches of one ancient tree and children of one world. During the golden Samanid era, Samarkand, Bukhara, and Dushanbe shone as cradles of this grand civilization. Sweet Persian is the language of a magnificent civilization—the living bridge of our shared history, culture, and roots. All my beloved compatriots across Iran and all our kindred nations worldwide are equally dear to my heart. I love you all deeply and am honored to offer free Persian and English education in service of our unity. Hoping to meet you in Tehran, Samarkand, Bukhara, Dushanbe, Tbilisi, Herat, Balkh, and Kabul beside the monuments of Siavash and Ismail Somoni!"';
 
 // ============================================================================
 // 4-ROW SIMULTANEOUS CYRILLIC & NATIVE LESSONS
@@ -266,8 +267,13 @@ const RUDAKI_SAMANID_POEMS = [
 
 export const TajikCyrillicHub: React.FC<TajikCyrillicHubProps> = ({ onEarnLingous }) => {
   const [activeTrack, setActiveTrack] = useState<
-    'four_row_persian' | 'english_via_cyrillic' | 'alphabet_dictionary_poetry' | 'script_converter'
-  >('four_row_persian');
+    | 'four_row_persian'
+    | 'iranian_spoken_slang'
+    | 'english_via_cyrillic'
+    | 'alphabet_dictionary_poetry'
+    | 'script_converter'
+  >('iranian_spoken_slang');
+  const [showBlackboard, setShowBlackboard] = useState<boolean>(true);
   const [copiedTribute, setCopiedTribute] = useState<boolean>(false);
   const [sharedStatus, setSharedStatus] = useState<string | null>(null);
   const [converterInput, setConverterInput] = useState<string>('Салом дӯсти ман, ба Шаҳри Тавоно хуш омадед аз Самарқанд, Бухоро, Душанбе ва Тифлис');
@@ -453,7 +459,7 @@ export const TajikCyrillicHub: React.FC<TajikCyrillicHubProps> = ({ onEarnLingou
             <span className="px-3 py-1 rounded-lg bg-cyan-400 text-slate-950 font-black text-xs">
               🇹🇯🇺🇿 Матни Тоҷикӣ (Бо хати Кириллӣ — Душанбе, Самарқанд ва Бухоро)
             </span>
-            <span className="text-xs font-bold text-amber-300">«Ман Эрониам!» • Сиёвуш ва Исмоили Сомонӣ</span>
+            <span className="text-xs font-bold text-amber-300">Пайванди ҷовидони Ориёӣ • Сиёвуш ва Исмоили Сомонӣ</span>
           </div>
           <p className="text-sm sm:text-base font-bold text-cyan-100 leading-relaxed text-justify">
             {FOUNDER_TRIBUTE_TG}
@@ -526,6 +532,29 @@ export const TajikCyrillicHub: React.FC<TajikCyrillicHubProps> = ({ onEarnLingou
           type="button"
           onClick={() => {
             sound.playClick();
+            setActiveTrack('iranian_spoken_slang');
+          }}
+          className={`p-4 rounded-2xl border-2 text-right transition-all flex items-center justify-between ${
+            activeTrack === 'iranian_spoken_slang'
+              ? 'bg-gradient-to-r from-rose-900 via-amber-900 to-teal-950 text-white border-amber-400 shadow-lg'
+              : 'bg-white text-slate-800 border-slate-200 hover:bg-slate-50'
+          }`}
+        >
+          <div>
+            <span className="text-xs sm:text-sm font-black block">
+              🗣️🇮🇷➔🇹🇯🇦🇫🇺🇿 ۲. فارسی گفتاری امروز ایران و اصطلاحات خودمانی (ویژه تاجیک، افغان و ازبک)
+            </span>
+            <span className="text-[11px] opacity-85 block" dir="ltr">
+              Гуфтори зиндаи имрӯзи Эрон ва истилоҳоти Теҳронӣ барои Тоҷикистон, Афғонистон ва Ӯзбекистон
+            </span>
+          </div>
+          <Sparkles className="w-5 h-5 text-amber-300 shrink-0" />
+        </button>
+
+        <button
+          type="button"
+          onClick={() => {
+            sound.playClick();
             setActiveTrack('english_via_cyrillic');
           }}
           className={`p-4 rounded-2xl border-2 text-right transition-all flex items-center justify-between ${
@@ -591,6 +620,287 @@ export const TajikCyrillicHub: React.FC<TajikCyrillicHubProps> = ({ onEarnLingou
           <ArrowRightLeft className="w-5 h-5 shrink-0" />
         </button>
       </div>
+
+      {/* Interactive Dual-Script Blackboard (Tajik Cyrillic А–Я + English A–Z + Persian) with Hand Eraser */}
+      <div className="space-y-2">
+        <div className="flex flex-wrap items-center justify-between gap-2 bg-emerald-950/90 text-white px-4 py-2.5 rounded-2xl border border-amber-400/50">
+          <span className="text-xs sm:text-sm font-black text-amber-300">
+            🖍️ تخته سیاه تعاملی زبان‌آموزی با سیریلیک (А–Я)، الفبای انگلیسی (A–Z) و فارسی همراه با پاک‌کن روی تخته
+          </span>
+          <button
+            type="button"
+            onClick={() => setShowBlackboard((prev) => !prev)}
+            className="px-3 py-1 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 text-xs font-black"
+          >
+            {showBlackboard ? 'بستن موقت تخته سیاه' : 'باز کردن تخته سیاه سیریلیک و انگلیسی'}
+          </button>
+        </div>
+        {showBlackboard && (
+          <LatinCyrillicBlackboardStudio
+            mode="tajik_cyrillic_english"
+            onEarnLingous={onEarnLingous}
+          />
+        )}
+      </div>
+
+      {/* =================================================================== */}
+      {/* TRACK: IRANIAN SPOKEN PERSIAN & STREET IDIOMS FOR TAJIK/AFGHAN/UZBEK */}
+      {/* =================================================================== */}
+      {activeTrack === 'iranian_spoken_slang' && (
+        <div className="space-y-4">
+          <div className="rounded-3xl bg-gradient-to-r from-emerald-950 via-teal-900 to-slate-900 text-white p-6 border-2 border-amber-400 shadow-xl space-y-2">
+            <span className="inline-block px-3 py-1 rounded-full bg-amber-400 text-slate-950 text-xs font-black">
+              🇮🇷🗣️ پل آشنایی با فارسی گفتاری امروز ایران • ویژه هم‌زبانان تاجیکستان، افغانستان و ازبکستان
+            </span>
+            <h3 className="text-xl sm:text-2xl font-black text-amber-300">
+              آشنایی با فارسی زنده و اصطلاحات روزمره که امروز در ایران صحبت می‌شود (با آوانگاری سیریلیک، معادل تاجیکی/دری و انگلیسی)
+            </h3>
+            <p className="text-xs sm:text-sm text-emerald-100 leading-relaxed">
+              علاوه بر فارسی ادبی و رسمی که میراث مشترک همهٔ ما در تهران، دوشنبه، کابل، هرات، سمرقند و بخاراست، در گفتار روزمرهٔ امروز ایران اصطلاحات شیرین و خودمانی رایج است که ممکن است در کشورهای دیگر کمتر شنیده شده باشد. در این بخش، این اصطلاحات را به همراه تلفظ سیریلیک، معنی دقیق به فارسی تاجیکی و دری و معادل انگلیسی می‌آموزید:
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {[
+              {
+                id: 'ir_slang_1',
+                badge: '۱. اصطلاح روزمره زمین خوردن یا شوکه شدن',
+                iranianFa: 'با فک خوردم زمین!',
+                cyrillicPron: 'Бо фак хӯрдам замин! (Bā fak khordam zamin!)',
+                meaningFaAndDari:
+                  'معنی در فارسی معیار، تاجیکی و دری: خیلی محکم و بدجور با صورت زمین خوردم! (یا در معنای مجازی: از شدت تعجب یا خستگی نقش بر زمین شدم).',
+                meaningTajikCyrillic:
+                  'Маъно дар Тоҷикӣ ва Дарӣ: Сахт бо рӯй ба замин афтодам! / Нақши замин шудам.',
+                dialogueFa: 'مثال در مکالمه: «پله‌ها لیز بود، حواسم نبود یهو با فک خوردم زمین!»',
+                dialogueCyrillic: '«Зинаҳо лағжонак буд, ногаҳон бо фак хӯрдам замин!»',
+                enEquivalent: 'I fell flat on my face! / I wiped out hard!'
+              },
+              {
+                id: 'ir_slang_2',
+                badge: '۲. بیان دلگیری و کسالت روحی',
+                iranianFa: 'امروز حالم تو قوطیه!',
+                cyrillicPron: 'Имрӯз ҳолам ту қуттие! (Emrooz hālam too ghootiyeh!)',
+                meaningFaAndDari:
+                  'معنی در فارسی معیار، تاجیکی و دری: امروز حالم گرفته است، کسل و بی‌حوصله‌ام و روحیه‌ام خوب نیست.',
+                meaningTajikCyrillic:
+                  'Маъно дар Тоҷикӣ ва Дарӣ: Имрӯз табъам хира аст, дилгиру беҳавсала ҳастам.',
+                dialogueFa: 'مثال در مکالمه: «نمی‌دونم چرا از صبح حالم تو قوطیه و حوصله هیچ کاری رو ندارم.»',
+                dialogueCyrillic: '«Намедонам чаро аз субҳ ҳолам ту қуттие ва ҳавсала надорам.»',
+                enEquivalent: "I'm feeling down in the dumps / I'm in a funk / out of sorts today."
+              },
+              {
+                id: 'ir_slang_3',
+                badge: '۳. نهایت تعجب و شگفتی در گفتار جوانان',
+                iranianFa: 'پشمام ریخت! (معادل مؤدبانه و خانوادگی: برگام ریخت!)',
+                cyrillicPron: 'Пашмом рехт! / Баргом рехт! (Pashmām rikht! / Bargām rikht!)',
+                meaningFaAndDari:
+                  'معنی در فارسی معیار، تاجیکی و دری: به شدت تعجب کردم و هوش از سرم پرید! (نکته فرهنگی: «پشمام ریخت» بسیار خودمانی است و در جمع‌های خانوادگی به جای آن «برگام ریخت!» گفته می‌شود).',
+                meaningTajikCyrillic:
+                  'Маъно дар Тоҷикӣ ва Дарӣ: Сахт ҳайрон шудам! Ҳушам аз сарам парид! («Баргом рехт» шакли боадабонаи он аст).',
+                dialogueFa: 'مثال در مکالمه: «وقتی سرعت پیشرفت هوش مصنوعی رو دیدم، واقعاً برگام ریخت!»',
+                dialogueCyrillic: '«Вақте суръати пешрафтро дидам, воқеан баргом рехт!»',
+                enEquivalent: 'My mind was blown! / I was totally shocked!'
+              },
+              {
+                id: 'ir_slang_4',
+                badge: '۴. احوال‌پرسی صمیمی و پرسیدن از روبه‌راه بودن اوضاع',
+                iranianFa: 'میزونی؟ — نه، بدجوری این روزا درگیرم!',
+                cyrillicPron: 'Мизӯнӣ? — На, бадҷӯрӣ ин рӯзо даргирам! (Mizooni? — Nah, bad-joori...)',
+                meaningFaAndDari:
+                  'معنی در فارسی معیار، تاجیکی و دری: «میزونی؟» یعنی حالت خوب و روبه‌راه است؟ کارهایت مرتب است؟ و «بدجوری» یعنی خیلی شدید و حسابی.',
+                meaningTajikCyrillic:
+                  'Маъно дар Тоҷикӣ ва Дарӣ: «Мизӯнӣ?» яъне «Нағзӣ? Корҳоят соз аст?» ва «Бадҷӯрӣ» яъне «Хеле сахт / бениҳоят».',
+                dialogueFa: 'مثال در مکالمه: «سلام رفیق، میزونی؟ — نه والا، این روزا بدجوری سرم شلوغه.»',
+                dialogueCyrillic: '«Салом рафиқ, мизӯнӣ? — На валлоҳ, ин рӯзҳо бадҷӯрӣ сарам شلوغ (банд) аст.»',
+                enEquivalent: 'Are you all good / sorted? — Nah, I’m swamped / having a rough time these days.'
+              },
+              {
+                id: 'ir_slang_5',
+                badge: '۵. کنایه طنز به دست‌وپاچلفتی بودن یا ناهماهنگی',
+                iranianFa: 'فلانی این پاش به اون پاش پنالتی می‌زنه! (یا به اون پاش می‌گه فلان)',
+                cyrillicPron: 'Фалонӣ ин пош ба ун пош пеналтӣ мезане! (In pāsh beh oon pāsh penālti mizaneh)',
+                meaningFaAndDari:
+                  'معنی در فارسی معیار، تاجیکی و دری: کنایه شوخ‌طبعانه به کسی که از خستگی یا دست‌وپاچلفتی بودن، پایش به پای دیگرش گیر می‌کند یا کارهایش را کاملاً ناهماهنگ انجام می‌دهد.',
+                meaningTajikCyrillic:
+                  'Маъно дар Тоҷикӣ ва Дарӣ: Кинояи шӯхиомез ба касе, ки пояш ба пояш мепечад ё дар корҳояш бетартибу ноҳамоҳанг аст.',
+                dialogueFa: 'مثال در مکالمه: «انقدر خسته است که موقع راه رفتن این پاش به اون پاش پنالتی می‌زنه!»',
+                dialogueCyrillic: '«Ин қадар хаста аст, ки ин пош ба ун пош пеналтӣ мезане!»',
+                enEquivalent: 'He is tripping over his own two feet! / Totally uncoordinated!'
+              },
+              {
+                id: 'ir_slang_6',
+                badge: '۶. دلداری دادن به دوستی که قیافه‌اش درهم و غمگین است',
+                iranianFa: 'چته؟ چرا کشتی‌هات غرق شده؟',
+                cyrillicPron: 'Чете? Чаро киштиҳот ғарқ шуде? (Cheteh? Cherā keshti-hāt ghargh shodeh?)',
+                meaningFaAndDari:
+                  'معنی در فارسی معیار، تاجیکی و دری: تو را چه شده است؟ چرا این‌قدر غمگین و درهم نشسته‌ای، انگار تمام کشتی‌های تجاری‌ات در دریا غرق شده است؟',
+                meaningTajikCyrillic:
+                  'Маъно дар Тоҷикӣ ва Дарӣ: Ба ту чӣ шудааст? Чаро ин қадар ғамгину дилшикаста нишастаӣ?',
+                dialogueFa: 'مثال در مکالمه: «پاشو لبخند بزن رفیق! چته از صبح کشتی‌هات غرق شده؟»',
+                dialogueCyrillic: '«Хез табассум кун рафиқ! Чете аз субҳ киштиҳот ғарқ шуде?»',
+                enEquivalent: "What's wrong with you? Why the long face—did all your ships sink?"
+              },
+              {
+                id: 'ir_slang_7',
+                badge: '۷. شوخی صمیمانه با دوستی که سرحال است یا رازی دارد',
+                iranianFa: 'چیه کلک؟ امروز خبریه؟',
+                cyrillicPron: 'Чие калак? Имрӯз хабарие? (Chiyeh kalak? Emrooz khabariyeh?)',
+                meaningFaAndDari:
+                  'معنی در فارسی معیار، تاجیکی و دری: در گفتار صمیمی ایران، «کلک» بین دوستان به معنی «زرنگ، شوخ و باحال» است (نه فریبکار). وقتی دوستی لباس نو پوشیده یا لبخند مرموز دارد به شوخی به او می‌گویند.',
+                meaningTajikCyrillic:
+                  'Маъно дар Тоҷикӣ ва Дарӣ: Дар гуфтори дӯстонаи Эрон «Калак» ба маънои «Шӯх ва зирак» аст: «Чӣ гап аст, дӯсти зирак? Имрӯз ягон хабари хуш ҳаст?»',
+                dialogueFa: 'مثال در مکالمه: «به به، چه تیپی زدی! چیه کلک؟ امروز خبریه؟»',
+                dialogueCyrillic: '«Баҳ-баҳ, чӣ либоси зебое! Чие калак? Имрӯз хабарие?»',
+                enEquivalent: "What's up, you sly fox? Looking sharp—is something special going on today?"
+              },
+              {
+                id: 'ir_slang_8',
+                badge: '۸. درخواست برای تمام کردن اصرار، غر زدن یا کلافه کردن',
+                iranianFa: 'بابا انقدر رو مخ من راه نرو! / انقدر تو مخ من نرو!',
+                cyrillicPron: 'Бобо инқадар рӯ мухи ман роҳ нарав! / Ту мухи ман нарав!',
+                meaningFaAndDari:
+                  'معنی در فارسی معیار، تاجیکی و دری: «مخ» در گفتار خودمانی یعنی ذهن و اعصاب؛ یعنی این‌قدر اعصاب مرا خرد نکن، گیر نده و کلافه‌ام نکن!',
+                meaningTajikCyrillic:
+                  'Маъно дар Тоҷикӣ ва Дарӣ: «Мух» яъне майна ва асаб. Маънояш: «Ин қадар ба асаби ман нарас ва маро хаставу дилгир накун!»',
+                dialogueFa: 'مثال در مکالمه: «باشه فهمیدم، بابا انقدر از صبح رو مخ من راه نرو!»',
+                dialogueCyrillic: '«Бошад фаҳмидам, бобо инқадар аз субҳ рӯ мухи ман роҳ нарав!»',
+                enEquivalent: 'Man, stop walking all over my nerves! / Quit getting in my head and bugging me!'
+              },
+              {
+                id: 'ir_slang_9',
+                badge: '۹. وقتی کسی ناگهانی شما را می‌ترساند یا حال خوشتان را می‌گیرد',
+                iranianFa: 'بابا هرچی زده بودیم پرید!',
+                cyrillicPron: 'Бобо ҳарчӣ зада будем парид! (Bābā harchi zadeh boodim parid!)',
+                meaningFaAndDari:
+                  'معنی در فارسی معیار، تاجیکی و دری: اصطلاح طنزآمیز در ایران وقتی کسی ناگهان شما را می‌ترساند، غافلگیر می‌کند یا با یک حرف، کل شادی، انرژی و حال خوشتان را در یک لحظه از بین می‌برد!',
+                meaningTajikCyrillic:
+                  'Маъно дар Тоҷикӣ ва Дарӣ: Истилоҳи шӯхиомез вақте касе ногаҳон шуморо метарсонад ё бо як гап ҳамаи кайфияту шодии шуморо мепарронад!',
+                dialogueFa: 'مثال در مکالمه: «چرا یهو داد زدی ترسوندیمون؟ بابا هرچی زده بودیم پرید!»',
+                dialogueCyrillic: '«Чаро ногаҳон дод задӣ тарсондӣ моро? Бобо ҳарчӣ зада будем парид!»',
+                enEquivalent: 'Man, you startled me so bad you totally killed my buzz / ruined the whole vibe!'
+              },
+              {
+                id: 'ir_slang_10',
+                badge: '۱۰. کنایه بسیار رایج از وضع نامساعد مالی و کمبود پول',
+                iranianFa: 'این روزا دستم خیلی خالیه! (یا: هشتم گروِ نُهُمه)',
+                cyrillicPron: 'Ин рӯзо дастам хеле холие! (In roozā dastam kheyli khāliyeh!)',
+                meaningFaAndDari:
+                  'معنی در فارسی معیار، تاجیکی و دری: کنایه مؤدبانه و عامیانه از وضع نامساعد مالی، کمبود نقدینگی و بی‌پولی موقت (به جای اینکه مستقیم بگویند «پول ندارم»، می‌گویند «دستم خالیه» یا «دست‌و بالم تنگه»).',
+                meaningTajikCyrillic:
+                  'Маъно дар Тоҷикӣ ва Дарӣ: Киноя аз вазъи номусоиди молӣ ва камбуди пул («Дастам تنگ / холӣ аст» яъне феълан пули кофӣ надорам).',
+                dialogueFa: 'مثال در مکالمه: «والا خیلی دوست داشتم تو این سفر باهاتون بیام، ولی این روزا دستم خیلی خالیه.»',
+                dialogueCyrillic: '«Хеле дӯст доштам ҳамроҳатон биёям, вале ин рӯзо дастам хеле холие.»',
+                enEquivalent: "I'm really strapped for cash / short on money / broke these days."
+              },
+              {
+                id: 'ir_slang_11',
+                badge: '۱۱. کنایه از شدت مشغله کاری و نداشتن فرصت',
+                iranianFa: 'سرم خیلی شلوغه، اصلاً وقت سر خاروندن ندارم!',
+                cyrillicPron: 'Сарам хеле شلوغ (банд) аст, аслан вақти сар хорундан надорам!',
+                meaningFaAndDari:
+                  'معنی در فارسی معیار، تاجیکی و دری: کنایه از اینکه کارها آن‌قدر زیاد و فشرده است که حتی یک ثانیه هم وقت استراحت ندارم.',
+                meaningTajikCyrillic:
+                  'Маъно дар Тоҷикӣ ва Дарӣ: Корам бениҳоят зиёд аст ва ҳатто як лаҳза вақти холӣ надорам.',
+                dialogueFa: 'مثال در مکالمه: «ببخشید دیر جواب دادم، این هفته وقت سر خاروندن نداشتم!»',
+                dialogueCyrillic: '«Бубахшед дер ҷавоб додам, ин ҳафта вақти сар хорундан надоштам!»',
+                enEquivalent: "I'm completely swamped—I barely have time to breathe!"
+              },
+              {
+                id: 'ir_slang_12',
+                badge: '۱۲. قدردانی گرم و صمیمانه در ایران',
+                iranianFa: 'دمت گرم! واقعاً سنگ تموم گذاشتی!',
+                cyrillicPron: 'Дамат гарм! Воқеан санги тамум гузоштӣ! (Damet garm! Sang-e tamoom gozāshti!)',
+                meaningFaAndDari:
+                  'معنی در فارسی معیار، تاجیکی و دری: نفست گرم و دستت درد نکند! واقعاً در محبت و مهمان‌نوازی هیچ کم نگذاشتی و بهترین کار را کردی.',
+                meaningTajikCyrillic:
+                  'Маъно дар Тоҷикӣ ва Дарӣ: Нафасат гарм ва раҳмати калон! Дар меҳрубонӣ ва меҳмоннавозӣ ҳеҷ камбудӣ нагузоштӣ.',
+                dialogueFa: 'مثال در مکالمه: «دمت گرم رفیق، با این کمکت واقعاً سنگ تموم گذاشتی!»',
+                dialogueCyrillic: '«Дамат гарм рафиқ, бо ин кумакат воқеан санги тамум гузоштӣ!»',
+                enEquivalent: 'Bless you, my friend! You truly went above and beyond!'
+              }
+            ].map((item) => (
+              <div
+                key={item.id}
+                className="bg-white rounded-3xl border-2 border-teal-500/40 p-5 space-y-3 shadow-sm flex flex-col justify-between"
+              >
+                <div className="space-y-2.5">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="px-3 py-1 rounded-xl bg-amber-100 text-amber-950 font-black text-xs border border-amber-300">
+                      {item.badge}
+                    </span>
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          speakPersian(`${item.iranianFa}. ${item.dialogueFa}`, 0.86);
+                          onEarnLingous(5);
+                        }}
+                        className="px-2.5 py-1.5 rounded-xl bg-teal-900 hover:bg-teal-800 text-amber-300 font-black text-xs flex items-center gap-1"
+                      >
+                        <Volume2 className="w-3.5 h-3.5" />
+                        <span>🔊 فارسی ایران</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          speakRussian(item.cyrillicPron, 0.85);
+                          onEarnLingous(5);
+                        }}
+                        className="px-2.5 py-1.5 rounded-xl bg-cyan-700 hover:bg-cyan-600 text-white font-black text-xs flex items-center gap-1"
+                      >
+                        <Volume2 className="w-3.5 h-3.5" />
+                        <span>🔊 Кириллӣ</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          speakEnglish(item.enEquivalent, 0.88);
+                          onEarnLingous(5);
+                        }}
+                        className="px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-black text-xs flex items-center gap-1"
+                      >
+                        <Volume2 className="w-3.5 h-3.5" />
+                        <span>🔊 EN</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Iranian Spoken Expression */}
+                  <div className="p-3.5 rounded-2xl bg-gradient-to-r from-emerald-950 to-teal-900 text-white space-y-1">
+                    <div className="text-lg sm:text-xl font-black text-amber-300">
+                      🇮🇷 {item.iranianFa}
+                    </div>
+                    <div className="text-xs sm:text-sm font-bold text-cyan-200" dir="ltr">
+                      🇹🇯 {item.cyrillicPron}
+                    </div>
+                  </div>
+
+                  {/* Meaning in Persian / Dari / Tajik */}
+                  <div className="p-3 rounded-2xl bg-amber-50 border border-amber-200 space-y-1.5 text-xs">
+                    <p className="font-bold text-slate-900 leading-relaxed">
+                      📖 {item.meaningFaAndDari}
+                    </p>
+                    <p className="font-bold text-teal-900 leading-relaxed" dir="ltr">
+                      🇹🇯🇦🇫🇺🇿 {item.meaningTajikCyrillic}
+                    </p>
+                  </div>
+
+                  {/* Real-world Example + English Equivalent */}
+                  <div className="p-3 rounded-2xl bg-slate-50 border border-slate-200 space-y-1 text-xs">
+                    <p className="font-black text-emerald-950">{item.dialogueFa}</p>
+                    <p className="font-bold text-slate-700" dir="ltr">
+                      {item.dialogueCyrillic}
+                    </p>
+                    <p className="font-black text-indigo-900 pt-1 border-t border-slate-200" dir="ltr">
+                      🇬🇧 English Idiom: {item.enEquivalent}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* =================================================================== */}
       {/* TRACK 1: 4-ROW SIMULTANEOUS DISPLAY (PERSIAN + CYRILLIC + RU + EN/UZ/KA) */}

@@ -132,9 +132,127 @@ export const PersianAlphabetCanvasStudio: React.FC<PersianAlphabetCanvasStudioPr
   const [showDariTajik, setShowDariTajik] = useState<boolean>(true);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [isDrawing, setIsDrawing] = useState<boolean>(false);
+  const [isEraser, setIsEraser] = useState<boolean>(false);
   const [strokeCount, setStrokeCount] = useState<number>(0);
 
+  // Smart Auto-Type Ink-to-Text state for Persian Blackboard
+  const [autoTypeEnabled, setAutoTypeEnabled] = useState<boolean>(true);
+  const [autoAdvanceNext, setAutoAdvanceNext] = useState<boolean>(true);
+  const [typedPersianLine, setTypedPersianLine] = useState<string>('');
+  const [lastTypedFlash, setLastTypedFlash] = useState<string | null>(null);
+  const [activeSentenceIdx, setActiveSentenceIdx] = useState<number>(0);
+  const [forceShowFullSentenceTopBar, setForceShowFullSentenceTopBar] = useState<boolean>(true);
+  const [sentenceBuildErrorNote, setSentenceBuildErrorNote] = useState<string | null>(null);
+  const autoTypeTimerRef = useRef<number | null>(null);
+
+  const PERSIAN_COLLOQUIAL_SENTENCE_DRILLS = [
+    {
+      id: 'pcs_1',
+      targetWord: 'خالیه',
+      wrongSample: 'این روزا دستم خیلی خالیع',
+      fullCorrectColloquialSentence: 'این روزا دستم خیلی خالیه!',
+      formalComparison: 'این روزها از نظر مالی دستم خالی است (کنایه از وضع نامساعد مالی).',
+      fingilish: 'In roozā dastam kheyli khāliyeh!',
+      englishMeaning: "I'm really strapped for cash / short on money these days!",
+      wordBlocks: ['این روزا', 'دستم', 'خیلی', 'خالیه!'],
+      spellingHintFa: 'در فارسی محاوره‌ای صدای «ـه» در پایان «خالیه» (خالی است) با حرف «ه» نوشته می‌شود، نه «ع».'
+    },
+    {
+      id: 'pcs_2',
+      targetWord: 'میزونه',
+      wrongSample: 'رفیق همه چی میزونع',
+      fullCorrectColloquialSentence: 'رفیق حالت چطوره؟ همه چی میزونه؟',
+      formalComparison: 'دوست عزیز حال شما چطور است؟ آیا همه‌چیز روبه‌راه است؟',
+      fingilish: 'Rafigh hālet chetoreh? Hameh chi mizooneh?',
+      englishMeaning: 'How are you doing buddy? Is everything sorted and going well?',
+      wordBlocks: ['رفیق', 'حالت چطوره؟', 'همه چی', 'میزونه؟'],
+      spellingHintFa: 'واژه محاوره‌ای «میزونه» (روبه‌راه و تنظیم است) با «ز» و «ه» پایانی نوشته می‌شود.'
+    },
+    {
+      id: 'pcs_3',
+      targetWord: 'سنگ تموم',
+      wrongSample: 'دمت گرم صنگ تموم گزاشتی',
+      fullCorrectColloquialSentence: 'دمت گرم رفیق، واقعاً سنگ تموم گذاشتی!',
+      formalComparison: 'از محبت شما سپاسگزارم، واقعاً نهایت لطف را به جا آوردید.',
+      fingilish: 'Damet garm rafigh, vāghe’an sang tamoom gozāshti!',
+      englishMeaning: 'Bless you my friend, you really went all out for us!',
+      wordBlocks: ['دمت گرم', 'رفیق،', 'واقعاً', 'سنگ تموم گذاشتی!'],
+      spellingHintFa: '«سنگ» با «س» (سین) و «گذاشتی» با حرف «ذ» (ذال) نوشته می‌شود.'
+    },
+    {
+      id: 'pcs_4',
+      targetWord: 'کشتی‌هات',
+      wrongSample: 'چته کشتی هات قرق شده',
+      fullCorrectColloquialSentence: 'چته کشتی‌هات غرق شده؟ بابا انقدر رو مخ من راه نرو!',
+      formalComparison: 'چرا این‌قدر پکر و غمگین هستی؟ لطفاً این‌قدر مرا کلافه نکن.',
+      fingilish: 'Cheteh keshti-hāt ghargh shodeh? Bābā enghadr roo mokh-e man rāh naro!',
+      englishMeaning: 'Why the long face, did your ships sink? Man, stop walking on my nerves!',
+      wordBlocks: ['چته', 'کشتی‌هات غرق شده؟', 'بابا انقدر', 'رو مخ من راه نرو!'],
+      spellingHintFa: 'واژه «غرق» با حرف «غ» (غین) نوشته می‌شود، نه «ق».'
+    }
+  ];
+
+  const activeDrill = PERSIAN_COLLOQUIAL_SENTENCE_DRILLS[activeSentenceIdx] || PERSIAN_COLLOQUIAL_SENTENCE_DRILLS[0];
+
+  // Evaluate Persian Dictation & Sentence Building accuracy
+  const evaluatePersianBoardDictation = () => {
+    const cleaned = typedPersianLine.trim();
+    if (!cleaned) {
+      return {
+        hasSpellingOrOrderError: Boolean(sentenceBuildErrorNote),
+        errorReasonFa:
+          sentenceBuildErrorNote ||
+          'برای ساختن جمله روی کلمات کلیک کنید یا با انگشت روی تخته بنویسید. کل جمله صحیح و دیکته درست در نوار بالای تخته نمایش داده شده است.'
+      };
+    }
+
+    const commonPersianMisspellings: Record<string, string> = {
+      صلام: 'املای صحیح «سلام» با حرف «س» است، نه «ص».',
+      طهران: 'املای استاندارد امروز «تهران» با «ت» دو نقطه است.',
+      خاهش: 'واژه «خواهش» دارای «و» معدوله است (خ-و-ا-ه-ش).',
+      قرق: 'در عبارت «کشتی‌هات غرق شده»، واژه «غرق» با حرف «غ» نوشته می‌شود.',
+      گزاشتی: 'واژه «گذاشتی» با حرف «ذ» نوشته می‌شود (گ-ذ-ا-ش-ت-ی).',
+      صنگ: 'واژه «سنگ» با حرف «س» نوشته می‌شود.',
+      خالیع: 'در پایان «خالیه» حرف «ه» قرار می‌گیرد، نه «ع».',
+      میزونع: 'در پایان «میزونه» حرف «ه» قرار می‌گیرد، نه «ع».'
+    };
+
+    for (const [wrongWord, hint] of Object.entries(commonPersianMisspellings)) {
+      if (cleaned.includes(wrongWord)) {
+        return {
+          hasSpellingOrOrderError: true,
+          errorReasonFa: hint
+        };
+      }
+    }
+
+    const normalizedTargetSentence = activeDrill.fullCorrectColloquialSentence.replace(/[!؟?،.]/g, '').trim();
+    const normalizedCleaned = cleaned.replace(/[!؟?،.]/g, '').trim();
+
+    if (
+      normalizedCleaned.length > 1 &&
+      !normalizedTargetSentence.startsWith(normalizedCleaned) &&
+      !activeDrill.targetWord.startsWith(normalizedCleaned) &&
+      normalizedCleaned !== normalizedTargetSentence
+    ) {
+      return {
+        hasSpellingOrOrderError: true,
+        errorReasonFa:
+          sentenceBuildErrorNote ||
+          `نوشته شما («${cleaned}») با دیکته یا ترتیب صحیح جمله هدف تفاوت دارد. کل جمله صحیح و دیکته کامل را در نوار بالا ببینید.`
+      };
+    }
+
+    return {
+      hasSpellingOrOrderError: Boolean(sentenceBuildErrorNote),
+      errorReasonFa: sentenceBuildErrorNote || activeDrill.spellingHintFa
+    };
+  };
+
+  const persianDictationState = evaluatePersianBoardDictation();
+
   const currentLetter = TRIPLE_SCRIPT_LETTERS[selectedLetterIdx] || TRIPLE_SCRIPT_LETTERS[0];
+  const activeSinglePersianChar = currentLetter.char.split(' ')[0].trim();
 
   // Draw guide watermark on Canvas whenever selected letter changes
   const drawLetterWatermark = () => {
@@ -144,28 +262,55 @@ export const PersianAlphabetCanvasStudio: React.FC<PersianAlphabetCanvasStudioPr
     if (!ctx) return;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+    // Top Auto-Typed Standard Strip + Correct Full Sentence Strip inside the Persian Blackboard
+    ctx.save();
+    ctx.fillStyle = persianDictationState.hasSpellingOrOrderError
+      ? 'rgba(136, 19, 55, 0.94)'
+      : 'rgba(2, 44, 34, 0.94)';
+    ctx.fillRect(8, 6, canvas.width - 16, 48);
+    ctx.strokeStyle = persianDictationState.hasSpellingOrOrderError
+      ? 'rgba(251, 113, 133, 0.9)'
+      : 'rgba(251, 191, 36, 0.75)';
+    ctx.lineWidth = 1.5;
+    ctx.strokeRect(8, 6, canvas.width - 16, 48);
+
+    ctx.font = 'bold 13px Vazirmatn, sans-serif';
+    ctx.fillStyle = '#fde047';
+    ctx.textAlign = 'right';
+    const topCorrectBarText = `✅ دیکته و جمله صحیح: ${activeDrill.fullCorrectColloquialSentence}`;
+    ctx.fillText(topCorrectBarText, canvas.width - 16, 24);
+
+    ctx.font = 'bold 14px Vazirmatn, sans-serif';
+    ctx.fillStyle = '#ffffff';
+    const userLineOnBoard =
+      typedPersianLine.length > 0
+        ? `✍️ نوشته شما: ${typedPersianLine}▋`
+        : '✍️ با کشیدن حرف یا کلیک روی کلمات، جمله خودمانی اینجا ساخته می‌شود...';
+    ctx.fillText(userLineOnBoard, canvas.width - 16, 44);
+    ctx.restore();
+
     // Subtle baseline
     ctx.strokeStyle = 'rgba(16, 185, 129, 0.28)';
     ctx.lineWidth = 2;
     ctx.setLineDash([6, 6]);
     ctx.beginPath();
-    ctx.moveTo(24, canvas.height * 0.65);
-    ctx.lineTo(canvas.width - 24, canvas.height * 0.65);
+    ctx.moveTo(24, canvas.height * 0.76);
+    ctx.lineTo(canvas.width - 24, canvas.height * 0.76);
     ctx.stroke();
     ctx.setLineDash([]);
 
     // Guide Persian Character
     ctx.fillStyle = 'rgba(251, 191, 36, 0.22)';
-    ctx.font = '900 118px Vazirmatn, sans-serif';
+    ctx.font = '900 102px Vazirmatn, sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText(currentLetter.char.split(' ')[0], canvas.width / 2, canvas.height / 2);
+    ctx.fillText(activeSinglePersianChar, canvas.width / 2, canvas.height * 0.62);
   };
 
   useEffect(() => {
     drawLetterWatermark();
     setStrokeCount(0);
-  }, [selectedLetterIdx]);
+  }, [selectedLetterIdx, typedPersianLine, activeSentenceIdx, sentenceBuildErrorNote]);
 
   const getPointerPos = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef.current;
@@ -187,14 +332,18 @@ export const PersianAlphabetCanvasStudio: React.FC<PersianAlphabetCanvasStudioPr
   };
 
   const startDraw = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
+    if (autoTypeTimerRef.current) {
+      window.clearTimeout(autoTypeTimerRef.current);
+      autoTypeTimerRef.current = null;
+    }
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
     const pos = getPointerPos(e);
     setIsDrawing(true);
-    ctx.strokeStyle = '#fbbf24';
-    ctx.lineWidth = 10;
+    ctx.strokeStyle = isEraser ? '#0f172a' : '#fbbf24';
+    ctx.lineWidth = isEraser ? 26 : 10;
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
     ctx.beginPath();
@@ -215,14 +364,35 @@ export const PersianAlphabetCanvasStudio: React.FC<PersianAlphabetCanvasStudioPr
   const endDraw = () => {
     if (!isDrawing) return;
     setIsDrawing(false);
-    setStrokeCount((prev) => {
-      const next = prev + 1;
-      if (next === 2) {
-        sound.playCoin();
-        onEarnLingous(15);
+    if (!isEraser) {
+      setStrokeCount((prev) => {
+        const next = prev + 1;
+        if (next === 2) {
+          sound.playCoin();
+          onEarnLingous(15);
+        }
+        return next;
+      });
+
+      if (autoTypeEnabled) {
+        if (autoTypeTimerRef.current) {
+          window.clearTimeout(autoTypeTimerRef.current);
+        }
+        autoTypeTimerRef.current = window.setTimeout(() => {
+          sound.playPop();
+          setTypedPersianLine((prev) => prev + activeSinglePersianChar);
+          setLastTypedFlash(activeSinglePersianChar);
+          setTimeout(() => setLastTypedFlash(null), 900);
+          speakPersian(activeSinglePersianChar, speechRate);
+          onEarnLingous(5);
+          if (autoAdvanceNext) {
+            setSelectedLetterIdx((prev) =>
+              prev < TRIPLE_SCRIPT_LETTERS.length - 1 ? prev + 1 : 0
+            );
+          }
+        }, 650);
       }
-      return next;
-    });
+    }
   };
 
   return (
@@ -356,22 +526,268 @@ export const PersianAlphabetCanvasStudio: React.FC<PersianAlphabetCanvasStudioPr
 
           {/* Right: Interactive Finger / Stylus / Mouse Drawing Board */}
           <div className="lg:col-span-5 p-4 rounded-2xl bg-slate-950 border-2 border-amber-400 flex flex-col justify-between space-y-3">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-wrap items-center justify-between gap-2">
               <span className="text-xs font-black text-amber-300">
-                🖐️ تخته هوشمند مشق الفبای فارسی با انگشت یا ماوس:
+                🖐️ تخته هوشمند مشق الفبای فارسی (با تایپ خودکار و پاک‌کن):
               </span>
-              <button
-                type="button"
-                onClick={() => {
-                  sound.playClick();
-                  drawLetterWatermark();
-                  setStrokeCount(0);
-                }}
-                className="px-3 py-1 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-black text-xs flex items-center gap-1"
-              >
-                <Eraser className="w-3.5 h-3.5" />
-                <span>پاک‌کن تخته</span>
-              </button>
+              <div className="flex flex-wrap items-center gap-1.5">
+                <button
+                  type="button"
+                  onClick={() => {
+                    sound.playClick();
+                    setAutoTypeEnabled((prev) => !prev);
+                  }}
+                  className={`px-2.5 py-1 rounded-xl text-[11px] font-black border ${
+                    autoTypeEnabled
+                      ? 'bg-amber-400 text-slate-950 border-amber-200'
+                      : 'bg-slate-800 text-slate-300 border-slate-600'
+                  }`}
+                >
+                  {autoTypeEnabled ? '✨ تایپ خودکار: روشن' : 'تایپ خودکار: خاموش'}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    sound.playClick();
+                    setIsEraser((prev) => !prev);
+                  }}
+                  className={`px-2.5 py-1 rounded-xl text-[11px] font-black flex items-center gap-1 border ${
+                    isEraser
+                      ? 'bg-rose-500 text-white border-rose-300'
+                      : 'bg-slate-800 text-rose-200 border-rose-500/40'
+                  }`}
+                >
+                  <Eraser className="w-3.5 h-3.5" />
+                  <span>{isEraser ? 'پاک‌کن دستی (فعال)' : 'پاک‌کن دستی'}</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    sound.playClick();
+                    drawLetterWatermark();
+                    setStrokeCount(0);
+                  }}
+                  className="px-2.5 py-1 rounded-xl bg-rose-700 hover:bg-rose-600 text-white font-black text-[11px]"
+                >
+                  پاک کردن تخته
+                </button>
+              </div>
+            </div>
+
+            {/* TOP-OF-BLACKBOARD DICTATION & COMPLETE COLLOQUIAL SENTENCE BAR */}
+            <div className="p-3 rounded-2xl bg-gradient-to-r from-emerald-950 via-slate-900 to-amber-950 border-2 border-amber-400/80 space-y-2 shadow-md">
+              <div className="flex flex-wrap items-center justify-between gap-2 text-[11px]">
+                <span className="font-black text-amber-300">
+                  🎯 نوار بالای تخته (دیکته صحیح و نمایش کل جمله خودمانی):
+                </span>
+                <div className="flex flex-wrap gap-1">
+                  {PERSIAN_COLLOQUIAL_SENTENCE_DRILLS.map((d, idx) => (
+                    <button
+                      key={d.id}
+                      type="button"
+                      onClick={() => {
+                        sound.playClick();
+                        setActiveSentenceIdx(idx);
+                        setTypedPersianLine('');
+                        setSentenceBuildErrorNote(null);
+                      }}
+                      className={`px-2 py-0.5 rounded-lg font-black transition-all ${
+                        activeSentenceIdx === idx
+                          ? 'bg-amber-400 text-slate-950'
+                          : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+                      }`}
+                    >
+                      جمله {idx + 1}: {d.targetWord}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Prominent Top Bar showing Correct Dictation & Full Correct Sentence */}
+              {(forceShowFullSentenceTopBar || persianDictationState.hasSpellingOrOrderError) && (
+                <div
+                  className={`p-2.5 rounded-xl border-2 space-y-1 ${
+                    persianDictationState.hasSpellingOrOrderError
+                      ? 'bg-rose-950/95 border-rose-400 animate-pulse'
+                      : 'bg-slate-950/90 border-emerald-500/60'
+                  }`}
+                >
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <span className="px-2 py-0.5 rounded-md bg-amber-400 text-slate-950 text-[10px] font-black">
+                      {persianDictationState.hasSpellingOrOrderError
+                        ? '🚨 اصلاح دیکته و نمایش کل جمله صحیح در نوار بالا'
+                        : '✅ نوار دیکته صحیح و کل جمله خودمانی هدف'}
+                    </span>
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        type="button"
+                        onClick={() =>
+                          speakPersian(
+                            activeDrill.fullCorrectColloquialSentence,
+                            speechRate,
+                            activeDrill.fingilish
+                          )
+                        }
+                        className="px-2 py-0.5 rounded-lg bg-emerald-400 hover:bg-emerald-300 text-slate-950 text-[10px] font-black flex items-center gap-1"
+                      >
+                        <Volume2 className="w-3 h-3" />
+                        <span>🔊 شنیدن جمله صحیح</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          sound.playClick();
+                          setTypedPersianLine(activeDrill.fullCorrectColloquialSentence);
+                          setSentenceBuildErrorNote(null);
+                          speakPersian(
+                            activeDrill.fullCorrectColloquialSentence,
+                            speechRate,
+                            activeDrill.fingilish
+                          );
+                        }}
+                        className="px-2 py-0.5 rounded-lg bg-amber-400 hover:bg-amber-300 text-slate-950 text-[10px] font-black"
+                      >
+                        ✨ درج کل جمله صحیح
+                      </button>
+                    </div>
+                  </div>
+
+                  <p className="text-sm sm:text-base font-black text-amber-300" dir="rtl">
+                    🌟 کل جمله صحیح (عامیانه و خودمانی): «{activeDrill.fullCorrectColloquialSentence}»
+                  </p>
+                  <p className="text-[11px] font-bold text-emerald-200" dir="rtl">
+                    ✅ دیکته صحیح واژه کلیدی: «{activeDrill.targetWord}» ({activeDrill.targetWord.split('').join(' - ')})
+                  </p>
+                  <p className="text-[11px] font-mono text-cyan-200" dir="ltr">
+                    🗣️ Finglish: "{activeDrill.fingilish}" — {activeDrill.englishMeaning}
+                  </p>
+                  {persianDictationState.hasSpellingOrOrderError && (
+                    <p className="text-[11px] text-rose-200 font-bold" dir="rtl">
+                      💡 راهنمای املا و جمله‌سازی: {persianDictationState.errorReasonFa}
+                    </p>
+                  )}
+                </div>
+              )}
+
+              {/* Word-by-word Sentence Builder Chips + "Show Full Correct Sentence" Rescue Button */}
+              <div className="space-y-1.5">
+                <div className="flex flex-wrap items-center justify-between gap-1 text-[10px] text-emerald-200">
+                  <span className="font-bold">🧩 جمله‌سازی خودمانی (کلمات را به ترتیب بزنید):</span>
+                  <div className="flex gap-1">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        sound.playClick();
+                        setTypedPersianLine(activeDrill.wrongSample);
+                        setSentenceBuildErrorNote(
+                          'در صورت اشتباه املایی یا ناتوانی در ساخت جمله، کل جمله صحیح و دیکته درست در نوار بالا به شما نشان داده می‌شود!'
+                        );
+                      }}
+                      className="px-2 py-0.5 rounded bg-rose-500/30 hover:bg-rose-500/50 text-rose-200 font-black border border-rose-400/40"
+                    >
+                      🧪 تست غلط املایی / ناتوانی در ساخت جمله
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        sound.playClick();
+                        setForceShowFullSentenceTopBar(true);
+                        setTypedPersianLine(activeDrill.fullCorrectColloquialSentence);
+                        setSentenceBuildErrorNote(null);
+                        speakPersian(
+                          activeDrill.fullCorrectColloquialSentence,
+                          speechRate,
+                          activeDrill.fingilish
+                        );
+                      }}
+                      className="px-2 py-0.5 rounded bg-amber-400 text-slate-950 font-black"
+                    >
+                      👁️ نمایش کل جمله صحیح در نوار بالا
+                    </button>
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap gap-1.5">
+                  {activeDrill.wordBlocks.map((wb, wIdx) => (
+                    <button
+                      key={wIdx}
+                      type="button"
+                      onClick={() => {
+                        sound.playClick();
+                        const currentParts = typedPersianLine.trim()
+                          ? typedPersianLine.trim().split(/\s+/)
+                          : [];
+                        const expectedNext = activeDrill.wordBlocks[0];
+                        if (currentParts.length === 0 && wb !== expectedNext) {
+                          setSentenceBuildErrorNote(
+                            `ترتیب جمله درست نبود؛ کل جمله صحیح در نوار بالای تخته برای شما نمایش داده شد: «${activeDrill.fullCorrectColloquialSentence}»`
+                          );
+                          setForceShowFullSentenceTopBar(true);
+                        } else {
+                          setSentenceBuildErrorNote(null);
+                        }
+                        setTypedPersianLine((prev) => (prev ? `${prev.trim()} ${wb}` : wb));
+                        speakPersian(wb, speechRate);
+                      }}
+                      className="px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 text-amber-200 border border-amber-400/40 text-xs font-black"
+                    >
+                      {wb}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Editable / Auto-Typed Input Bar */}
+              <div className="flex flex-wrap items-center justify-between gap-2 bg-slate-950 px-3 py-1.5 rounded-lg border border-emerald-700/60">
+                <input
+                  type="text"
+                  value={typedPersianLine}
+                  onChange={(e) => setTypedPersianLine(e.target.value)}
+                  dir="rtl"
+                  placeholder="با کشیدن حرف روی تخته یا نوشتن در اینجا، دیکته و جمله شما بررسی می‌شود..."
+                  className="flex-1 min-w-[160px] bg-transparent text-sm sm:text-base font-black text-amber-200 placeholder:text-[11px] placeholder:text-slate-400 focus:outline-none"
+                />
+                {lastTypedFlash && (
+                  <span className="px-2 py-0.5 rounded bg-amber-400 text-slate-950 text-[10px] font-black">
+                    +{lastTypedFlash}
+                  </span>
+                )}
+                <div className="flex items-center gap-1">
+                  <button
+                    type="button"
+                    onClick={() => setAutoAdvanceNext((prev) => !prev)}
+                    className="px-2 py-0.5 rounded bg-emerald-900/80 text-emerald-200 text-[10px] font-bold"
+                  >
+                    {autoAdvanceNext ? '⏭️ پیشروی حرف' : 'تکرار حرف'}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setTypedPersianLine((prev) => prev + ' ')}
+                    className="px-2 py-0.5 rounded bg-slate-800 text-white text-[10px] font-bold"
+                  >
+                    فاصله
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setTypedPersianLine((prev) => prev.slice(0, -1))}
+                    className="px-2 py-0.5 rounded bg-slate-800 text-rose-200 text-[10px] font-bold"
+                  >
+                    ⌫
+                  </button>
+                  {typedPersianLine && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setTypedPersianLine('');
+                        setSentenceBuildErrorNote(null);
+                      }}
+                      className="px-2 py-0.5 rounded bg-rose-900/80 text-white text-[10px] font-bold"
+                    >
+                      پاک کردن سطر
+                    </button>
+                  )}
+                </div>
+              </div>
             </div>
 
             <canvas

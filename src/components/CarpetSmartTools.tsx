@@ -23,15 +23,32 @@ export const CarpetSmartTools: React.FC = () => {
   const [lengthCm, setLengthCm] = useState<number>(200);
   const [pricePerSqmUsd, setPricePerSqmUsd] = useState<number>(450);
 
-  // 2. Digital Certificate of Authenticity Generator State
+  // 2. Bilingual Analytical Carpet Report & Certificate State (Section 6)
+  const [reportPatternEn, setReportPatternEn] = useState<string>(
+    'Kashan-style visual similarity (Central Medallion / Lachak-Toranj & Shah Abbasi floral field)'
+  );
+  const [reportPatternFa, setReportPatternFa] = useState<string>(
+    'شباهت بصری به سبک لچک و ترنج کاشان / اصفهان با نقش‌مایه‌های شاه‌عباسی'
+  );
+  const [reportDensityEn, setReportDensityEn] = useState<string>('Estimated ~40 Raj (in ~7 cm width)');
+  const [reportDensityFa, setReportDensityFa] = useState<string>('تخمین تقریبی: حدود ۴۰ رج در ۷ سانتی‌متر');
+  const [reportLocalTermEn, setReportLocalTermEn] = useState<string>(
+    'Raj (Tabriz/Tehran) • Khaneh (Kashan/Isfahan tradition) • Khofteh (Khorasan tradition) • 9-La / 6-La (Nain warp ply count)'
+  );
+  const [reportLocalTermFa, setReportLocalTermFa] = useState<string>(
+    'رج (تبریز و تهران) • خانه (کاشان و اصفهان) • خفته (مشهد و خراسان) • لا (نائین: ۹ لا و ۶ لا)'
+  );
+  const [copiedBilingualReport, setCopiedBilingualReport] = useState<boolean>(false);
+
+  // 3. Digital Certificate of Authenticity Generator State
   const [certGalleryName, setCertGalleryName] = useState<string>(
     'فرش حسین علی‌میری و پسران — خیابان خیام شمالی، جنب مترو خیام، بازار فرش ایران، طبقه همکف، پلاک ۴۸ (Hossein Ali-Miri & Sons Carpets, No. 48)'
   );
   const [certBuyerName, setCertBuyerName] = useState<string>('Valued International Collector');
-  const [certOrigin, setCertOrigin] = useState<string>('Tabriz / Isfahan Master Weave (تبریز / اصفهان)');
-  const [certTypeSize, setCertTypeSize] = useState<string>('Dozar Ghalicheh (200×135 cm / 4.5×6.7 ft)');
-  const [certCondition, setCertCondition] = useState<string>('100% Kohneh Zaati (Naturally Aged Patina) & Vegetable Dyes');
-  const [certMaterialRaj, setCertMaterialRaj] = useState<string>('50 Raj • 329 KPSI (510,200 knots/m²) • Silk Foundation & Kork Wool');
+  const [certOrigin, setCertOrigin] = useState<string>('Tabriz / Kashan Style Visual Similarity (شباهت بصری سبک تبریز / کاشان)');
+  const [certTypeSize, setCertTypeSize] = useState<string>('Dozar Ghalicheh (Approx. 200×135 cm / 4.5×6.7 ft)');
+  const [certCondition, setCertCondition] = useState<string>('Handmade (Hand-Knotted) • Natural Vegetable Dyes • Kohneh Zaati Patina');
+  const [certMaterialRaj, setCertMaterialRaj] = useState<string>('Estimated ~50 Raj • Regional Terms: Raj / Khaneh / Khofteh / 6-La • Silk & Kork Wool');
   const [copiedCert, setCopiedCert] = useState<boolean>(false);
 
   // Calculations
@@ -63,25 +80,57 @@ export const CarpetSmartTools: React.FC = () => {
   const totalAed = Math.round(totalUsd * 3.67);
   const totalCny = Math.round(totalUsd * 7.24);
 
-  const pitchEn = `This authentic Persian carpet measures ${widthCm} by ${lengthCm} centimeters, which is ${imperialStr} (${areaSqm} square meters). The collector price is ${totalUsd} US Dollars (or ${totalEur} Euros).`;
-  const pitchAr = `هذه السجادة الإيرانية اليدوية أبعادها ${widthCm} في ${lengthCm} سنتيمتراً (${areaSqm} متر مربع). السعر النهائي للمقتنين هو ${totalUsd} دولار أمريكي أو ${totalAed} درهم إماراتي.`;
-  const pitchZh = `这张正宗波斯手工地毯尺寸为 ${widthCm} 乘 ${lengthCm} 厘米（${areaSqm} 平方米），天然植物染色（Kohneh Zaati），收藏价格为 ${totalUsd} 美元（约 ${totalCny} 人民币）。`;
-  const pitchRu = `Этот подлинный персидский ковер ручной работы имеет размер ${widthCm} на ${lengthCm} сантиметров (${areaSqm} кв. м), натуральное старение Кохне Заати. Цена составляет ${totalUsd} долларов США.`;
+  const pitchEn = `This handwoven Persian carpet has approximate dimensions of ${widthCm} by ${lengthCm} centimeters, which is about ${imperialStr} (${areaSqm} square meters). The estimated price is ${totalUsd} US Dollars (or ${totalEur} Euros).`;
+  const pitchAr = `هذه السجادة الإيرانية اليدوية أبعادها التقريبية ${widthCm} في ${lengthCm} سنتيمتراً (${areaSqm} متر مربع). السعر للمقتنين هو ${totalUsd} دولار أمريكي أو ${totalAed} درهم إماراتي.`;
+  const pitchZh = `这张波斯手工地毯近似尺寸为 ${widthCm} 乘 ${lengthCm} 厘米（${areaSqm} 平方米），天然植物染色，价格为 ${totalUsd} 美元（约 ${totalCny} 人民币）。`;
+  const pitchRu = `Этот персидский ковер ручной работы имеет ориентировочный размер ${widthCm} на ${lengthCm} сантиметров (${areaSqm} кв. м). Цена составляет ${totalUsd} долларов США.`;
+
+  const englishCarpetReportText = `BILINGUAL PERSIAN CARPET ANALYTICAL REPORT (ENGLISH & PERSIAN)
+==================================================
+Pattern (Closest Visual Similarities):
+${reportPatternEn}
+
+Density:
+${reportDensityEn}
+
+Local Terminology:
+${reportLocalTermEn}
+
+Approximate Dimensions:
+Approx. ${widthCm} × ${lengthCm} cm (${imperialStr} / ${areaSqm} m²) — ${zarLabel}
+
+Disclaimer:
+Photographic analysis does not establish exact origin or authenticity. A photograph alone cannot conclusively determine a carpet's origin, authenticity, or value.
+--------------------------------------------------
+گزارش تحلیلی دوزبانه فرش (فارسی):
+• شباهت بصری طرح: ${reportPatternFa}
+• تراکم تقریبی: ${reportDensityFa}
+• اصطلاحات محلی بافت: ${reportLocalTermFa}
+• ابعاد تقریبی: حدود ${widthCm} در ${lengthCm} سانتی‌متر (${imperialStr}) — ${zarLabel}
+• سلب مسئولیت کارشناسی: تصویر فرش به‌تنهایی نمی‌تواند محل بافت، اصالت یا ارزش فرش را به‌طور قطعی تعیین کند.`;
+
+  const handleCopyBilingualReport = () => {
+    sound.playCoin();
+    navigator.clipboard.writeText(englishCarpetReportText);
+    setCopiedBilingualReport(true);
+    setTimeout(() => setCopiedBilingualReport(false), 2500);
+  };
 
   const handleCopyCertificate = () => {
     sound.playCoin();
-    const certText = `✨ OFFICIAL CERTIFICATE OF PERSIAN CARPET AUTHENTICITY ✨
+    const certText = `✨ PERSIAN CARPET ANALYTICAL REPORT & SHOWROOM RECORD ✨
 Issued by: ${certGalleryName}
 In Honored Memory of Master Merchant Haj Hossein Agha Ali Miri (فرش بازار - Farsh Bazaar)
 ----------------------------------------
 • Collector / Buyer: ${certBuyerName}
-• Origin & Master Weave: ${certOrigin}
-• Traditional Cut & Dimensions: ${certTypeSize}
-• Age & Dye Authenticity: ${certCondition}
-• Optical Verified Knot Density (Raj): ${certMaterialRaj}
+• Closest Visual Pattern Similarity: ${certOrigin}
+• Approximate Dimensions & Cut: ${certTypeSize}
+• Weave Type & Dyes: ${certCondition}
+• Estimated Density & Local Terminology: ${certMaterialRaj}
+• Disclaimer: Photographic analysis does not establish exact origin or authenticity.
 • Serial ID: FB-${Date.now().toString().slice(-6)}
 ----------------------------------------
-100% Hand-Knotted Iranian Heritage • Verified by Farsh Bazaar & English-lingou`;
+Iranian Handwoven Carpet Heritage • Farsh Bazaar & LingoEnglish`;
     navigator.clipboard.writeText(certText);
     setCopiedCert(true);
     setTimeout(() => setCopiedCert(false), 2500);
@@ -89,12 +138,214 @@ In Honored Memory of Master Merchant Haj Hossein Agha Ali Miri (فرش بازا�
 
   return (
     <div className="space-y-6">
-      {/* 0. FLAGSHIP OFFLINE OPTICAL CAMERA RAJ-SHOMAR (تشخیص آفلاین رج فرش با دوربین موبایل) */}
+      {/* 0. FLAGSHIP OFFLINE OPTICAL CAMERA RAJ-SHOMAR & PATTERN SIMILARITY MODULE */}
       <OfflineRajScanner
-        onApplyToCertificate={(summaryEn) => {
+        onApplyToCertificate={(summaryEn, summaryFa, result) => {
           setCertMaterialRaj(summaryEn);
+          if (result) {
+            setReportDensityEn(
+              result.isMachineMadeMode
+                ? `Machine-Made Carpet (~${result.machineShaneh} Shaneh)`
+                : `Estimated ~${result.exactRaj} Raj (in ~7 cm width)`
+            );
+            setReportDensityFa(
+              result.isMachineMadeMode
+                ? `فرش ماشینی (حدود ${result.machineShaneh} شانه)`
+                : `تخمین تقریبی: حدود ${result.exactRaj} رج در ۷ سانتی‌متر`
+            );
+            setReportLocalTermEn(result.localTerminologyNoteEn);
+            setReportLocalTermFa(result.localTerminologyNoteFa);
+            if (result.patternSimilarityEn) setReportPatternEn(result.patternSimilarityEn);
+            if (result.patternSimilarityFa) setReportPatternFa(result.patternSimilarityFa);
+          }
         }}
       />
+
+      {/* =================================================================== */}
+      {/* BILINGUAL CARPET REPORT GENERATOR (PERSIAN + ENGLISH - SECTION 6)   */}
+      {/* =================================================================== */}
+      <div className="bg-white border-2 border-emerald-600/50 rounded-3xl p-5 sm:p-7 shadow-md space-y-5">
+        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-3">
+          <div>
+            <span className="px-3 py-1 rounded-xl bg-emerald-100 text-emerald-950 font-black text-xs">
+              📄 BILINGUAL CARPET REPORT (گزارش تحلیلی دوزبانه فارسی و انگلیسی فرش)
+            </span>
+            <h3 className="text-base sm:text-lg font-black text-slate-900 mt-1">
+              تولید خودکار گزارش کارشناسی دوزبانه (فارسی + English) با رعایت کامل استاندارد سلب مسئولیت تصویری
+            </h3>
+          </div>
+          <span className="text-xs font-bold text-emerald-900 bg-emerald-50 px-3 py-1 rounded-xl border border-emerald-200">
+            بدون ادعای قطعی محل بافت از روی عکس
+          </span>
+        </div>
+
+        <div className="space-y-2">
+          <span className="text-xs font-black text-slate-700 block">
+            انتخاب سریع الگوی نقشه (ایرانی یا غیرایرانی: قفقاز، ترکیه، پاکستان، افغانستان و مصر):
+          </span>
+          <div className="flex flex-wrap gap-1.5">
+            {[
+              {
+                label: '🇮🇷 کاشان (لچک‌ترنج)',
+                en: 'Kashan-style visual similarity (Central Medallion & Shah Abbasi floral field)',
+                fa: 'نقشه با اصالت بصری ایرانی — شباهت بصری به سبک لچک و ترنج کاشان'
+              },
+              {
+                label: '🇮🇷 تبریز (ماهی / علیا)',
+                en: 'Tabriz / Mahi-style visual similarity (Herati / Fish motif & medallion)',
+                fa: 'نقشه با اصالت بصری ایرانی — شباهت بصری به سبک تبریز و طرح ماهی در هم'
+              },
+              {
+                label: '🇮🇷 نائین و اصفهان',
+                en: 'Nain / Isfahan-style visual similarity (Ivory-cream & lapis floral medallion)',
+                fa: 'نقشه با اصالت بصری ایرانی — شباهت بصری به سبک نائین و اصفهان'
+              },
+              {
+                label: '🏔️ قفقاز (قزاق / شیروان / قره‌باغ)',
+                en: 'Non-Iranian Pattern — Closest visual similarity to Caucasian Carpet Designs (Kazak, Shirvan, Karabakh, Kuba)',
+                fa: 'این نقشه به نظر ایرانی نیست و بیشترین شباهت بصری را به فرش‌های ناحیه قفقاز (قزاق، شیروان، قره‌باغ یا قوبا) دارد'
+              },
+              {
+                label: '🇹🇷 ترکیه (عوشاق / هرکه / قونیه)',
+                en: 'Non-Iranian Pattern — Closest visual similarity to Turkish / Anatolian Carpet Designs (Oushak, Hereke, Konya, Bergama)',
+                fa: 'این نقشه به نظر ایرانی نیست و بیشترین شباهت بصری را به فرش‌های کشور ترکیه (سبک عوشاق/اوشاک، هرکه یا قونیه) دارد'
+              },
+              {
+                label: '🇵🇰 پاکستان (موری / بخارا / پیشاور)',
+                en: 'Non-Iranian Pattern — Closest visual similarity to Pakistani Carpet Designs (Pakistani Mori/Bokhara, Lahore, Peshawar Chobi)',
+                fa: 'این نقشه به نظر ایرانی نیست و بیشترین شباهت بصری را به فرش‌های کشور پاکستان (سبک موری/بخارای پاکستانی، لاهور یا پیشاور) دارد'
+              },
+              {
+                label: '🇦🇫 افغانستان (خال‌محمدی / آقچه / بلخ)',
+                en: 'Non-Iranian Pattern — Closest visual similarity to Afghan Carpet Designs (Khal Mohammadi, Aqcha, Balkh, Herat)',
+                fa: 'این نقشه به نظر ایرانی نیست و بیشترین شباهت بصری را به قالی‌های کشور افغانستان (سبک خال‌محمدی، آقچه، بلخ یا هرات) دارد'
+              },
+              {
+                label: '🇪🇬 مصر (مملوکی قاهره / اسیوط)',
+                en: 'Non-Iranian Pattern — Closest visual similarity to Egyptian Carpet Designs (Mamluk Cairo Kaleidoscopic Geometric, Assiut)',
+                fa: 'این نقشه به نظر ایرانی نیست و بیشترین شباهت بصری را به فرش‌های کشور مصر (سبک هندسی مملوکی قاهره یا اسیوط) دارد'
+              }
+            ].map((p) => (
+              <button
+                key={p.label}
+                type="button"
+                onClick={() => {
+                  setReportPatternEn(p.en);
+                  setReportPatternFa(p.fa);
+                }}
+                className="px-2.5 py-1.5 rounded-xl bg-slate-100 hover:bg-emerald-100 text-slate-800 border border-slate-300 text-xs font-black transition-all"
+              >
+                {p.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+          <div className="space-y-2">
+            <label className="font-black text-slate-700 block">
+              ۱. نزدیک‌ترین شباهت بصری طرح (Pattern — Closest Visual Similarities):
+            </label>
+            <input
+              type="text"
+              value={reportPatternEn}
+              onChange={(e) => setReportPatternEn(e.target.value)}
+              dir="ltr"
+              className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 font-bold text-slate-900"
+            />
+            <input
+              type="text"
+              value={reportPatternFa}
+              onChange={(e) => setReportPatternFa(e.target.value)}
+              className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 font-bold text-slate-900 bg-slate-50"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="font-black text-slate-700 block">
+              ۲. تخمین تقریبی تراکم و اصطلاحات محلی (Estimated Density &amp; Local Terminology):
+            </label>
+            <input
+              type="text"
+              value={reportDensityEn}
+              onChange={(e) => setReportDensityEn(e.target.value)}
+              dir="ltr"
+              className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 font-bold text-slate-900"
+            />
+            <input
+              type="text"
+              value={reportLocalTermEn}
+              onChange={(e) => setReportLocalTermEn(e.target.value)}
+              dir="ltr"
+              className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 font-bold text-slate-900 bg-slate-50"
+            />
+          </div>
+        </div>
+
+        {/* Side-by-Side English & Persian Analytical Report Output */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="p-4 rounded-2xl bg-slate-950 text-white border border-emerald-400/50 space-y-2" dir="ltr">
+            <span className="px-2.5 py-0.5 rounded-md bg-emerald-400 text-slate-950 font-black text-[11px] inline-block">
+              🇬🇧 ENGLISH CARPET DESCRIPTION REPORT
+            </span>
+            <div className="text-xs space-y-1.5 font-mono leading-relaxed">
+              <p><strong className="text-amber-300">Pattern:</strong><br />{reportPatternEn}</p>
+              <p><strong className="text-amber-300">Density:</strong><br />{reportDensityEn}</p>
+              <p><strong className="text-amber-300">Local terminology:</strong><br />{reportLocalTermEn}</p>
+              <p><strong className="text-amber-300">Approximate dimensions:</strong><br />Approx. {widthCm} × {lengthCm} cm ({imperialStr} / {areaSqm} m²)</p>
+              <p className="text-amber-200 border-t border-white/15 pt-1.5">
+                <strong>Disclaimer:</strong><br />
+                Photographic analysis does not establish exact origin or authenticity.
+              </p>
+            </div>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-slate-950 text-white border border-amber-400/50 space-y-2">
+            <span className="px-2.5 py-0.5 rounded-md bg-amber-400 text-slate-950 font-black text-[11px] inline-block">
+              🇮🇷 گزارش تحلیلی فرش (نسخه فارسی)
+            </span>
+            <div className="text-xs space-y-1.5 leading-relaxed">
+              <p><strong className="text-amber-300">شباهت بصری طرح:</strong><br />{reportPatternFa}</p>
+              <p><strong className="text-amber-300">تراکم تقریبی:</strong><br />{reportDensityFa}</p>
+              <p><strong className="text-amber-300">اصطلاحات محلی بافت (رج / خانه / خفته / لا):</strong><br />{reportLocalTermFa}</p>
+              <p><strong className="text-amber-300">ابعاد تقریبی:</strong><br />حدود {widthCm} در {lengthCm} سانتی‌متر ({imperialStr}) — {zarLabel}</p>
+              <p className="text-amber-200 border-t border-white/15 pt-1.5">
+                <strong>سلب مسئولیت کارشناسی:</strong><br />
+                تصویر فرش به‌تنهایی نمی‌تواند محل بافت، اصالت یا ارزش فرش را به‌طور قطعی تعیین کند.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex flex-wrap gap-2.5">
+          <button
+            type="button"
+            onClick={handleCopyBilingualReport}
+            className="flex-1 py-3 px-4 rounded-2xl bg-emerald-700 hover:bg-emerald-600 text-white font-black text-xs sm:text-sm flex items-center justify-center gap-2 shadow-sm"
+          >
+            {copiedBilingualReport ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+            <span>
+              {copiedBilingualReport
+                ? '✅ گزارش دوزبانه (English + فارسی) کپی شد!'
+                : '📋 کپی گزارش دوزبانه کارشناسی فرش (Copy Bilingual Carpet Report)'}
+            </span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() =>
+              speakEnglish(
+                `Pattern: ${reportPatternEn}. Density: ${reportDensityEn}. Local terminology: ${reportLocalTermEn}. Approximate dimensions: ${widthCm} by ${lengthCm} centimeters (${imperialStr}). Disclaimer: Photographic analysis does not establish exact origin or authenticity.`,
+                0.88
+              )
+            }
+            className="py-3 px-4 rounded-2xl bg-rose-800 hover:bg-rose-700 text-white font-black text-xs flex items-center gap-1.5"
+          >
+            <Volume2 className="w-4 h-4" />
+            <span>🔊 Read English Report</span>
+          </button>
+        </div>
+      </div>
 
       {/* 1. MULTILINGUAL (EN / AR / ZH / RU) DIMENSION & PRICE CALCULATOR */}
       <div className="bg-white border-2 border-amber-500/50 rounded-3xl p-5 sm:p-7 shadow-md space-y-5">

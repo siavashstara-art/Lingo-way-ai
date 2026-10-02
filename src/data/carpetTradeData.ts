@@ -244,6 +244,62 @@ export const CARPET_TERMINOLOGY_DB: CarpetTermItem[] = [
     technicalNoteFa: 'مشتریان حرفه‌ای خارجی عاشق «ابرش طبیعی (Natural Abrash)» در فرش‌های عشایری و کُردی هستند چون اثبات می‌کند پشم‌ها به صورت دست‌ریس و با دیگ‌های رنگرزی سنتی رنگ شده‌اند.',
     merchantPitchEn: 'Notice the subtle "Abrash" color variation—this proves the wool was hand-spun and dyed in small organic batches. It also has full thick pile ("Goosht-dar") and original borders.',
     merchantPitchAr: 'لاحظ التدرج اللوني الطبيعي المسمى «أبرش»، وهو دليل قاطع على الغزل اليدوي والصباغة الطبيعية، كما أن وبر السجادة كامل وحوافها أصلية تماماً.'
+  },
+  {
+    id: 'ct_raj_khaneh_khofteh_la',
+    category: 'structure_materials',
+    categoryLabelFa: 'واحدهای سنتی تراکم بافت (رج / خانه / خفته / لا)',
+    termFa: 'رج (تبریز)، خانه (کاشان و اصفهان)، خفته (خراسان و مشهد) و لا (نائین: ۹ لا، ۶ لا، ۴ لا)',
+    fingilish: 'Raj, Khaneh, Khofteh & La (9-La, 6-La, 4-La)',
+    termEn: 'Traditional Persian Density Terminology: Raj, Khaneh, Khofteh & La (Ply Count)',
+    pronunciationEn: 'RAJ, kha-NEH, khof-TEH, and LAH (ply kownt)',
+    termAr: 'مصطلحات كثافة النسيج الإيرانية التقليدية: الرج، الخانه، الخفته، واللا (عدد طيات الخيط)',
+    pronunciationAr: 'Mustalahāt al-Kathāfah: Raj, Khāneh, Khofteh, wa Lā',
+    technicalNoteFa: 'در ایران هر منطقه واحد سنتی خود را دارد: «رج» در تبریز و تهران (تعداد گره در ۷ سانتی‌متر / یک گره ذرع)، «خانه» در کاشان، اصفهان و کرمان (هر خانه معمولاً ۱۰ گره در مقیاس گره ذرع مقاطعه)، «خفته» در مشهد و خراسان (تعداد گره در واحد گره خراسانی، مثلاً ۳۰ خفته یا ۳۵ خفته) و «لا» در نائین و طبس (تعداد نخ‌های ظریف تابیده در چله: ۹ لا، ۶ لا و ۴ لا؛ هرچه عدد لا کمتر باشد فرش ریزباف‌تر است). بدون فرمول ساختگی، هر واحد در چارچوب سنت همان منطقه سنجیده می‌شود.',
+    merchantPitchEn: 'Depending on the regional weaving tradition, Persian weavers describe density using "Raj" (knots per ~7 cm in Tabriz/Qom), "Khaneh" (in Kashan/Isfahan), "Khofteh" (in Mashhad/Khorasan), or "La" warp ply count (such as Nain 9-La, 6-La, or ultra-fine 4-La).',
+    merchantPitchAr: 'تختلف تسمية كثافة العقد حسب المدرسة الإيرانية: «الرج» في تبريز وقم، و«الخانه» في كاشان وأصفهان، و«الخفته» في مشهد وخراسان، و«اللا» في نائين (٩ لا، ٦ لا، ٤ لا).'
+  },
+  {
+    id: 'ct_anatomy_warp_weft_knot',
+    category: 'structure_materials',
+    categoryLabelFa: 'کالبدشناسی بافت (گره، چله/تار، پود، ریشه و شیرازه)',
+    termFa: 'گره (متقارن ترکی / نامتقارن فارسی)، چله (تار)، پود (زیر و رو)، ریشه و شیرازه (حاشیه)',
+    fingilish: 'Gereh (Knot), Chelleh/Taar (Warp), Pood (Weft), Risheh (Fringe) & Shirzeh/Hashiyeh (Border)',
+    termEn: 'Knot (Symmetrical/Asymmetrical), Warp (Chelleh), Weft (Pood), Fringe (Risheh) & Border (Hashiyeh)',
+    pronunciationEn: 'NOT, WARP (chel-leh), WEFT (pood), FRINJ (ree-sheh), BOR-der (ha-shee-yeh)',
+    termAr: 'العقدة (متماثلة/غير متماثلة)، السدى (جله)، اللحمة (بود)، الشراريب (ريشه)، والحاشية (شيرازه)',
+    pronunciationAr: 'Al-‘Uqdah, As-Sadā (Chelleh), Al-Luhmah (Pood), Ash-Sharārīb, wal-Hāshiyah',
+    technicalNoteFa: 'اسکلت اصلی فرش دستباف از «چله یا تار» (نخ پنبه، ابریشم یا پشم)، «پود» (پود کلفت زیرین و پود نازک رویی)، «گره» یا پرز (گره ترکی دوگره و گره فارسی تک‌گره)، «ریشه» (امتداد چله در دو سر فرش) و «شیرازه» (کلاف‌پیچی دو طرف عرض فرش) تشکیل می‌شود.',
+    merchantPitchEn: 'Every handwoven Persian carpet is built on vertical "Warp" threads (Chelleh), locked horizontally by "Weft" shoots (Pood), with hand-tied "Knots" (Gereh), natural "Fringes" (Risheh), and reinforced "Borders" (Hashiyeh/Shirzeh).',
+    merchantPitchAr: 'تتكون السجادة اليدوية من خيوط السدى العمودية (جله)، وخيوط اللحمة الأفقية (بود)، والعُقد اليدوية، والشراريب الطبيعية (ريشه)، والحاشية المتينة.'
+  },
+  {
+    id: 'ct_design_medallion_field_motif',
+    category: 'types',
+    categoryLabelFa: 'اجزای نقشه و طرح (ترنج، لچک، متن، حاشیه و نقش‌مایه)',
+    termFa: 'ترنج (Medallion)، لچک (Corner)، متن/زمینه (Field)، حاشیه (Border) و نقش‌مایه (Motif: شاه‌عباسی، ماهی، هراتی، بته)',
+    fingilish: 'Toranj (Medallion), Lachak (Corner), Matn/Zamineh (Field), Hashiyeh (Border) & Naghsh-mayeh (Motif)',
+    termEn: 'Central Medallion (Toranj), Corner Spandrels (Lachak), Field (Matn), Border (Hashiyeh) & Classical Motifs',
+    pronunciationEn: 'me-DAL-yun (to-ranj), FELD (matn), BOR-der (ha-shee-yeh), moh-TEEF',
+    termAr: 'الترنج الأوسط (الميدالية)، الزوايا (لجك)، المتن/الخلفية (زمينه)، الحاشية، والزخارف (شاه عباسي، ماهي، بته)',
+    pronunciationAr: 'At-Toranj, Al-Lachak, Al-Matn, Al-Hāshiyah, wal-Zakhārif',
+    technicalNoteFa: 'در توصیف ظاهری طرح فرش برای خریدار خارجی، همیشه به جای ادعای قطعی محل بافت از روی عکس، از «شباهت بصری طرح (Style & Pattern Visual Similarity)» استفاده کنید؛ مانند طرح لچک و ترنج کاشان/اصفهان، طرح ماهی در هم، طرح افشان یا طرح هندسی هریس.',
+    merchantPitchEn: 'Looking at the design composition: the central "Medallion" (Toranj) floats on the main "Field" (Matn), framed by floral "Motifs" (Shah Abbasi palmettes) and a multi-band "Border" (Hashiyeh).',
+    merchantPitchAr: 'بالنظر إلى تكوين التصميم: يتوسط «الترنج» خلفية «المتن»، وتحيط به الزخارف النباتية و«الحاشية» المتعددة الإطارات.'
+  },
+  {
+    id: 'ct_materials_cotton_wool_silk',
+    category: 'structure_materials',
+    categoryLabelFa: 'الیاف طبیعی (پشم، کرک، ابریشم و نخ پنبه)',
+    termFa: 'پشم دست‌ریس (Wool)، کرک (Fine Lambswool)، ابریشم خالص (Silk) و چله نخ پنبه (Cotton Foundation)',
+    fingilish: 'Pashm (Wool), Kork (Lambswool), Abrisham (Silk) & Nakh-e Panbeh (Cotton)',
+    termEn: 'Hand-Spun Wool (Pashm), Kork Lambswool, Pure Natural Silk (Abrisham) & Cotton Warp (Panbeh)',
+    pronunciationEn: 'WOOL (pashm), KORK, SILK (ab-ree-sham), and KOT-un (pan-beh)',
+    termAr: 'الصوف الطبيعي (بشم)، صوف الكرك الناعم، الحرير الخالص (أبريشم)، والقطن الطبيعي للسدى (بنبه)',
+    pronunciationAr: 'As-Sūf, Sūf al-Kork, Al-Harīr al-Khālis, wal-Qutn',
+    technicalNoteFa: 'بخش بزرگی از قالی‌های اصیل و بادوام ایران روی «چله نخ پنبه اعلا (Cotton Warp)» با پرز پشم یا کرک و گل‌ابریشم بافته می‌شوند و قالی‌های بسیار ریزباف روی «چله ابریشم (Silk Warp)» قرار دارند.',
+    merchantPitchEn: 'This handwoven carpet combines a strong natural "Cotton" warp foundation (Chelleh Nakh) with a soft "Wool" and "Silk"-highlighted pile for lifelong durability.',
+    merchantPitchAr: 'تجمع هذه السجادة اليدوية بين سدى «القطن» المتين ووبر «الصوف» المطعّم بـ«الحرير» الطبيعي لضمان المتانة والجمال مدى الحياة.'
   }
 ];
 
