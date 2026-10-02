@@ -13,8 +13,12 @@ import {
 import { sound, speakEnglish, speakPersian, speakMultilingual, transliteratePersianToFingilish } from '../utils/audio';
 import { EmbassyVisaEnglish } from './EmbassyVisaEnglish';
 import { LatinCyrillicBlackboardStudio } from './LatinCyrillicBlackboardStudio';
+import { FluencyAccelerator } from './FluencyAccelerator';
+import { BilingualStoriesStudio } from './BilingualStoriesStudio';
 
 export type EnglishCategoryTab =
+  | 'bilingual_stories_30'
+  | 'fluency_accelerator'
   | 'core'
   | 'real_life'
   | 'embassy_visa'
@@ -410,8 +414,20 @@ export const EnglishLearningHub: React.FC<EnglishLearningHubProps> = ({
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
           {[
+            {
+              id: 'bilingual_stories_30' as const,
+              icon: '📖',
+              titleEn: '30 Bilingual Street Stories',
+              titleFa: '★ ۳۰ داستان صوتی کوچه‌بازار'
+            },
+            {
+              id: 'fluency_accelerator' as const,
+              icon: '🚀',
+              titleEn: 'Fluency & Reflex Lab',
+              titleFa: '★ شتاب‌دهنده مکالمه روان'
+            },
             {
               id: 'core' as const,
               icon: '🎓',
@@ -488,6 +504,20 @@ export const EnglishLearningHub: React.FC<EnglishLearningHubProps> = ({
           mode="english_for_persian"
           onEarnLingous={onEarnLingous}
         />
+      )}
+
+      {/* =================================================================== */}
+      {/* 0. 📖 30 BILINGUAL COLLOQUIAL STORIES STUDIO (NEW SHARED MODULE)   */}
+      {/* =================================================================== */}
+      {activeCategory === 'bilingual_stories_30' && (
+        <BilingualStoriesStudio onEarnLingous={onEarnLingous} defaultMode="learn_english" />
+      )}
+
+      {/* =================================================================== */}
+      {/* 0. 🚀 FLUENCY ACCELERATOR & REFLEX LAB (FLAGSHIP FEATURE)           */}
+      {/* =================================================================== */}
+      {activeCategory === 'fluency_accelerator' && (
+        <FluencyAccelerator onEarnLingous={onEarnLingous} />
       )}
 
       {/* =================================================================== */}

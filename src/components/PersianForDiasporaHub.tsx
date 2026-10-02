@@ -14,6 +14,7 @@ import {
 import confetti from 'canvas-confetti';
 import { sound, speakPersian, speakEnglish, setPersianVoiceGender, transliteratePersianToFingilish } from '../utils/audio';
 import { PersianAlphabetCanvasStudio } from './PersianAlphabetCanvasStudio';
+import { BilingualStoriesStudio } from './BilingualStoriesStudio';
 
 interface PersianForDiasporaHubProps {
   onEarnLingous: (amount: number) => void;
@@ -1708,11 +1709,11 @@ export const PersianForDiasporaHub: React.FC<PersianForDiasporaHubProps> = ({ on
             setSubTab('stories');
           }}
           className={`px-4 py-2.5 rounded-xl text-xs sm:text-sm font-black whitespace-nowrap flex items-center gap-2 ${
-            subTab === 'stories' ? 'bg-emerald-800 text-white' : 'text-slate-700 hover:bg-slate-100'
+            subTab === 'stories' ? 'bg-amber-400 text-slate-950 shadow-sm border border-amber-500' : 'text-slate-700 hover:bg-slate-100'
           }`}
         >
-          <Headphones className="w-4 h-4" />
-          <span>5. Bilingual Stories & Listening (داستان‌های صوتی دوزبانه ایران)</span>
+          <BookOpen className="w-4 h-4 text-emerald-800" />
+          <span>📖 5. ۳۰ داستان صوتی دوزبانه (کوچه‌بازار و محاوره واقعی روزمره)</span>
         </button>
 
         <button
@@ -2670,11 +2671,18 @@ export const PersianForDiasporaHub: React.FC<PersianForDiasporaHubProps> = ({ on
       )}
 
       {/* =================================================================== */}
-      {/* SUB-TAB 4: BILINGUAL STORIES & LISTENING FOR DIASPORA YOUTH         */}
+      {/* SUB-TAB 4: 30 BILINGUAL COLLOQUIAL STORIES & LISTENING STUDIO       */}
       {/* =================================================================== */}
       {subTab === 'stories' && (
-        <div className="space-y-5">
-          {BILINGUAL_HERITAGE_STORIES.map((story) => (
+        <div className="space-y-6">
+          <BilingualStoriesStudio onEarnLingous={onEarnLingous} defaultMode="learn_persian" />
+
+          {/* Classic Heritage Stories Accordion */}
+          <div className="space-y-4 pt-4 border-t-2 border-slate-200">
+            <h3 className="text-base font-black text-slate-800">
+              🏛️ آرشیو داستان‌های کهن و میراث ادبی ایران (مولانا، عطار، نوروز و یلدا):
+            </h3>
+            {BILINGUAL_HERITAGE_STORIES.map((story) => (
             <div
               key={story.id}
               className="bg-white rounded-3xl border-2 border-slate-200 p-6 sm:p-8 space-y-4 shadow-xs"
@@ -2742,6 +2750,7 @@ export const PersianForDiasporaHub: React.FC<PersianForDiasporaHubProps> = ({ on
               </div>
             </div>
           ))}
+          </div>
         </div>
       )}
 

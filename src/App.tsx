@@ -490,10 +490,10 @@ export function App() {
                 >
                   <div>
                     <span className="text-xs font-black block text-amber-300">
-                      🇬🇧 ۳. آموزش خودمانی انگلیسی
+                      🚀 ۳. انگلیسی روان (درمان قفل مکالمه)
                     </span>
                     <span className="text-[10px] text-indigo-100 block">
-                      تخته الفبای A-Z + مکالمه روزمره
+                      شتاب‌دهنده نیتیو + شکستن ترجمه در ذهن
                     </span>
                   </div>
                 </button>

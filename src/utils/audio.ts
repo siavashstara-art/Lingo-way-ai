@@ -269,7 +269,7 @@ export const getPersianVoiceGender = (): 'female' | 'male' => {
   return preferredPersianVoiceGender;
 };
 
-const stopAllActiveSpeech = () => {
+export const stopAllActiveSpeech = () => {
   if (typeof window === 'undefined') return;
   try {
     if (activeNeuralAudio) {
